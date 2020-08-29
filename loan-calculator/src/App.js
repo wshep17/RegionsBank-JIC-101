@@ -1,5 +1,9 @@
 import React from 'react';
 import { Tabs } from 'antd';
+import AffordabilityCalculator from './AffordabilityCalculator';
+import MonthlyPaymentCalculator from './MonthlyPaymentCalculator';
+import CashBackCalculator from './CashBackCalculator';
+
 import './App.css';
 import "antd/dist/antd.css";
 
@@ -8,16 +12,16 @@ function App() {
   return (
     <div className="App">
       <header className="App-header"/>
-      <div>
-        <Tabs defaultActiveKey="1">
-          <TabPane tab="Vehicle Affordability" key="1">
-            Content of Tab Pane 1
+      <div className='tabs-container'>
+        <Tabs defaultActiveKey="1" type="card">
+          <TabPane tab="Monthly Payment" key="1">
+            <MonthlyPaymentCalculator />
           </TabPane>
-          <TabPane tab="Monthly Payment" key="2">
-            Content of Tab Pane 2
+          <TabPane tab="Vehicle Affordability" key="2">
+            <AffordabilityCalculator />
           </TabPane>
           <TabPane tab="Low Rate vs. Cash Back" key="3">
-            Content of Tab Pane 3
+            <CashBackCalculator />
           </TabPane>
         </Tabs>
       </div>
