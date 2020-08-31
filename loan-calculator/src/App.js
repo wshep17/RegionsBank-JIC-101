@@ -1,24 +1,32 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Tabs } from 'antd';
+import AffordabilityCalculator from './AffordabilityCalculator';
+import MonthlyPaymentCalculator from './MonthlyPaymentCalculator';
+import CashBackCalculator from './CashBackCalculator';
+
 import './App.css';
+import "antd/dist/antd.css";
 
 function App() {
+  const { TabPane } = Tabs;
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <p className="header-text">[Regions Logo] Loan Calculator</p>
       </header>
+      <div className='tabs-container'>
+        <Tabs defaultActiveKey="1" type="card">
+          <TabPane tab="Monthly Payment" key="1">
+            <MonthlyPaymentCalculator />
+          </TabPane>
+          <TabPane tab="Vehicle Affordability" key="2">
+            <AffordabilityCalculator />
+          </TabPane>
+          <TabPane tab="Low Rate vs. Cash Back" key="3">
+            <CashBackCalculator />
+          </TabPane>
+        </Tabs>
+      </div>
     </div>
   );
 }
