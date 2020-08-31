@@ -11,7 +11,9 @@ function App() {
   const { TabPane } = Tabs;
   return (
     <div className="App">
-      <header className="App-header"/>
+      <header className="App-header">
+        <p className="header-text">[Regions Logo] Loan Calculator</p>
+      </header>
       <div className='tabs-container'>
         <Tabs defaultActiveKey="1" type="card">
           <TabPane tab="Monthly Payment" key="1">
