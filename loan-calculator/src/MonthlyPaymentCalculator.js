@@ -1,6 +1,8 @@
 import React from 'react';
 import { Collapse } from 'antd';
 import './MonthlyPaymentCalculator.css';
+import BarChart from './chart'
+import { loan_data } from './data';
 
 function MonthlyPaymentCalculator() {
   const { Panel } = Collapse;
@@ -19,6 +21,9 @@ function MonthlyPaymentCalculator() {
             loan terms (months), interest rate, down payment
           </Panel>
         </Collapse>
+      </div>
+      <div className='chart'>
+        <BarChart data={loan_data} width={400} height={300} />
       </div>
     </div>
   );
