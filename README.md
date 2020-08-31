@@ -1,4 +1,5 @@
 # RegionsBank-JIC-101 (Front End)
+This readme is written for a Windows OS
 
 ### Step 1: Open The Command Line
 
