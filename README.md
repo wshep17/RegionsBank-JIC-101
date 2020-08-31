@@ -1,7 +1,4 @@
-# RegionsBank-JIC-101
-Fall 2020 Junior Design Project Implementation.
-
-### How to Run The Front End(Windows Operating System):
+# RegionsBank-JIC-101 Front End
 
 ### Step 1: Open The Command Line
 
