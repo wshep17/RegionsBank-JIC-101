@@ -1,4 +1,4 @@
-# RegionsBank-JIC-101 Front End
+# RegionsBank-JIC-101 (Front End)
 
 ### Step 1: Open The Command Line
 
