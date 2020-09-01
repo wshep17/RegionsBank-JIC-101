@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   Collapse,
   Form,
-  Input,
   InputNumber,
   Radio
 } from 'antd';
