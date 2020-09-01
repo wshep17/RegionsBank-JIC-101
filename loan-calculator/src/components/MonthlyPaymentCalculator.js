@@ -4,8 +4,8 @@ import {
   Form,
   InputNumber
 } from 'antd';
-import { calculateMonthlyPayment } from './calculators';
-import './MonthlyPaymentCalculator.css';
+import { calculateMonthlyPayment } from '../SCRIPTS/calculators';
+import '../CSS/MonthlyPaymentCalculator.css';
 
 function MonthlyPaymentCalculator() {
   const [ inputs, setInputs ] = useState({
