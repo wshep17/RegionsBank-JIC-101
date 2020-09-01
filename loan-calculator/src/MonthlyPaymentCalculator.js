@@ -141,25 +141,23 @@ function MonthlyPaymentCalculator() {
           </Panel>
         </Collapse>
       </div>
-      <div className='chart'>
-        <BarChart data={interest_data} width={400} height={300} />
-
-        <Radio.Group onChange={onRadioChange} value={radioInputs.value}>
-          <Radio style={radioStyle} value={1}>
-            Option A
-        </Radio>
-          <Radio style={radioStyle} value={2}>
-            Option B
-        </Radio>
-          <Radio style={radioStyle} value={3}>
-            Option C
-        </Radio>
-          <Radio style={radioStyle} value={4}>
-            More...
-          {radioInputs.value === 4 ? <Input style={{ width: 100, marginLeft: 10 }} /> : null}
-          </Radio>
-        </Radio.Group>
-
+      <div className='chart-container'>
+        <div className='chart'>
+          <BarChart data={interest_data} width={400} height={300} />
+        </div>
+        <div className='radio'>
+          <Radio.Group onChange={onRadioChange} value={radioInputs.value}>
+            <Radio style={radioStyle} value={1}>
+              Interest Paid
+            </Radio>
+            <Radio style={radioStyle} value={2}>
+              Principal Paid
+            </Radio>
+            <Radio style={radioStyle} value={3}>
+              Ending Balance
+            </Radio>
+          </Radio.Group>
+        </div>
       </div>
     </div>
   );
