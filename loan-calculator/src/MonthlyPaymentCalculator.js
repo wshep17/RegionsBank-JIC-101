@@ -9,7 +9,7 @@ import './MonthlyPaymentCalculator.css';
 
 function MonthlyPaymentCalculator() {
   const [ inputs, setInputs ] = useState({
-    purchasePrice: 0,
+    purchasePrice: 0.0,
     cashBack: 0,
     taxRate: 0,
     tradeInValue: 0,

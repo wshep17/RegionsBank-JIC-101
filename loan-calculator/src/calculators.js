@@ -7,9 +7,10 @@ function calculateMonthlyPayment(inputs) {
     tradeInOwed,
     loanTerm,
     interestRate,
-    downPayment
+    downPayment,
+    monthlyPayment,
   } = inputs;
-  return 0;
+  return 0; //monthlyPayment = purchasePrice * loanTerm * interestRate;
 }
 
 export { calculateMonthlyPayment };
