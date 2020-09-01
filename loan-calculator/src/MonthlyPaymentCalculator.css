@@ -6,3 +6,11 @@
     border-bottom: none !important;
     background-color: white;
 }
+
+#monthly-payment-inputs {
+    display: flex;
+}
+
+.ant-form-item-control-input-content {
+    padding-right: 20px;
+}
