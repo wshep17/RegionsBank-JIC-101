@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import {
   Collapse,
   Form,
-  InputNumber
+  Input,
+  InputNumber,
+  Radio
 } from 'antd';
 import { calculateMonthlyPayment } from './calculators';
 import './MonthlyPaymentCalculator.css';
 import BarChart from './chart'
-import { loan_data } from './data';
+import { interest_data } from './data';
 
 function MonthlyPaymentCalculator() {
   const [ inputs, setInputs ] = useState({
@@ -19,6 +21,9 @@ function MonthlyPaymentCalculator() {
     loanTerm: 0,
     interestRate: 0,
     downPayment: 0
+  });
+  const [ radioInputs, setRadioInputs ] = useState({
+    value: 1
   });
   const { Panel } = Collapse;
 
@@ -35,6 +40,20 @@ function MonthlyPaymentCalculator() {
     setInputs(newInputs);
     calculateMonthlyPayment(newInputs);
   };
+
+  const onRadioChange = e => {
+    const newInputs = { ...radioInputs };
+    newInputs.value = e.target.value;
+    setRadioInputs(newInputs);
+  }
+
+  const radioStyle = {
+    display: 'block',
+    height: '30px',
+    lineHeight: '30px',
+  };
+
+  const value = 1;
 
   return (
     <div>
@@ -124,7 +143,24 @@ function MonthlyPaymentCalculator() {
         </Collapse>
       </div>
       <div className='chart'>
-        <BarChart data={loan_data} width={400} height={300} />
+        <BarChart data={interest_data} width={400} height={300} />
+
+        <Radio.Group onChange={onRadioChange} value={radioInputs.value}>
+          <Radio style={radioStyle} value={1}>
+            Option A
+        </Radio>
+          <Radio style={radioStyle} value={2}>
+            Option B
+        </Radio>
+          <Radio style={radioStyle} value={3}>
+            Option C
+        </Radio>
+          <Radio style={radioStyle} value={4}>
+            More...
+          {value === 4 ? <Input style={{ width: 100, marginLeft: 10 }} /> : null}
+          </Radio>
+        </Radio.Group>
+
       </div>
     </div>
   );

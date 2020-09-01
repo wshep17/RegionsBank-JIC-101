@@ -52,7 +52,7 @@ const draw = (props) => {
         .attr("transform", "rotate(-90)")
         .attr("x", -margin.top*1.5)
         .attr("y", -margin.left + 15)
-        .text("Dollars")
+        .text("Dollars");
 
     // Title
     svg.append("text")
