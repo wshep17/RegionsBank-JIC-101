@@ -25,6 +25,11 @@ function MonthlyPaymentCalculator() {
     formData.forEach(field => {
       newInputs[field.name[0]] = field.value !== "" ? field.value : 0;
     });
+    Object.keys(newInputs).forEach(key => {
+      if (newInputs[key] == null) {
+        newInputs[key] = 0;
+      }
+    });
     setInputs(newInputs);
     calculateMonthlyPayment(newInputs);
   };
