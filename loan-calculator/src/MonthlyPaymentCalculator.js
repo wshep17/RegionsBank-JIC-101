@@ -45,6 +45,7 @@ function MonthlyPaymentCalculator() {
     const newInputs = { ...radioInputs };
     newInputs.value = e.target.value;
     setRadioInputs(newInputs);
+    console.log(radioInputs.value);
   }
 
   const radioStyle = {
@@ -52,8 +53,6 @@ function MonthlyPaymentCalculator() {
     height: '30px',
     lineHeight: '30px',
   };
-
-  const value = 1;
 
   return (
     <div>
@@ -157,7 +156,7 @@ function MonthlyPaymentCalculator() {
         </Radio>
           <Radio style={radioStyle} value={4}>
             More...
-          {value === 4 ? <Input style={{ width: 100, marginLeft: 10 }} /> : null}
+          {radioInputs.value === 4 ? <Input style={{ width: 100, marginLeft: 10 }} /> : null}
           </Radio>
         </Radio.Group>
 
