@@ -9,7 +9,7 @@ import {
 import { calculateMonthlyPayment } from './calculators';
 import './MonthlyPaymentCalculator.css';
 import BarChart from './chart'
-import { interest_data } from './data';
+import { interest_data, principal_data } from './data';
 
 function MonthlyPaymentCalculator() {
   const [ inputs, setInputs ] = useState({
@@ -23,7 +23,8 @@ function MonthlyPaymentCalculator() {
     downPayment: 0
   });
   const [ radioInputs, setRadioInputs ] = useState({
-    value: 1
+    value: 1,
+    chart_data: [{}]
   });
   const { Panel } = Collapse;
 
@@ -43,9 +44,19 @@ function MonthlyPaymentCalculator() {
 
   const onRadioChange = e => {
     const newInputs = { ...radioInputs };
+
     newInputs.value = e.target.value;
+    if (newInputs.value === 1) {
+      console.log("Interest Paid");
+      newInputs.chart_data = interest_data;
+    } else if (newInputs.value === 2) {
+      console.log("Principal Paid");
+      newInputs.chart_data = principal_data;
+    } else {
+      console.log("Ending Balance");
+    }
+
     setRadioInputs(newInputs);
-    console.log(radioInputs.value);
   }
 
   const radioStyle = {
@@ -141,9 +152,9 @@ function MonthlyPaymentCalculator() {
           </Panel>
         </Collapse>
       </div>
-      <div className='chart-container'>
+      <div className='chart-container' style={{'display': 'flex'}}>
         <div className='chart'>
-          <BarChart data={interest_data} width={400} height={300} />
+          <BarChart data={radioInputs.chart_data} width={400} height={300} />
         </div>
         <div className='radio'>
           <Radio.Group onChange={onRadioChange} value={radioInputs.value}>
