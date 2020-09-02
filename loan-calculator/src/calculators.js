@@ -9,7 +9,11 @@ function calculateMonthlyPayment(inputs) {
     interestRate,
     downPayment,
     monthlyPayment,
+    loanAmount,
   } = inputs;
+  loanAmount = purchasePrice - downPayment;
+  monthlyPayment = loanAmount * loanTerm * interestRate;
+
   return 0; //monthlyPayment = purchasePrice * loanTerm * interestRate;
 }
 
