@@ -22,7 +22,7 @@ const draw = (props) => {
     let y = d3.scaleLinear()
         .range([height, 0]);
     x.domain(data.map(d => d.year));
-    y.domain([0, d3.max(data, d => d.dollars)]);
+    y.domain([0, d3.max(data, d => parseInt(d.dollars))]);
 
     // Create rectangles/bars
     svg.selectAll(".bar")

@@ -5,31 +5,35 @@ import {
   InputNumber,
   Radio
 } from 'antd';
-import { calculateLoanData } from '../scripts/calculators';
+import { calculateLoanData, calculateAmortizedLoanData } from '../scripts/calculators';
 import '../css/MonthlyPaymentCalculator.css';
-import BarChart from './chart'
-import { interest_data, principal_data } from './data';
+import BarChart from './BarChart'
+import { interest_data, principal_data } from '../data';
 
 function MonthlyPaymentCalculator() {
   const [ inputs, setInputs ] = useState({
-    purchasePrice: 0.0,
+    purchasePrice: 0,
     cashBack: 0,
     taxRate: 0,
     tradeInValue: 0,
     tradeInOwed: 0,
     loanTerm: 36,
     interestRate: 0,
-    downPayment: 0,
-    loanAmount: 0,
-    monthlyPayment: 0
+    downPayment: 0
   });
-  const [ radioInputs, setRadioInputs ] = useState({
+  const [ loanData, setLoanData ] = useState({
+    loanAmount: 0,
+    monthlyPayment: 0,
+    interestPaidData: [{}],
+    principalPaidData: [{}]
+  });
+  const [ radioData, setRadioData ] = useState({
     value: 1,
     chart_data: [{}]
   });
   const { Panel } = Collapse;
 
-  const onChange = (formData) => {
+  const onInputsChange = (formData) => {
     const newInputs = { ...inputs };
     formData.forEach(field => {
       newInputs[field.name[0]] = field.value !== "" ? field.value : 0;
@@ -39,28 +43,34 @@ function MonthlyPaymentCalculator() {
         newInputs[key] = 0;
       }
     });
-    const {loanAmount, monthlyPayment} = calculateLoanData(newInputs);
-    newInputs.loanAmount = loanAmount;
-    newInputs.monthlyPayment = monthlyPayment;
-    // console.log(loanAmount, monthlyPayment);
     setInputs(newInputs);
+
+    const newLoanData = { ...loanData };
+    const {loanAmount, monthlyPayment} = calculateLoanData(newInputs);
+    newLoanData.loanAmount = loanAmount;
+    newLoanData.monthlyPayment = monthlyPayment;
+
+    // using amortize package
+    newLoanData.interestPaidData = calculateAmortizedLoanData(newInputs);
+    setLoanData(newLoanData);
+    console.log(newLoanData.interestPaidData);
   };
 
   const onRadioChange = e => {
-    const newInputs = { ...radioInputs };
+    const newRadioData = { ...radioData };
 
-    newInputs.value = e.target.value;
-    if (newInputs.value === 1) {
+    newRadioData.value = e.target.value;
+    if (newRadioData.value === 1) {
       console.log("Interest Paid");
-      newInputs.chart_data = interest_data;
-    } else if (newInputs.value === 2) {
+      newRadioData.chart_data = loanData.interestPaidData;
+    } else if (newRadioData.value === 2) {
       console.log("Principal Paid");
-      newInputs.chart_data = principal_data;
+      newRadioData.chart_data = loanData.principalPaidData;
     } else {
       console.log("Ending Balance");
     }
 
-    setRadioInputs(newInputs);
+    setRadioData(newRadioData);
   }
 
   const radioStyle = {
@@ -82,7 +92,7 @@ function MonthlyPaymentCalculator() {
                 { name: ["taxRate"], value: inputs.taxRate }
               ]}
               onFieldsChange={(changedFields, allFields) => {
-                onChange(changedFields);
+                onInputsChange(changedFields);
               }}
             >
               <Form.Item label="Vehicle Purchase Price">
@@ -110,7 +120,7 @@ function MonthlyPaymentCalculator() {
                 { name: ["tradeInOwed"], value: inputs.tradeInOwed }
               ]}
               onFieldsChange={(changedFields, allFields) => {
-                onChange(changedFields);
+                onInputsChange(changedFields);
               }}
             >
               <Form.Item label="Value of Trade-in">
@@ -134,7 +144,7 @@ function MonthlyPaymentCalculator() {
                 { name: ["downPayment"], value: inputs.downPayment }
               ]}
               onFieldsChange={(changedFields, allFields) => {
-                onChange(changedFields);
+                onInputsChange(changedFields);
               }}
             >
               <Form.Item label="Loan Term (months)">
@@ -158,10 +168,10 @@ function MonthlyPaymentCalculator() {
       </div>
       <div className='chart-container' style={{'display': 'flex'}}>
         <div className='chart'>
-          <BarChart data={radioInputs.chart_data} width={400} height={300} />
+          <BarChart data={radioData.chart_data} width={400} height={300} />
         </div>
         <div className='radio'>
-          <Radio.Group onChange={onRadioChange} value={radioInputs.value}>
+          <Radio.Group onChange={onRadioChange} value={radioData.value}>
             <Radio style={radioStyle} value={1}>
               Interest Paid
             </Radio>
