@@ -1,4 +1,4 @@
-function calculateMonthlyPayment(inputs) {
+function calculateLoanData(inputs) {
   const {
     purchasePrice,
     cashBack,
@@ -8,16 +8,12 @@ function calculateMonthlyPayment(inputs) {
     loanTerm,
     interestRate,
     downPayment,
-    monthlyPayment,
-    loanAmount,
-    netTradeInWorth,
   } = inputs;
-  netTradeInWorth = tradeInValue - tradeInOwed;
-  //purchasePrice -= cashBack;
-  loanAmount = ((purchasePrice - cashBack) - downPayment - netTradeInWorth) * taxRate;
-  monthlyPayment = (loanAmount / loanTerm) * interestRate;
-  
-  return monthlyPayment; //monthlyPayment = purchasePrice * loanTerm * interestRate;
+  const netTradeInWorth = tradeInValue - tradeInOwed;
+  const loanAmount = ((purchasePrice - cashBack) - downPayment - netTradeInWorth) * (1+taxRate/100);
+  const monthlyPayment = (loanAmount / loanTerm) * (1+interestRate/100);
+
+  return { loanAmount: loanAmount, monthlyPayment: monthlyPayment };
 }
 
-export { calculateMonthlyPayment };
+export { calculateLoanData };
