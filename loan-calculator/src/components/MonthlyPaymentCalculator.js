@@ -4,19 +4,21 @@ import {
   Form,
   InputNumber
 } from 'antd';
-import { calculateMonthlyPayment } from '../scripts/calculators';
+import { calculateLoanData } from '../scripts/calculators';
 import '../css/MonthlyPaymentCalculator.css';
 
 function MonthlyPaymentCalculator() {
   const [ inputs, setInputs ] = useState({
-    purchasePrice: 0,
+    purchasePrice: 0.0,
     cashBack: 0,
     taxRate: 0,
     tradeInValue: 0,
     tradeInOwed: 0,
-    loanTerm: 0,
+    loanTerm: 36,
     interestRate: 0,
-    downPayment: 0
+    downPayment: 0,
+    loanAmount: 0,
+    monthlyPayment: 0
   });
   const { Panel } = Collapse;
 
@@ -30,8 +32,11 @@ function MonthlyPaymentCalculator() {
         newInputs[key] = 0;
       }
     });
+    const {loanAmount, monthlyPayment} = calculateLoanData(newInputs);
+    newInputs.loanAmount = loanAmount;
+    newInputs.monthlyPayment = monthlyPayment;
+    // console.log(loanAmount, monthlyPayment);
     setInputs(newInputs);
-    calculateMonthlyPayment(newInputs);
   };
 
   return (
