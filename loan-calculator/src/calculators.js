@@ -10,11 +10,14 @@ function calculateMonthlyPayment(inputs) {
     downPayment,
     monthlyPayment,
     loanAmount,
+    netTradeInWorth,
   } = inputs;
-  loanAmount = purchasePrice - downPayment;
-  monthlyPayment = loanAmount * loanTerm * interestRate;
-
-  return 0; //monthlyPayment = purchasePrice * loanTerm * interestRate;
+  netTradeInWorth = tradeInValue - tradeInOwed;
+  //purchasePrice -= cashBack;
+  loanAmount = ((purchasePrice - cashBack) - downPayment - netTradeInWorth) * taxRate;
+  monthlyPayment = (loanAmount / loanTerm) * interestRate;
+  
+  return monthlyPayment; //monthlyPayment = purchasePrice * loanTerm * interestRate;
 }
 
 export { calculateMonthlyPayment };
