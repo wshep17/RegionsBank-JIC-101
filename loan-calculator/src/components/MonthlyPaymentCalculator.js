@@ -5,21 +5,23 @@ import {
   InputNumber,
   Radio
 } from 'antd';
-import { calculateMonthlyPayment } from './calculators';
-import './MonthlyPaymentCalculator.css';
+import { calculateLoanData } from '../scripts/calculators';
+import '../css/MonthlyPaymentCalculator.css';
 import BarChart from './chart'
 import { interest_data, principal_data } from './data';
 
 function MonthlyPaymentCalculator() {
   const [ inputs, setInputs ] = useState({
-    purchasePrice: 0,
+    purchasePrice: 0.0,
     cashBack: 0,
     taxRate: 0,
     tradeInValue: 0,
     tradeInOwed: 0,
-    loanTerm: 0,
+    loanTerm: 36,
     interestRate: 0,
-    downPayment: 0
+    downPayment: 0,
+    loanAmount: 0,
+    monthlyPayment: 0
   });
   const [ radioInputs, setRadioInputs ] = useState({
     value: 1,
@@ -37,8 +39,11 @@ function MonthlyPaymentCalculator() {
         newInputs[key] = 0;
       }
     });
+    const {loanAmount, monthlyPayment} = calculateLoanData(newInputs);
+    newInputs.loanAmount = loanAmount;
+    newInputs.monthlyPayment = monthlyPayment;
+    // console.log(loanAmount, monthlyPayment);
     setInputs(newInputs);
-    calculateMonthlyPayment(newInputs);
   };
 
   const onRadioChange = e => {
