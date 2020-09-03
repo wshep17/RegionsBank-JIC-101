@@ -53,13 +53,29 @@ function MonthlyPaymentCalculator() {
     // using amortize package
     newLoanData.interestPaidData = calculateAmortizedLoanData(newInputs);
     setLoanData(newLoanData);
-    console.log(newLoanData.interestPaidData);
+    // console.log(newLoanData.interestPaidData);
+
+    updateChart();
   };
 
-  const onRadioChange = e => {
+  const updateChart = () => {
+    const newRadioData = { ...radioData };
+    if (newRadioData.value === 1) {
+      console.log("Interest Paid");
+      newRadioData.chart_data = loanData.interestPaidData;
+    } else if (newRadioData.value === 2) {
+      console.log("Principal Paid");
+      newRadioData.chart_data = loanData.principalPaidData;
+    } else {
+      console.log("Ending Balance");
+    }
+    setRadioData(newRadioData);
+  }
+
+  const onRadioChange = (event) => {
     const newRadioData = { ...radioData };
 
-    newRadioData.value = e.target.value;
+    newRadioData.value = event.target.value;
     if (newRadioData.value === 1) {
       console.log("Interest Paid");
       newRadioData.chart_data = loanData.interestPaidData;
