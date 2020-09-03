@@ -8,7 +8,6 @@ import {
 import { calculateLoanData, calculateAmortizedLoanData } from '../scripts/calculators';
 import '../css/MonthlyPaymentCalculator.css';
 import BarChart from './BarChart'
-import { interest_data, principal_data } from '../data';
 
 function MonthlyPaymentCalculator() {
   const [ inputs, setInputs ] = useState({
