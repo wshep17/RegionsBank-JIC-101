@@ -24,7 +24,8 @@ function MonthlyPaymentCalculator() {
     loanAmount: 0,
     monthlyPayment: 0,
     interestPaidData: [{}],
-    principalPaidData: [{}]
+    principalPaidData: [{}],
+    endingBalanceData: [{}]
   });
   const [ radioData, setRadioData ] = useState({
     value: 1,
@@ -52,7 +53,6 @@ function MonthlyPaymentCalculator() {
     // using amortize package
     newLoanData.interestPaidData = calculateAmortizedLoanData(newInputs);
     setLoanData(newLoanData);
-    // console.log(newLoanData.interestPaidData);
 
     updateChart();
   };
@@ -60,13 +60,11 @@ function MonthlyPaymentCalculator() {
   const updateChart = () => {
     const newRadioData = { ...radioData };
     if (newRadioData.value === 1) {
-      console.log("Interest Paid");
       newRadioData.chart_data = loanData.interestPaidData;
     } else if (newRadioData.value === 2) {
-      console.log("Principal Paid");
       newRadioData.chart_data = loanData.principalPaidData;
     } else {
-      console.log("Ending Balance");
+      newRadioData.chart_data = loanData.endingBalanceData;
     }
     setRadioData(newRadioData);
   }
@@ -76,13 +74,11 @@ function MonthlyPaymentCalculator() {
 
     newRadioData.value = event.target.value;
     if (newRadioData.value === 1) {
-      console.log("Interest Paid");
       newRadioData.chart_data = loanData.interestPaidData;
     } else if (newRadioData.value === 2) {
-      console.log("Principal Paid");
       newRadioData.chart_data = loanData.principalPaidData;
     } else {
-      console.log("Ending Balance");
+      newRadioData.chart_data = loanData.endingBalanceData;
     }
 
     setRadioData(newRadioData);
