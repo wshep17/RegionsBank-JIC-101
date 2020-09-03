@@ -60,7 +60,7 @@ function MonthlyPaymentCalculator() {
   const updateChart = (event) => {
     const newRadioData = { ...radioData };
 
-    if (event != null ) {
+    if (event != null) {
       newRadioData.value = event.target.value;
     }
 
