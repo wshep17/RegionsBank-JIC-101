@@ -5,6 +5,11 @@ const draw = (props) => {
     d3.select('.vis-barchart > *').remove();
 
     const data = props.data;
+    if (!data?.length) {
+        // data is empty
+        return;
+    }
+
     const margin = { top: 50, right: 20, bottom: 40, left: 55 };
     const width = props.width - margin.left - margin.right;
     const height = props.height - margin.top - margin.bottom;
