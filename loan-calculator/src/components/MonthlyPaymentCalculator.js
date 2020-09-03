@@ -57,22 +57,13 @@ function MonthlyPaymentCalculator() {
     updateChart();
   };
 
-  const updateChart = () => {
+  const updateChart = (event) => {
     const newRadioData = { ...radioData };
-    if (newRadioData.value === 1) {
-      newRadioData.chart_data = loanData.interestPaidData;
-    } else if (newRadioData.value === 2) {
-      newRadioData.chart_data = loanData.principalPaidData;
-    } else {
-      newRadioData.chart_data = loanData.endingBalanceData;
+
+    if (event != null ) {
+      newRadioData.value = event.target.value;
     }
-    setRadioData(newRadioData);
-  }
 
-  const onRadioChange = (event) => {
-    const newRadioData = { ...radioData };
-
-    newRadioData.value = event.target.value;
     if (newRadioData.value === 1) {
       newRadioData.chart_data = loanData.interestPaidData;
     } else if (newRadioData.value === 2) {
@@ -182,7 +173,7 @@ function MonthlyPaymentCalculator() {
           <BarChart data={radioData.chart_data} width={400} height={300} />
         </div>
         <div className='radio'>
-          <Radio.Group onChange={onRadioChange} value={radioData.value}>
+          <Radio.Group onChange={updateChart} value={radioData.value}>
             <Radio style={radioStyle} value={1}>
               Interest Paid
             </Radio>

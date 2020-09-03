@@ -39,8 +39,12 @@ function calculateAmortizedLoanData(inputs) {
   var prevLoanAmount = 0;
   var prevLoanTerm = 0;
   for (let i = 0; i < numYears; i++) {
+    const newLoanAmount = loanAmount - prevLoanAmount; // update new loan amount based on accumulated principal paid
+    if (newLoanAmount < 0) {
+      return graphData;
+    }
     const amortizedData = amortize({
-      amount: loanAmount - prevLoanAmount, // update new loan amount based on accumulatd principal paid
+      amount: newLoanAmount,
       rate: interestRate,
       totalTerm: loanTerm - prevLoanTerm, // update new loan term: 12 months fewer
       amortizeTerm: 12 // our graph shows per-year data; 12 months in a year
