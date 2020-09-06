@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 });
 
 //API route to fetch all the chat rooms.
-router.get('/get-rooms', function(req, res, next) {
+router.get('/get-rooms', isAdminMiddleWare, function(req, res, next) {
 	fetchChatRooms()
 	.then((data) => {
 		utilityFunctions.handleResponse(200, data, res)
@@ -36,5 +36,15 @@ function fetchChatRooms() {
 		})
 	})
 }
+
+//API Admin-Only middleware
+function isAdminMiddleWare(req, res, next) {
+	if (req.session.email) {
+		return next();
+	} else {
+		utilityFunctions.handleResponse(404, 'Page Not Found', res)
+	}
+}
+
 
 module.exports = router;

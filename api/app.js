@@ -4,6 +4,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require('express-session')
 var app = express();
 var mongo = require('./scripts/db-setup');
 
@@ -13,8 +14,18 @@ mongo.connectToServer(function(err) {
 	if (err) {
 		console.log(err)
 	} else {
+
+		//Establish Sessions for the entire API :)
+		app.use(session({
+			secret: 'sa7aeiwe8o-3$%^@()$_+@$0',
+			resave: true, //refresh or "resave" session if another request is made
+			saveUninitialized: false,
+			cookie: { secure: true }
+		}))
+
 		//Our API Routes.
 		var chat = require('./routes/chat');
+		var auth = require('./routes/auth')
 
 		//Setup the View Engine
 		app.set('views', path.join(__dirname, 'views'));
@@ -29,6 +40,7 @@ mongo.connectToServer(function(err) {
 
 		//Where we "register" the imported routes for the API to use.
 		app.use('/chat', chat);
+		app.use('/auth', auth)
 
 		//Our API Instructions for dealing with 404 errors
 		app.use(function(req, res, next) {
