@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ChatRooms from './ChatRooms.js'
+import { Card, Col, Row, Button } from 'antd';
 import { ContextAPI } from './Context.js'
 
 import {
@@ -24,9 +25,13 @@ class Home extends Component {
 		const conditionalRender = () => {
 			if (this.context.isAdmin) {
 				return(
-					<Link to="/chat-rooms">
-						<button>Go to chat rooms</button>
-					</Link>			
+					<Col span={10} style={{margin:'auto', padding: '10px'}}>
+						<Card style={{textAlign: 'center', backgroundColor: '#FFFFCC'}}
+							  hoverable={true}
+							  bordered={true}
+							  onClick={()=>this.props.history.push('/chat-rooms')}
+						><b>Go to the Chat Rooms!</b></Card>
+					</Col>		
 				)
 			} else {
 				return(
@@ -36,10 +41,18 @@ class Home extends Component {
 		}
 		return (
 			<div>
-				<Link to="/calculator">
-					<button>Go to calculator</button>
-				</Link>
-				{conditionalRender()}		
+				<Row gutter={20}>
+					<div style={{margin:'auto', width: '50%'}}>
+						<Col span={10} style={{margin:'auto', padding: '10px'}}>
+							<Card style={{textAlign: 'center', backgroundColor: '#CCFFCC' }}
+								  hoverable={true}
+							      bordered={true}
+							      onClick={()=>this.props.history.push('/calculator')}
+							><b>Go to the Calculator!</b></Card>
+						</Col>
+						{conditionalRender()}
+					</div>
+				</Row>
 			</div>
 		)
 	}

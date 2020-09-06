@@ -14,6 +14,7 @@ import ChatRooms from './components/ChatRooms.js'
 import AdminSignup from './components/AdminSignup.js'
 import AdminLogin from './components/AdminLogin.js'
 import PrivateRoute from './components/PrivateRoute.js'
+import NavigationBar from './components/NavigationBar.js'
 import { ContextAPI } from './components/Context.js'
 
 class App extends React.Component {
@@ -25,6 +26,7 @@ class App extends React.Component {
         }
         this.handleAdminCheck = this.handleAdminCheck.bind(this)
         this.handleAdminLogin = this.handleAdminLogin.bind(this)
+        this.handleAdminLogout = this.handleAdminLogout.bind(this)
     }
     componentDidMount() {
         this.handleAdminCheck()
@@ -32,7 +34,8 @@ class App extends React.Component {
     render() {
         const value = {
             isAdmin: this.state.isAdmin,
-            triggerAdminLogin: this.handleAdminLogin
+            triggerAdminLogin: this.handleAdminLogin,
+            triggerLogout: this.handleAdminLogout
         }
         const conditionalRender = () => {
             //if it's still loading return blank screen
@@ -41,12 +44,14 @@ class App extends React.Component {
             } else {
                 return (
                     <ContextAPI.Provider value = {value}>
+                        <NavigationBar />
                         <Switch>
                             <Route path='/home' component={Home} />
                             <Route path='/login' component={AdminLogin} />
                             <Route path='/signup' component={AdminSignup} />
                             <Route path='/calculator' component={Calculator} />
                             <PrivateRoute path='/chat-rooms' component={ChatRooms} />
+                            <Route path='/' component={Home} />
                         </Switch>
                     </ContextAPI.Provider>
                 )                
@@ -78,6 +83,13 @@ class App extends React.Component {
         this.setState({isAdmin: true})
         console.log("Admin Status: ", this.state.isAdmin)
     }
+
+    handleAdminLogout() {
+        console.log('handle log out')
+        this.setState({isAdmin: false})
+        console.log("Admin Status: ", this.state.isAdmin)
+    }
+
 }
 
 export default App;

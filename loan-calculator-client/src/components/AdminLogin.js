@@ -1,4 +1,5 @@
 import React from 'react'
+import { Card, Col, Row, Input, Button } from 'antd';
 import { ContextAPI } from './Context.js'
 
 
@@ -25,12 +26,22 @@ class AdminLogin extends React.Component {
 	render() {
 		return (
 			<div>
-				Regions Representative Login Page:
-				<form>
-					<input placeholder='email' name='email' value={this.state.email} onChange={this.handleChange}></input>
-					<input placeholder='password' name='password' value={this.state.password} onChange={this.handleChange}></input>
-				</form>
-				<button onClick={this.handleSubmitForm.bind(this)}>Submit</button>
+				<Row gutter={10} style={{paddingTop: '10px'}}>
+					<Col span={10} style={{margin: 'auto'}}>
+						<Card title="Admin Login Form" bordered={true}>
+						Email: <Input placeholder="Email" name='email' value={this.state.email} onChange={this.handleChange}/>
+						<br />
+						<br />
+						Password: <Input.Password placeholder="input password" name='password' value={this.state.password} onChange={this.handleChange}/>
+						<br />
+						<br />
+						<Button block type="primary" onClick={this.handleSubmitForm.bind(this)}>Submit</Button>
+						<br />
+						<br />
+						<Button block onClick={()=>this.props.history.push('/signup')}>Signup</Button>
+						</Card>
+					</Col>
+				</Row>
 			</div>
 		)
 	}
@@ -54,8 +65,11 @@ class AdminLogin extends React.Component {
 		.then((response) => response.json())
 		.then((data) => {
 			if (data.status === 200) {
+				alert("Successfully Logged In")
 				this.context.triggerAdminLogin()
 				this.props.history.push('/home')
+			} else {
+				alert("Incorrect Credentials")
 			}
 		})
 		.catch((err) => console.log(err))
