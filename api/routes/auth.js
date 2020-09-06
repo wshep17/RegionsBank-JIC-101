@@ -13,10 +13,12 @@ router.get('/', function(req, res, next) {
 //API Login Route
 router.post('/login', function(req, res, next) {
 	db.collection('AdminUser').find({'email': req.body.email}).toArray((err, data) => {
-		if (data) {
+		if (data.length > 0) {
 			if (data[0].password === req.body.password) {
 				req.session.email = data[0].email
 				utilityFunctions.handleResponse(200, data[0], res)
+			} else {
+				utilityFunctions.handleResponse(404, 'Incorrect Credentials', res)
 			}
 		} else {
 			utilityFunctions.handleResponse(404, 'Incorrect Credentials', res)
@@ -32,6 +34,7 @@ router.post('/signup', function(req, res, next) {
 
 //API Authorization Check (aka: Are you an Admin/"Regions Representative" or not..?)
 router.get('/auth-check', function(req, res, next) {
+	console.log('The session is: ', req.session)
 	if (req.session.email) {
 		utilityFunctions.handleResponse(200, 'authorized', res)
 	} else {

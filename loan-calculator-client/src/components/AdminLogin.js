@@ -1,6 +1,19 @@
 import React from 'react'
+import { ContextAPI } from './Context.js'
+
 
 class AdminLogin extends React.Component {
+	/**
+	* Developer Notes:
+	* 1. This will provide our Login component with the nearest current
+	*    value of our context, by using this.context.
+	* 2. Example shown in the code below. Ping me(william) if you have any questions.
+	* 3. Search for "triggerAdminLogin" in this file to see how I make use of a method provided
+	*    within the "value" field passed through our Context Provider from the App.js file.
+	* 4. To make the connection, open App.js and see search for the same method("triggerAdminLogin").
+	* 5. The important thing is: "Consumers" can ONLY use things provided by the "Provider" ;)
+	*/
+	static contextType = ContextAPI
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -39,7 +52,12 @@ class AdminLogin extends React.Component {
 			'body': JSON.stringify(data)
 		})
 		.then((response) => response.json())
-		.then((data) => console.log(data))
+		.then((data) => {
+			if (data.status === 200) {
+				this.context.triggerAdminLogin()
+				this.props.history.push('/home')
+			}
+		})
 		.catch((err) => console.log(err))
 	}
 }

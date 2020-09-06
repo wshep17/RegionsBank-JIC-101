@@ -20,7 +20,7 @@ mongo.connectToServer(function(err) {
 			secret: 'sa7aeiwe8o-3$%^@()$_+@$0',
 			resave: true, //refresh or "resave" session if another request is made
 			saveUninitialized: false,
-			cookie: { secure: true }
+			cookie: { secure: false } //set the cookie regardless of an https connection
 		}))
 
 		//Our API Routes.

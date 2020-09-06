@@ -14,13 +14,17 @@ class ChatRooms extends React.Component {
 		this.fetchRooms();
 	}
 	render() {
-		const roomsList = this.state.chat_rooms.map((each) => {
-			return (
-				<li key={each._id}>
-					<button>{each.room}</button>
-				</li>
-			)
-		})
+		const roomsList = () => {
+			if (this.state.chat_rooms.length > 0) {
+				this.state.chat_rooms.map((each) => {
+					return (
+						<li key={each._id}>
+							<button>{each.room}</button>
+						</li>
+					)
+				})
+			}
+		}
 
 		return(
 			<div>
