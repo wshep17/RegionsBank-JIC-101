@@ -30,6 +30,7 @@ module.exports = {
 							if (err) callback(err)
 							console.log('Regions Database Created! (utility-functions.js)')
 							console.log('AdminUser collection Created (utility-functions.js)')
+							console.log('SCRIPT TERMINATED.')
 						})
 					}
 				}
