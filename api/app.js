@@ -6,11 +6,11 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session')
 var app = express();
-var mongo = require('./scripts/db-setup');
+var utilityFunctions = require('./scripts/utility-functions');
 
 
 //Start db connection and step into callback
-mongo.connectToServer(function(err) {
+utilityFunctions.connectToServer(function(err) {
 	if (err) {
 		console.log(err)
 	} else {

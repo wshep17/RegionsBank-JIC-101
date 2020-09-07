@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var mongo = require('../scripts/db-setup');
-var db = mongo.getDb();
-var utilityFunctions = require('../scripts/utility-functions')
+var utilityFunctions = require('../scripts/utility-functions');
+var db = utilityFunctions.getDb();
 
 //API index route to make sure things work properly(remove before production)
 router.get('/', function(req, res, next) {

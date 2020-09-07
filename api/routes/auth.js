@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var mongo = require('../scripts/db-setup');
-var utilityFunctions = require('../scripts/utility-functions')
-var db = mongo.getDb();
+var utilityFunctions = require('../scripts/utility-functions');
+var db = utilityFunctions.getDb();
 var AdminUser = require('../schema/AdminUser')
 
 //API index route to make sure things work properly(remove before production)
