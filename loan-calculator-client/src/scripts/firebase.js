@@ -1,6 +1,4 @@
 import firebase from "firebase";
-import "firebase/analytics";
-import "firebase/auth";
 
 //Firebase Configuration Object
 const firebaseConfig = {

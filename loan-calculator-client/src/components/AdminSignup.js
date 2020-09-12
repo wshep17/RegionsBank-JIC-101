@@ -43,7 +43,11 @@ class AdminSignup extends React.Component {
 			password: this.state.password
 		}
 		firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
-		.then((user) => console.log('user-creds: ', user))
+		.then((user) => {
+			alert('Successfully Created Account')
+			this.props.history.push('/home')
+			console.log('user-creds: ', user)
+		})
 		.catch((err) => console.log('error: ', err))
 	}
 }
