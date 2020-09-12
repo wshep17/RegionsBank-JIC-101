@@ -28,4 +28,4 @@ This readme is written for a Windows OS
 		This command will run the start script to start the application in development mode.
 
 ## Step 6: Open the Application in the Browser!
-	(a) Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+	(a) Open [http://localhost:3000] to view it in the browser.
