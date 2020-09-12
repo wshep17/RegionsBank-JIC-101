@@ -1,5 +1,7 @@
 import React from 'react'
 import { Card, Col, Row, Input, Button } from 'antd';
+import firebase from '../scripts/firebase.js'
+
 
 
 class AdminSignup extends React.Component {
@@ -40,24 +42,9 @@ class AdminSignup extends React.Component {
 			email: this.state.email,
 			password: this.state.password
 		}
-		fetch('auth/signup', {
-			'method':  'POST', 
-			'headers': {
-				'Content-Type': 'application/json'
-			},
-			'body': JSON.stringify(data)
-		})
-		.then((response) => response.json())
-		.then((data) => {
-			console.log(data)
-			if (data.status === 200) {
-				alert('Successfully Created Account!')
-				this.props.history.push('login')
-			} else {
-				alert(JSON.stringify(data.payload))
-			}
-		})
-		.catch((err) => console.log(err))
+		firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
+		.then((user) => console.log('user-creds: ', user))
+		.catch((err) => console.log('error: ', err))
 	}
 }
 

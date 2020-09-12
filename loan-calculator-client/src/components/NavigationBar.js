@@ -3,6 +3,7 @@ import ChatRooms from './ChatRooms.js'
 import { ContextAPI } from './Context.js'
 import '../css/NavigationBar.css';
 import { Button } from "antd";
+import firebase from '../scripts/firebase.js'
 
 import {
   Link,
@@ -47,15 +48,9 @@ class NavigationBar extends Component {
 
 	//Facilitate Logging Out
 	handleLogout() {
-		fetch('auth/logout', {
-			'method':  'POST', 
-			'headers': {
-				'Content-Type': 'application/json'
-			}
-		})
-		.then((response) => response.json())
-		.then((data) => {
-			this.context.triggerLogout()
+		firebase.auth().signOut()
+		.then(() => {
+			this.context.triggerAdminLogout()
 			alert('Successfully Logged Out')
 		})
 		.catch((err) => console.log(err))

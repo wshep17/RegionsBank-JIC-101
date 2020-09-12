@@ -16,6 +16,7 @@ import AdminLogin from './components/AdminLogin.js'
 import PrivateRoute from './components/PrivateRoute.js'
 import NavigationBar from './components/NavigationBar.js'
 import { ContextAPI } from './components/Context.js'
+import firebase from './scripts/firebase.js'
 
 class App extends React.Component {
     constructor(props) {
@@ -35,7 +36,7 @@ class App extends React.Component {
         const value = {
             isAdmin: this.state.isAdmin,
             triggerAdminLogin: this.handleAdminLogin,
-            triggerLogout: this.handleAdminLogout
+            triggerAdminLogout: this.handleAdminLogout
         }
         const conditionalRender = () => {
             //if it's still loading return blank screen
@@ -65,18 +66,14 @@ class App extends React.Component {
     }
 
     handleAdminCheck() {
-        fetch('/auth/auth-check')
-        .then((response) => response.json())
-        .then((data) => {
-            console.log(data)
-            //authorized admin user
-            if (data.status === 200) {
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                console.log({email: user.email, name: user.displayName})
                 this.setState({isAdmin: true, isLoading: false})
             } else {
                 this.setState({isAdmin: false, isLoading: false})
             }
         })
-        .catch((err) => console.log(err))
     }
 
     handleAdminLogin() {
@@ -85,7 +82,7 @@ class App extends React.Component {
     }
 
     handleAdminLogout() {
-        console.log('handle log out')
+        //console.log('handle log out')
         this.setState({isAdmin: false})
         console.log("Admin Status: ", this.state.isAdmin)
     }

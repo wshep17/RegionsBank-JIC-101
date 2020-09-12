@@ -9,6 +9,7 @@
     "amortize": "^1.1.0",
     "antd": "^4.6.1",
     "d3": "^6.1.1",
+    "firebase": "^7.20.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",

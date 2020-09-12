@@ -1,6 +1,7 @@
 import React from 'react'
 import { Card, Col, Row, Input, Button } from 'antd';
 import { ContextAPI } from './Context.js'
+import firebase from '../scripts/firebase.js'
 
 
 class AdminLogin extends React.Component {
@@ -55,24 +56,18 @@ class AdminLogin extends React.Component {
 			email: this.state.email,
 			password: this.state.password
 		}
-		fetch('auth/login', {
-			'method':  'POST', 
-			'headers': {
-				'Content-Type': 'application/json'
-			},
-			'body': JSON.stringify(data)
+		
+		firebase.auth().signInWithEmailAndPassword(data.email, data.password)
+		.then((user) => {
+			console.log('user-creds: ', user)
+			this.context.triggerAdminLogin()
+			this.props.history.push('/home')
+			alert('Signed In Successfully!')
 		})
-		.then((response) => response.json())
-		.then((data) => {
-			if (data.status === 200) {
-				alert("Successfully Logged In")
-				this.context.triggerAdminLogin()
-				this.props.history.push('/home')
-			} else {
-				alert("Incorrect Credentials")
-			}
+		.catch((err) => {
+			console.log('error: ', err)
+			alert('Incorrect Credentials')
 		})
-		.catch((err) => console.log(err))
 	}
 }
 
