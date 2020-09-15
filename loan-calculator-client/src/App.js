@@ -15,6 +15,7 @@ import AdminSignup from './components/AdminSignup.js'
 import AdminLogin from './components/AdminLogin.js'
 import PrivateRoute from './components/PrivateRoute.js'
 import NavigationBar from './components/NavigationBar.js'
+import Chat from './components/Chat.js'
 import { ContextAPI } from './components/Context.js'
 import firebase from './scripts/firebase.js'
 
@@ -23,11 +24,13 @@ class App extends React.Component {
         super(props)
         this.state = {
             isAdmin: true,
-            isLoading: true
+            isLoading: true,
+            chat_room: ""
         }
         this.handleAdminCheck = this.handleAdminCheck.bind(this)
         this.handleAdminLogin = this.handleAdminLogin.bind(this)
         this.handleAdminLogout = this.handleAdminLogout.bind(this)
+        this.handleAdminJoinRoom = this.handleAdminJoinRoom.bind(this)
     }
     componentDidMount() {
         this.handleAdminCheck()
@@ -35,6 +38,8 @@ class App extends React.Component {
     render() {
         const value = {
             isAdmin: this.state.isAdmin,
+            chat_room: this.state.chat_room,
+            triggerAdminJoinRoom: this.handleAdminJoinRoom,
             triggerAdminLogin: this.handleAdminLogin,
             triggerAdminLogout: this.handleAdminLogout
         }
@@ -51,6 +56,7 @@ class App extends React.Component {
                             <Route path='/login' component={AdminLogin} />
                             <Route path='/signup' component={AdminSignup} />
                             <Route path='/calculator' component={Calculator} />
+                            <Route path='/chat' component={Chat} />
                             <PrivateRoute path='/chat-rooms' component={ChatRooms} />
                             <Route path='/' component={Home} />
                         </Switch>
@@ -79,6 +85,12 @@ class App extends React.Component {
     handleAdminLogin() {
         this.setState({isAdmin: true})
         console.log("Admin Status: ", this.state.isAdmin)
+    }
+
+    handleAdminJoinRoom(room) {
+        this.setState({chat_room: room})
+        
+        console.log("An admin has just joined room: ", this.state.chat_room)
     }
 
     handleAdminLogout() {

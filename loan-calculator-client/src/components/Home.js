@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import ChatRooms from './ChatRooms.js'
 import { Card, Col, Row, Button } from 'antd';
 import { ContextAPI } from './Context.js'
+import firebase from '../scripts/firebase.js'
+import AnonUserIdentification from './AnonUserIdentification.js'
 
 import {
   Link
@@ -41,6 +43,7 @@ class Home extends Component {
 		}
 		return (
 			<div>
+				<AnonUserIdentification />
 				<Row gutter={20}>
 					<div style={{margin:'auto', width: '50%'}}>
 						<Col span={10} style={{margin:'auto', padding: '10px'}}>
@@ -56,6 +59,8 @@ class Home extends Component {
 			</div>
 		)
 	}
+
+
 }
 
 export default Home

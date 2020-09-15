@@ -1,7 +1,16 @@
-import React from 'react'
+import React, { Component } from 'react'
+import ConfirmationScreen from './ConfirmationScreen.js'
+import firebase from '../scripts/firebase.js'
+import { ContextAPI } from './Context.js'
+
+import {
+  withRouter 
+} from "react-router-dom";
 
 
-class ChatRooms extends React.Component {
+class ChatRooms extends Component {
+
+	static contextType = ContextAPI
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -11,39 +20,43 @@ class ChatRooms extends React.Component {
 	}
 	componentDidMount() {
 		//fetch the chat rooms from the database
-		this.fetchRooms();
+		this.fetchRooms()
+
 	}
 	render() {
-		const roomsList = () => {
-			if (this.state.chat_rooms.length > 0) {
-				this.state.chat_rooms.map((each) => {
-					return (
-						<li key={each._id}>
-							<button>{each.room}</button>
-						</li>
-					)
-				})
-			}
-		}
-
 		return(
 			<div>
 				The following users have questions. Join their room to address their questions!
 				<br />
-				<ul>{roomsList}</ul>
+				<ul style={{backgroundColor: "white"}}>
+					{this.state.chat_rooms.map((each) => {
+						return (<div><li onClick={()=>this.adminJoinRoom(each.room)}><ConfirmationScreen name={each.title} /></li><br /></div>)
+					})}
+				</ul>
 			</div>
 		)
 	}
 
-	//This function will fetch the rooms from the database
+	//This function will fetch all the rooms from the database
 	fetchRooms() {
-		fetch('/chat/get-rooms')
-		.then((res) => res.json())
-		.then((data) => this.setState({chat_rooms: data.payload}))
-		.catch((err) => console.log(err))
+		let chatRoomsRef = firebase.database().ref(`private-rooms`)
+		chatRoomsRef.on('value', (snapshot) => {
+			let list = []
+			snapshot.forEach((item) => {
+				list.push(item.val())
+			})
+			this.setState({chat_rooms: list})
+		})
+	}
+
+	//This function will allow the admin to join this room
+	adminJoinRoom(room) {
+		console.log(room)
+		// Set the chat_room to "room" in the state in App.js (Possible through the Context API) 
+		this.context.triggerAdminJoinRoom(room)
 	}
 }
 
 
 
-export default ChatRooms;
+export default withRouter(ChatRooms);
