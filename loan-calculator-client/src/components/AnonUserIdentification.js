@@ -5,6 +5,10 @@ import {
   withRouter 
 } from "react-router-dom";
 
+/**
+ * Anonymous User Component:
+ * Creates chatroom
+ */
 class AnonUserIdentification extends Component {
   constructor(props) {
     super(props)
@@ -68,6 +72,31 @@ class AnonUserIdentification extends Component {
     roomsRef.set({
       "title": `${displayName}'s private room`,
       "room": room
+    })
+    //check if current room already exists. if not, set chatbot status to true
+    let chatbotRef  = firebase.database().ref(`chatbot`)
+    chatbotRef.once('value', (snapshot) =>{
+      let exists = false
+      snapshot.forEach((item) => {
+        if (item.key == room) {
+          exists = true
+        }
+      })
+      if (!exists) {
+        console.log("New chatroom... Setting chatbot status to true")
+        let roomStatusRef = firebase.database().ref(`chatbot/${room}`)
+        roomStatusRef.set({
+          "status": true
+        })
+        let messageRef = firebase.database().ref(`messages/room:${room}`)
+        messageRef.push({
+          "name": "Chatbot",
+          "message": "Hi! How can I help you today?",
+          "uid": "bot",
+        })
+      } else {
+        console.log("Chatroom already exists")
+      }
     })
   }
 

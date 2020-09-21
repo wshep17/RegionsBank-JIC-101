@@ -1,21 +1,31 @@
 import React, { Component } from 'react'
 import firebase from '../scripts/firebase.js'
 import { ContextAPI } from './Context.js'
+import { getChatbotResponse } from '../scripts/chatbot'
 
+/**
+ * General Component:
+ * Chatroom
+ */
 class Chat extends Component {
 
 	static contextType = ContextAPI
+
 	constructor(props) {
 		super(props)
 
 		this.state = {
 			message: "",
-			chat: []
+			chat: [],
+			//set default status as false so chatbot doesn't auto respond
+			status: false
 		}
 	}
 	componentDidMount() {
 		//fetch the messages from the database	
 		this.fetchMessages()
+		//fetch chatroom status
+		this.fetchStatus()
 	}
 	render() {
 		return (
@@ -66,14 +76,17 @@ class Chat extends Component {
 	handleSend() {
 		let user = firebase.auth().currentUser
 		if (user && user.photoURL) {
-				//if you're an anonymous user
-				let messageRef = firebase.database().ref(`messages/room:${user.photoURL}`)
-				messageRef.push({
-					"name": user.displayName,
-					"message": this.state.message,
-					"uid": user.uid,
-				})
-			} 
+			//if you're an anonymous user
+			let messageRef = firebase.database().ref(`messages/room:${user.photoURL}`)
+			messageRef.push({
+				"name": user.displayName,
+				"message": this.state.message,
+				"uid": user.uid,
+			})
+			if (this.state.status) {
+				this.handleChatbotResponse(user, this.state.message)
+			}
+		}
 		if (user && this.context.chat_room) {
 			//if you're an admin user
 			let messageRef = firebase.database().ref(`messages/room:${this.context.chat_room}`)
@@ -81,6 +94,34 @@ class Chat extends Component {
 				"name": user.displayName,
 				"message": this.state.message,
 				"uid": user.uid,
+			})
+		}
+	}
+	handleChatbotResponse(user, userMessage) {
+		let response = getChatbotResponse(userMessage)
+		if (!response.status) {
+			let chatbotRef = firebase.database().ref(`chatbot/${user.photoURL}`)
+			chatbotRef.set({
+				"status": false
+			})
+			this.setState({status: false})
+		}
+		let messageRef = firebase.database().ref(`messages/room:${user.photoURL}`)
+		messageRef.push({
+			"name": "Chatbot",
+			"message": response.message,
+			"uid": "bot",
+		})
+	}
+	fetchStatus() {
+		let user = firebase.auth().currentUser
+		if (user && user.photoURL) {
+			let statusRef = firebase.database().ref(`chatbot/${user.photoURL}`)
+			statusRef.on('value', (snapshot) => {
+				let snap = snapshot.val()
+				if (snap) {
+					this.setState({ status: snap.status })
+				}
 			})
 		}
 	}

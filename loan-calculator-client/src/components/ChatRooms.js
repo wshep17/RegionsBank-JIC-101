@@ -7,7 +7,10 @@ import {
   withRouter 
 } from "react-router-dom";
 
-
+/**
+ * Admin Component:
+ * Shows which chatrooms are available
+ */
 class ChatRooms extends Component {
 
 	static contextType = ContextAPI
