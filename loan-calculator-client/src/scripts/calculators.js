@@ -35,13 +35,14 @@ function calculateAmortizedLoanData(inputs) {
   const loanAmount = ((purchasePrice - cashBack) - downPayment - netTradeInWorth) * (1 + taxRate / 100);
 
   const numYears = Math.ceil(loanTerm / 12); // number of years the loan extends
-  const graphData = []
+  const interestPaidData = [];
+  const principalPaidData = [];
   var prevLoanAmount = 0;
   var prevLoanTerm = 0;
   for (let i = 0; i < numYears; i++) {
     const newLoanAmount = loanAmount - prevLoanAmount; // update new loan amount based on accumulated principal paid
     if (newLoanAmount < 0) {
-      return graphData;
+      return [interestPaidData, principalPaidData];
     }
     const amortizedData = amortize({
       amount: newLoanAmount,
@@ -49,12 +50,13 @@ function calculateAmortizedLoanData(inputs) {
       totalTerm: loanTerm - prevLoanTerm, // update new loan term: 12 months fewer
       amortizeTerm: 12 // our graph shows per-year data; 12 months in a year
     });
-    graphData.push({ 'year': i + 1, 'dollars': amortizedData.interestRound })
+    interestPaidData.push({ 'year': i + 1, 'dollars': amortizedData.interestRound })
+    principalPaidData.push({ 'year': i + 1, 'dollars': amortizedData.principalRound })
     prevLoanAmount += amortizedData.principal;
     prevLoanTerm += 12;
   }
 
-  return graphData;
+  return [interestPaidData, principalPaidData];
 }
 
 export { calculateLoanData, calculateAmortizedLoanData };

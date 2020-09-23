@@ -51,7 +51,9 @@ function MonthlyPaymentCalculator() {
     newLoanData.monthlyPayment = monthlyPayment;
 
     // using amortize package
-    newLoanData.interestPaidData = calculateAmortizedLoanData(newInputs);
+    const [newInterestPaidData, newPrincipalPaidData] = calculateAmortizedLoanData(newInputs);
+    newLoanData.interestPaidData = newInterestPaidData;
+    newLoanData.principalPaidData = newPrincipalPaidData;
     setLoanData(newLoanData);
 
     updateChart();
