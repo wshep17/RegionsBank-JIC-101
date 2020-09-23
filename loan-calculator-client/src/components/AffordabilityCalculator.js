@@ -11,7 +11,6 @@ import BarChart from './BarChart'
 
 function AffordabilityCalculator() {
   // make the panels collapsed
-  const { Panel } = Collapse;
   // create the inputs for our calculator
   const [ inputs, setInputs ] = useState({
     monthlyPayment: 0,
@@ -20,27 +19,23 @@ function AffordabilityCalculator() {
     cashBack: 0,
     valueOfTradeIn: 0,
     amountOwnedOnTradeIn: 0,
-    downPayment:0,
+    downPayment: 0
   });
-
+  
   // create radioData and set it to calue 1
   const [ radioData, setRadioData ] = useState({
     value: 1,
     chart_data: [{}]
   });
   
-  //style the radio buttons
-  const radioStyle = {
-    display: 'block',
-    height: '30px',
-    lineHeight: '30px',
-  };
-
+  
   //create an array for vehicleAffordability inputs
   const [ loanData, setLoanData ] = useState({
+    vehiclePrice: 0, //added this
     vehicleAffordability: [{}],
   });
-
+  const { Panel } = Collapse; // moved this line
+  
   //call it if inputs are changed
   const onInputsChange = (formData) => {
     const newInputs = { ...inputs };
@@ -53,31 +48,40 @@ function AffordabilityCalculator() {
       }
     });
     setInputs(newInputs);
-
-    const newLoanData = { ...loanData };
-
+    
+    const newLoanData = { ...loanData }; //moved this line
+    
     // using affordability calculator
     newLoanData.vehicleAffordability = calculateAffordability(newInputs);
+    const {vehiclePrice} = calculateAffordability(newInputs); // added this
+    newLoanData.vehiclePrice = vehiclePrice; // added this
     setLoanData(newLoanData);
-
+    
     updateChart();
   };
-
+  
   // Update chart depending on the radio buttons
   const updateChart = (event) => {
     const newRadioData = { ...radioData };
-
+    
     if (event != null) {
       newRadioData.value = event.target.value;
     }
-
+    
     if (newRadioData.value === 1) {
       newRadioData.chart_data = loanData.vehicleAffordability;
     }
-
+    
     setRadioData(newRadioData);
   }
 
+  //style the radio buttons
+  const radioStyle = {
+    display: 'block',
+    height: '30px',
+    lineHeight: '30px',
+  };
+  
   return (
     <div>
       <div className='calculator-inputs'>
