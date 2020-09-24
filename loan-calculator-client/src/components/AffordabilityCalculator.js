@@ -97,12 +97,12 @@ function AffordabilityCalculator() {
                 onInputsChange(changedFields);
               }}
             >
-              <Form.Item label="Monthly Payment">
+              <Form.Item label="Monthly Payment ($)">
                 <Form.Item name="monthlyPayment" noStyle>
                   <InputNumber min={0} />
                 </Form.Item>
               </Form.Item>
-              <Form.Item label="Interest Rate">
+              <Form.Item label="Interest Rate (%)">
                 <Form.Item name="interestRate" noStyle>
                   <InputNumber min={0} />
                 </Form.Item>
@@ -116,6 +116,30 @@ function AffordabilityCalculator() {
                 { name: ["salesTaxRate"], value: inputs.salesTaxRate },
                 { name: ["cashBack"], value: inputs.cashBack },
                 { name: ["valueOfTradeIn"], value: inputs.valueOfTradeIn },
+              ]}
+              onFieldsChange={(changedFields, allFields) => {
+                onInputsChange(changedFields);
+              }}
+            >
+              <Form.Item label="Sales tax rate (%)">
+                <Form.Item name="salesTaxRate" noStyle>
+                  <InputNumber min={0} />
+                </Form.Item>
+              </Form.Item>
+              <Form.Item label="Cash rebate/back ($)">
+                <Form.Item name="cashBack" noStyle>
+                  <InputNumber min={0} />
+                </Form.Item>
+              </Form.Item>
+              <Form.Item label="Value of your trade-in ($)">
+                <Form.Item name="valueOfTradeIn" noStyle>
+                  <InputNumber min={0} />
+                </Form.Item>
+              </Form.Item>
+            </Form>
+            <Form
+              name="affordability-inputs"
+              fields={[
                 { name: ["amountOwnedOnTradeIn"], value: inputs.amountOwnedOnTradeIn },
                 { name: ["downPayment"], value: inputs.downPayment }
               ]}
@@ -123,27 +147,12 @@ function AffordabilityCalculator() {
                 onInputsChange(changedFields);
               }}
             >
-              <Form.Item label="Sales tax rate">
-                <Form.Item name="salesTaxRate" noStyle>
-                  <InputNumber min={0} />
-                </Form.Item>
-              </Form.Item>
-              <Form.Item label="Cash rebate or cash back">
-                <Form.Item name="cashBack" noStyle>
-                  <InputNumber min={0} />
-                </Form.Item>
-              </Form.Item>
-              <Form.Item label="Value of your trade-in">
-                <Form.Item name="valueOfTradeIn" noStyle>
-                  <InputNumber min={0} />
-                </Form.Item>
-              </Form.Item>
-              <Form.Item label="Amount owed on trade-in">
+              <Form.Item label="Amount owed on trade-in($)">
                 <Form.Item name="amountOwnedOnTradeIn" noStyle>
                   <InputNumber min={0} />
                 </Form.Item>
               </Form.Item>
-              <Form.Item label="Down payment amount">
+              <Form.Item label="Down payment amount ($)">
                 <Form.Item name="downPayment" noStyle>
                   <InputNumber min={0} />
                 </Form.Item>
