@@ -29,7 +29,7 @@ function MonthlyPaymentCalculator() {
   });
   const [ radioData, setRadioData ] = useState({
     value: 1,
-    chart_data: {title: "Interest Paid", data: [{}]}
+    chart_data: {title: "Loan Payoff Schedule", data: [{}]}
   });
   const { Panel } = Collapse;
 
@@ -68,11 +68,11 @@ function MonthlyPaymentCalculator() {
     }
 
     if (newRadioData.value === 1) {
-      newRadioData.chart_data = { title: "Interest Paid", data: loanData.interestPaidData };
+      newRadioData.chart_data.data = loanData.interestPaidData;
     } else if (newRadioData.value === 2) {
-      newRadioData.chart_data = { title: "Principal Paid", data: loanData.principalPaidData };
+      newRadioData.chart_data.data = loanData.principalPaidData;
     } else {
-      newRadioData.chart_data = { title: "Ending Balance", data: loanData.endingBalanceData };
+      newRadioData.chart_data.data = loanData.endingBalanceData;
     }
 
     setRadioData(newRadioData);
