@@ -10,7 +10,6 @@ import '../css/AffordabilityCalculator.css';
 import BarChart from './BarChart'
 
 function AffordabilityCalculator() {
-  // make the panels collapsed
   // create the inputs for our calculator
   const [ inputs, setInputs ] = useState({
     monthlyPayment: 0,
@@ -25,16 +24,17 @@ function AffordabilityCalculator() {
   // create radioData and set it to calue 1
   const [ radioData, setRadioData ] = useState({
     value: 1,
-    chart_data_afford: { key: 2, title: "Vehicle Affordability", xAxisTitle: "Loan Term (Months)", data: [{}] }
+    chart_data_afford: { key: 2, title: "Vehicle Affordability by Loan Term", xAxisTitle: "Loan Term per Year", data: [{}] }
   });
-
 
   //create an array for vehicleAffordability inputs
   const [ loanData, setLoanData ] = useState({
     vehiclePrice: 0, //added this
     vehicleAffordability: [{}],
   });
-  const { Panel } = Collapse; // moved this line
+
+  // make the panels collapsed
+  const { Panel } = Collapse;
 
   //call it if inputs are changed
   const onInputsChange = (formData) => {

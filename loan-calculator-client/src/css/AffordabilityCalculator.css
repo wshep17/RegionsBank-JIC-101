@@ -7,7 +7,11 @@
     background-color: white;
 }
 
-#monthly-payment-inputs {
+.chart {
+    margin-left: 100px;
+}
+
+#affordability-inputs {
     display: flex;
 }
 
