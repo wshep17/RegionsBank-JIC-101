@@ -3,7 +3,7 @@ import './style.css';
 
 const draw = (props) => {
     const key = props.data.key;
-    d3.selectAll(`.vis-barchart-${key} > *`).remove();
+    d3.selectAll(`.vis-barchart.class-${key} > *`).remove();
 
     const data = props.data.data;
     const title = props.data.title;
@@ -12,7 +12,7 @@ const draw = (props) => {
     const width = props.width - margin.left - margin.right;
     const height = props.height - margin.top - margin.bottom;
 
-    let svg = d3.selectAll(`.vis-barchart-${key}`).append('svg')
+    let svg = d3.selectAll(`.vis-barchart.class-${key}`).append('svg')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
         .append("g")

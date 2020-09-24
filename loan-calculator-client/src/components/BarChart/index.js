@@ -13,7 +13,7 @@ export default class BarChart extends Component {
 
     render() {
         return (
-            <div className={`vis-barchart-${this.props.data.key}`} />
+            <div className={`vis-barchart class-${this.props.data.key}`} />
         )
     }
 }
