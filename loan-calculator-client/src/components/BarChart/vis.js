@@ -2,14 +2,15 @@ import * as d3 from 'd3';
 import './style.css';
 
 const draw = (props) => {
-    d3.select('.vis-barchart > *').remove();
+    d3.selectAll('.vis-barchart > *').remove();
 
-    const data = props.data;
+    const data = props.data.data;
+    const title = props.data.title;
     const margin = { top: 50, right: 20, bottom: 40, left: 55 };
     const width = props.width - margin.left - margin.right;
     const height = props.height - margin.top - margin.bottom;
 
-    let svg = d3.select('.vis-barchart').append('svg')
+    let svg = d3.selectAll('.vis-barchart').append('svg')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
         .append("g")
@@ -60,7 +61,7 @@ const draw = (props) => {
         .attr("x", (width/2))
         .attr("y", 0 - (margin.top/2))
         .style("font-size", "16px")
-        .text("Loan Payoff Schedule");
+        .text(title);
 }
 
 export default draw;

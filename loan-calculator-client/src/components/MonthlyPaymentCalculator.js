@@ -29,7 +29,7 @@ function MonthlyPaymentCalculator() {
   });
   const [ radioData, setRadioData ] = useState({
     value: 1,
-    chart_data: [{}]
+    chart_data: {title: "Loan Payoff Schedule", data: [{}]}
   });
   const { Panel } = Collapse;
 
@@ -51,7 +51,10 @@ function MonthlyPaymentCalculator() {
     newLoanData.monthlyPayment = monthlyPayment;
 
     // using amortize package
-    newLoanData.interestPaidData = calculateAmortizedLoanData(newInputs);
+    const [newInterestPaidData, newPrincipalPaidData, newEndingBalanceData] = calculateAmortizedLoanData(newInputs);
+    newLoanData.interestPaidData = newInterestPaidData;
+    newLoanData.principalPaidData = newPrincipalPaidData;
+    newLoanData.endingBalanceData = newEndingBalanceData;
     setLoanData(newLoanData);
 
     updateChart();
@@ -65,11 +68,11 @@ function MonthlyPaymentCalculator() {
     }
 
     if (newRadioData.value === 1) {
-      newRadioData.chart_data = loanData.interestPaidData;
+      newRadioData.chart_data.data = loanData.interestPaidData;
     } else if (newRadioData.value === 2) {
-      newRadioData.chart_data = loanData.principalPaidData;
+      newRadioData.chart_data.data = loanData.principalPaidData;
     } else {
-      newRadioData.chart_data = loanData.endingBalanceData;
+      newRadioData.chart_data.data = loanData.endingBalanceData;
     }
 
     setRadioData(newRadioData);
