@@ -21,21 +21,21 @@ function AffordabilityCalculator() {
     amountOwnedOnTradeIn: 0,
     downPayment: 0
   });
-  
+
   // create radioData and set it to calue 1
   const [ radioData, setRadioData ] = useState({
     value: 1,
-    chart_data: [{}]
+    chart_data: { title: "Vehicle Affordability", data: [{}] }
   });
-  
-  
+
+
   //create an array for vehicleAffordability inputs
   const [ loanData, setLoanData ] = useState({
     vehiclePrice: 0, //added this
     vehicleAffordability: [{}],
   });
   const { Panel } = Collapse; // moved this line
-  
+
   //call it if inputs are changed
   const onInputsChange = (formData) => {
     const newInputs = { ...inputs };
@@ -48,30 +48,30 @@ function AffordabilityCalculator() {
       }
     });
     setInputs(newInputs);
-    
+
     const newLoanData = { ...loanData }; //moved this line
-    
+
     // using affordability calculator
     newLoanData.vehicleAffordability = calculateAffordability(newInputs);
     const {vehiclePrice} = calculateAffordability(newInputs); // added this
     newLoanData.vehiclePrice = vehiclePrice; // added this
     setLoanData(newLoanData);
-    
+
     updateChart();
   };
-  
+
   // Update chart depending on the radio buttons
   const updateChart = (event) => {
     const newRadioData = { ...radioData };
-    
+
     if (event != null) {
       newRadioData.value = event.target.value;
     }
-    
+
     if (newRadioData.value === 1) {
-      newRadioData.chart_data = loanData.vehicleAffordability;
+      newRadioData.chart_data.data = loanData.vehicleAffordability;
     }
-    
+
     setRadioData(newRadioData);
   }
 
@@ -81,7 +81,7 @@ function AffordabilityCalculator() {
     height: '30px',
     lineHeight: '30px',
   };
-  
+
   return (
     <div>
       <div className='calculator-inputs'>
@@ -156,7 +156,7 @@ function AffordabilityCalculator() {
         <div className='chart'>
           <BarChart data={radioData.chart_data} width={400} height={300} />
         </div>
-        <div className='radio'>
+        <div className='radio' style={{'display': 'none'}}>
           <Radio.Group onChange={updateChart} value={radioData.value}>
             <Radio style={radioStyle} value={1}>
               Vehicle Affordability
