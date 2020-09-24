@@ -37,6 +37,7 @@ function calculateAmortizedLoanData(inputs) {
   const numYears = Math.ceil(loanTerm / 12); // number of years the loan extends
   const interestPaidData = [];
   const principalPaidData = [];
+  const endingBalanceData = [];
   var prevLoanAmount = 0;
   var prevLoanTerm = 0;
   for (let i = 0; i < numYears; i++) {
@@ -52,11 +53,12 @@ function calculateAmortizedLoanData(inputs) {
     });
     interestPaidData.push({ 'year': i + 1, 'dollars': amortizedData.interestRound })
     principalPaidData.push({ 'year': i + 1, 'dollars': amortizedData.principalRound })
+    endingBalanceData.push({ 'year': i + 1, 'dollars': amortizedData.balanceRound })
     prevLoanAmount += amortizedData.principal;
     prevLoanTerm += 12;
   }
 
-  return [interestPaidData, principalPaidData];
+  return [interestPaidData, principalPaidData, endingBalanceData];
 }
 
 export { calculateLoanData, calculateAmortizedLoanData };
