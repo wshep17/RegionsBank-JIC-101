@@ -43,7 +43,7 @@ function calculateAmortizedLoanData(inputs) {
   for (let i = 0; i < numYears; i++) {
     const newLoanAmount = loanAmount - prevLoanAmount; // update new loan amount based on accumulated principal paid
     if (newLoanAmount < 0) {
-      return [interestPaidData, principalPaidData];
+      return [interestPaidData, principalPaidData, endingBalanceData];
     }
     const amortizedData = amortize({
       amount: newLoanAmount,
