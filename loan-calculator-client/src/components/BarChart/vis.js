@@ -8,7 +8,7 @@ const draw = (props) => {
     const data = props.data.data;
     const title = props.data.title;
     const xAxisTitle = props.data.xAxisTitle;
-    const margin = { top: 50, right: 20, bottom: 40, left: 55 };
+    const margin = { top: 50, right: 20, bottom: 40, left: 70 };
     const width = props.width - margin.left - margin.right;
     const height = props.height - margin.top - margin.bottom;
 
@@ -42,7 +42,7 @@ const draw = (props) => {
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x));
     svg.append("text")
-        .attr("text-anchor", "end")
+        .attr("text-anchor", "middle")
         .attr("x", width/2)
         .attr("y", height + margin.bottom - 5)
         .text(xAxisTitle);
@@ -51,10 +51,10 @@ const draw = (props) => {
     svg.append("g")
         .call(d3.axisLeft(y));
     svg.append("text")
-        .attr("text-anchor", "end")
+        .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
-        .attr("x", -margin.top*1.5)
-        .attr("y", -margin.left + 15)
+        .attr("x", -margin.top*2)
+        .attr("y", -margin.left + 20)
         .text("Dollars");
 
     // Title
