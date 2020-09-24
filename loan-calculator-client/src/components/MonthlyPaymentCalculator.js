@@ -29,7 +29,7 @@ function MonthlyPaymentCalculator() {
   });
   const [ radioData, setRadioData ] = useState({
     value: 1,
-    chart_data: {title: "Loan Payoff Schedule", data: [{}]}
+    chart_data: {key: 1, title: "Loan Payoff Schedule", xAxisTitle: "Year", data: [{}]}
   });
   const { Panel } = Collapse;
 

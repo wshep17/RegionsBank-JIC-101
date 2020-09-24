@@ -25,7 +25,7 @@ function AffordabilityCalculator() {
   // create radioData and set it to calue 1
   const [ radioData, setRadioData ] = useState({
     value: 1,
-    chart_data: { title: "Vehicle Affordability", data: [{}] }
+    chart_data_afford: { key: 2, title: "Vehicle Affordability", xAxisTitle: "Loan Term (Months)", data: [{}] }
   });
 
 
@@ -69,7 +69,7 @@ function AffordabilityCalculator() {
     }
 
     if (newRadioData.value === 1) {
-      newRadioData.chart_data.data = loanData.vehicleAffordability;
+      newRadioData.chart_data_afford.data = loanData.vehicleAffordability;
     }
 
     setRadioData(newRadioData);
@@ -154,7 +154,7 @@ function AffordabilityCalculator() {
       </div>
       <div className='chart-container' style={{'display': 'flex'}}>
         <div className='chart'>
-          <BarChart data={radioData.chart_data} width={400} height={300} />
+          <BarChart data={radioData.chart_data_afford} width={400} height={300} />
         </div>
         <div className='radio' style={{'display': 'none'}}>
           <Radio.Group onChange={updateChart} value={radioData.value}>

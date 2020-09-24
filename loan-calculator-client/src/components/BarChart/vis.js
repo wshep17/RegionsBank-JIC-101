@@ -2,15 +2,17 @@ import * as d3 from 'd3';
 import './style.css';
 
 const draw = (props) => {
-    d3.selectAll('.vis-barchart > *').remove();
+    const key = props.data.key;
+    d3.selectAll(`.vis-barchart-${key} > *`).remove();
 
     const data = props.data.data;
     const title = props.data.title;
+    const xAxisTitle = props.data.xAxisTitle;
     const margin = { top: 50, right: 20, bottom: 40, left: 55 };
     const width = props.width - margin.left - margin.right;
     const height = props.height - margin.top - margin.bottom;
 
-    let svg = d3.selectAll('.vis-barchart').append('svg')
+    let svg = d3.selectAll(`.vis-barchart-${key}`).append('svg')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
         .append("g")
@@ -43,7 +45,7 @@ const draw = (props) => {
         .attr("text-anchor", "end")
         .attr("x", width/2)
         .attr("y", height + margin.bottom - 5)
-        .text("Year");
+        .text(xAxisTitle);
 
     // Y axis
     svg.append("g")
