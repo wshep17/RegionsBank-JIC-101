@@ -76,17 +76,17 @@ function calculateAffordability(inputs) {
   const netTradeInWorth = valueOfTradeIn - amountOwnedOnTradeIn;
 
   const graphData = []
-  for (let i = 1; i < 5; i++) {
-    //loan term in months, start with 12 months, ends with 60 months
-    const loanTerm = i * 12;
-    // loan amount payed after the loan term
-    const loanAmount = monthlyPayment * loanTerm * 100 * (1/(1 + interestRate));
-    // vehicle price affordable with the loan Amount available
-    const vehiclePrice = (cashBack + downPayment + netTradeInWorth) * (loanAmount * 100 / (1 + salesTaxRate));
+  for (let i = 1; i <= 5; i++) {
+    // loan term in months, start with 12 months, ends with 60 months
+    const loanTerm = i*12;
+    // loan amount paid after the loan term
+    const loanAmount = monthlyPayment * loanTerm * (100/(100 + interestRate));
+    // vehicle price affordable with the loan amount available
+    const vehiclePrice = (cashBack + downPayment + netTradeInWorth) + (loanAmount * (100/(100 + salesTaxRate)));
     if (vehiclePrice < 0) {
       return graphData;
     }
-    graphData.push({ 'year': i, 'dollars': vehiclePrice })
+    graphData.push({ 'year': loanTerm, 'dollars': vehiclePrice })
   }
   return graphData;
 }
