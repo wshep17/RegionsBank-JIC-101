@@ -37,12 +37,13 @@ function calculateAmortizedLoanData(inputs) {
   const numYears = Math.ceil(loanTerm / 12); // number of years the loan extends
   const interestPaidData = [];
   const principalPaidData = [];
+  const endingBalanceData = [];
   var prevLoanAmount = 0;
   var prevLoanTerm = 0;
   for (let i = 0; i < numYears; i++) {
     const newLoanAmount = loanAmount - prevLoanAmount; // update new loan amount based on accumulated principal paid
     if (newLoanAmount < 0) {
-      return [interestPaidData, principalPaidData];
+      return [interestPaidData, principalPaidData, endingBalanceData];
     }
     const amortizedData = amortize({
       amount: newLoanAmount,
@@ -52,11 +53,42 @@ function calculateAmortizedLoanData(inputs) {
     });
     interestPaidData.push({ 'year': i + 1, 'dollars': amortizedData.interestRound })
     principalPaidData.push({ 'year': i + 1, 'dollars': amortizedData.principalRound })
+    endingBalanceData.push({ 'year': i + 1, 'dollars': amortizedData.balanceRound })
     prevLoanAmount += amortizedData.principal;
     prevLoanTerm += 12;
   }
 
-  return [interestPaidData, principalPaidData];
+  return [interestPaidData, principalPaidData, endingBalanceData];
 }
 
-export { calculateLoanData, calculateAmortizedLoanData };
+
+function calculateAffordability(inputs) {
+  const {
+    monthlyPayment,
+    interestRate,
+    salesTaxRate,
+    cashBack,
+    valueOfTradeIn,
+    amountOwnedOnTradeIn,
+    downPayment,
+  } = inputs;
+
+  const netTradeInWorth = valueOfTradeIn - amountOwnedOnTradeIn;
+
+  const graphData = []
+  for (let i = 1; i <= 5; i++) {
+    // loan term in months, start with 12 months, ends with 60 months
+    const loanTerm = i*12;
+    // loan amount paid after the loan term
+    const loanAmount = monthlyPayment * loanTerm * (100/(100 + interestRate));
+    // vehicle price affordable with the loan amount available
+    const vehiclePrice = (cashBack + downPayment + netTradeInWorth) + (loanAmount * (100/(100 + salesTaxRate)));
+    if (vehiclePrice < 0) {
+      return graphData;
+    }
+    graphData.push({ 'year': loanTerm, 'dollars': vehiclePrice })
+  }
+  return graphData;
+}
+
+export { calculateLoanData, calculateAmortizedLoanData, calculateAffordability};
