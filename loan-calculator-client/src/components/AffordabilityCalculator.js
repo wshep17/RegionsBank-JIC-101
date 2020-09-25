@@ -7,7 +7,7 @@ import {
 } from 'antd';
 import { calculateAffordability } from '../scripts/calculators';
 import '../css/AffordabilityCalculator.css';
-import BarChart from './BarChart'
+import BarChart from './BarChart';
 
 function AffordabilityCalculator() {
   // create the inputs for our calculator
@@ -24,7 +24,7 @@ function AffordabilityCalculator() {
   // create radioData and set it to calue 1
   const [ radioData, setRadioData ] = useState({
     value: 1,
-    chart_data_afford: { key: 2, title: "Vehicle Affordability by Loan Term", xAxisTitle: "Loan Term per Year", data: [{}] }
+    chart_data_afford: { key: 2, title: "Vehicle Affordability by Loan Term", xAxisTitle: "Loan Term per Month", data: [{}] }
   });
 
   //create an array for vehicleAffordability inputs
@@ -97,14 +97,21 @@ function AffordabilityCalculator() {
                 onInputsChange(changedFields);
               }}
             >
-              <Form.Item label="Monthly Payment ($)">
+              <Form.Item label="Monthly Payment">
                 <Form.Item name="monthlyPayment" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber 
+                    min={0} 
+                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                  />
                 </Form.Item>
               </Form.Item>
-              <Form.Item label="Interest Rate (%)">
+              <Form.Item label="Interest Rate">
                 <Form.Item name="interestRate" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber 
+                    min={0} 
+                    formatter={value => `${value}%`}
+                    parser={value => value.replace('%', '')}/>
                 </Form.Item>
               </Form.Item>
             </Form>
@@ -121,19 +128,28 @@ function AffordabilityCalculator() {
                 onInputsChange(changedFields);
               }}
             >
-              <Form.Item label="Sales tax rate (%)">
+              <Form.Item label="Sales tax rate">
                 <Form.Item name="salesTaxRate" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber 
+                    min={0} 
+                    formatter={value => `${value}%`}
+                    parser={value => value.replace('%', '')}/>
                 </Form.Item>
               </Form.Item>
-              <Form.Item label="Cash rebate/back ($)">
+              <Form.Item label="Cash rebate/back">
                 <Form.Item name="cashBack" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber 
+                    min={0}
+                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={value => value.replace(/\$\s?|(,*)/g, '')} />
                 </Form.Item>
               </Form.Item>
-              <Form.Item label="Value of your trade-in ($)">
+              <Form.Item label="Value of your trade-in">
                 <Form.Item name="valueOfTradeIn" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber 
+                    min={0} 
+                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={value => value.replace(/\$\s?|(,*)/g, '')}/>
                 </Form.Item>
               </Form.Item>
             </Form>
@@ -147,14 +163,20 @@ function AffordabilityCalculator() {
                 onInputsChange(changedFields);
               }}
             >
-              <Form.Item label="Amount owed on trade-in($)">
+              <Form.Item label="Amount owed on trade-in">
                 <Form.Item name="amountOwnedOnTradeIn" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber 
+                    min={0} 
+                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={value => value.replace(/\$\s?|(,*)/g, '')}/>
                 </Form.Item>
               </Form.Item>
-              <Form.Item label="Down payment amount ($)">
+              <Form.Item label="Down payment amount">
                 <Form.Item name="downPayment" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber
+                    min={0} 
+                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={value => value.replace(/\$\s?|(,*)/g, '')}/>
                 </Form.Item>
               </Form.Item>
             </Form>
