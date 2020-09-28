@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ChatRooms from './ChatRooms.js'
-import { Card, Col, Row, Button } from 'antd';
+import { Card, Col, Row } from 'antd';
 import { ContextAPI } from './Context.js'
 
 import {
@@ -42,7 +42,7 @@ class Home extends Component {
 		return (
 			<div>
 				<Row gutter={20}>
-					<div style={{margin:'auto', width: '50%'}}>
+					<div style={{margin:'auto', width: '50%', paddingTop: '60px'}}>
 						<Col span={10} style={{margin:'auto', padding: '10px'}}>
 							<Card style={{textAlign: 'center', backgroundColor: '#CCFFCC' }}
 								  hoverable={true}

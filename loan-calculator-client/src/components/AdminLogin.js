@@ -27,7 +27,7 @@ class AdminLogin extends React.Component {
 	render() {
 		return (
 			<div>
-				<Row gutter={10} style={{paddingTop: '10px'}}>
+				<Row gutter={10} style={{paddingTop: '70px'}}>
 					<Col span={10} style={{margin: 'auto'}}>
 						<Card title="Admin Login Form" bordered={true}>
 						Email: <Input placeholder="Email" name='email' value={this.state.email} onChange={this.handleChange}/>
