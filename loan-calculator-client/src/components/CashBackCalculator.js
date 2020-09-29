@@ -22,9 +22,73 @@ function CashBackCalculator() {
     interestRate: 0,
     downPayment: 0
   });
+
+  const [ loanData, setLoanData ] = useState({
+    loanAmount: 0,
+    monthlyPayment: 0,
+    totalData: [{}],
+    totalPrincipalPaidData: [{}],
+    totalInterestPaidData: [{}]
+  });
+
+  const [ radioData, setRadioData ] = useState({
+    value: 1,
+    chart_data: {key: 1, title: "Total Cost of Loan", xAxisTitle: "Year", data: [{}]}
+  });
   
-    // make the panels collapsed
-    const { Panel } = Collapse;
+  // make the panels collapsed
+  const { Panel } = Collapse;
+
+  const onInputsChange = (formData) => {
+    const newInputs = { ...inputs };
+    formData.forEach(field => {
+      newInputs[field.name[0]] = field.value !== "" ? field.value : 0;
+    });
+    Object.keys(newInputs).forEach(key => {
+      if (newInputs[key] == null) {
+        newInputs[key] = 0;
+      }
+    });
+    setInputs(newInputs);
+
+    const newLoanData = { ...loanData };
+    const {loanAmount, monthlyPayment} = calculateCashBack(newInputs);
+    newLoanData.loanAmount = loanAmount;
+    newLoanData.monthlyPayment = monthlyPayment;
+
+    // using amortize package
+    const [totalData, totalPrincipalPaidData, totalInterestPaidData] = calculateCashBack(newInputs);
+    newLoanData.totalData = totalData;
+    newLoanData.totalPrincipalPaidData = totalPrincipalPaidData;
+    newLoanData.totalInterestPaidData = totalInterestPaidData;
+    setLoanData(newLoanData);
+
+    updateChart();
+  };
+
+  const updateChart = (event) => {
+    const newRadioData = { ...radioData };
+
+    if (event != null) {
+      newRadioData.value = event.target.value;
+    }
+
+    if (newRadioData.value === 1) {
+      newRadioData.chart_data.data = loanData.totalData;
+    } else if (newRadioData.value === 2) {
+      newRadioData.chart_data.data = loanData.totalPrincipalPaidData;
+    } else {
+      newRadioData.chart_data.data = loanData.totalInterestPaidData;
+    }
+
+    setRadioData(newRadioData);
+  }
+
+  const radioStyle = {
+    display: 'block',
+    height: '30px',
+    lineHeight: '30px',
+  };
 
   return (
     <div>
@@ -40,7 +104,7 @@ function CashBackCalculator() {
                 { name: ["taxRate"], value: inputs.taxRate }
               ]}
               onFieldsChange={(changedFields, allFields) => {
-                //onInputsChange(changedFields);
+                onInputsChange(changedFields);
               }}
             >
               <Form.Item label="Vehicle Purchase Price">
@@ -73,7 +137,7 @@ function CashBackCalculator() {
                 { name: ["tradeInOwed"], value: inputs.tradeInOwed }
               ]}
               onFieldsChange={(changedFields, allFields) => {
-                //onInputsChange(changedFields);
+                onInputsChange(changedFields);
               }}
             >
               <Form.Item label="Value of Trade-in">
@@ -97,7 +161,7 @@ function CashBackCalculator() {
                 { name: ["downPayment"], value: inputs.downPayment }
               ]}
               onFieldsChange={(changedFields, allFields) => {
-                //onInputsChange(changedFields);
+                onInputsChange(changedFields);
               }}
             >
               <Form.Item label="Loan Term (months)">
@@ -118,6 +182,24 @@ function CashBackCalculator() {
             </Form>
           </Panel>
         </Collapse>
+      </div>
+      <div className='chart-container' style={{'display': 'flex'}}>
+        <div className='chart'>
+          <BarChart data={radioData.chart_data} width={400} height={300} />
+        </div>
+        <div className='radio'>
+          <Radio.Group onChange={updateChart} value={radioData.value}>
+            <Radio style={radioStyle} value={1}>
+              Total
+            </Radio>
+            <Radio style={radioStyle} value={2}>
+              Total Principal Paid
+            </Radio>
+            <Radio style={radioStyle} value={3}>
+              Total Interest Paid
+            </Radio>
+          </Radio.Group>
+        </div>
       </div>
     </div>
   );
