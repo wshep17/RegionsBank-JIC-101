@@ -14,7 +14,7 @@ function CashBackCalculator() {
   const [ inputs, setInputs ] = useState({
     purchasePrice: 0,
     cashBack: 0,
-    lowinterestrate: 0,
+    lowInterestRate: 0,
     taxRate: 0,
     tradeInValue: 0,
     tradeInOwed: 0,
@@ -33,10 +33,9 @@ function CashBackCalculator() {
 
   const [ radioData, setRadioData ] = useState({
     value: 1,
-    chart_data: {key: 1, title: "Total Cost of Loan", xAxisTitle: "Year", data: [{}]}
+    chart_data: {key: 1, title: "Total Cost of Loan", xAxisTitle: "", data: [{}]}
   });
   
-  // make the panels collapsed
   const { Panel } = Collapse;
 
   const onInputsChange = (formData) => {
@@ -100,7 +99,7 @@ function CashBackCalculator() {
               fields={[
                 { name: ["purchasePrice"], value: inputs.purchasePrice },
                 { name: ["cashBack"], value: inputs.cashBack },
-                { name: ["lowinterestrate"], value: inputs.lowinterestrate },
+                { name: ["lowInterestRate"], value: inputs.lowInterestRate },
                 { name: ["taxRate"], value: inputs.taxRate }
               ]}
               onFieldsChange={(changedFields, allFields) => {
@@ -118,7 +117,7 @@ function CashBackCalculator() {
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Low Interest Rate">
-                <Form.Item name="lowinterestrate" noStyle>
+                <Form.Item name="lowInterestRate" noStyle>
                   <InputNumber min={0} />
                 </Form.Item>
               </Form.Item>
