@@ -91,4 +91,39 @@ function calculateAffordability(inputs) {
   return graphData;
 }
 
-export { calculateLoanData, calculateAmortizedLoanData, calculateAffordability};
+function calculateCashBack(inputs) {
+  const {
+    purchasePrice,
+    cashBack,
+    lowinterestrate,
+    taxRate,
+    tradeInValue,
+    tradeInOwed,
+    loanTerm,
+    interestRate,
+    downPayment,
+  } = inputs;
+
+  const netTradeInWorth = tradeInValue - tradeInOwed;
+  //const loanAmount = ((purchasePrice - cashBack) - downPayment - netTradeInWorth) * (1 + taxRate / 100);
+  const totalPrincipal; //loan amount
+  const totalInterest; //paid interest
+  const total = totalInterest + totalPrincipal; //loan amount with interest
+  const graphData = []
+  //low rate option calculation
+  if (purchasePrice < 0) {
+    return graphData;
+  }
+  graphData.push({ 'year': 'Low Rate Option', 'dollars': total })
+
+  //cashback option calculation
+  if (purchasePrice < 0) {
+    return graphData;
+  }
+  graphData.push({ 'year': 'Cash Back Option', 'dollars': total })
+
+  //return graphData
+  return graphData;
+}
+
+export { calculateLoanData, calculateAmortizedLoanData, calculateAffordability, calculateCashBack};

@@ -6,7 +6,7 @@ import {
   Radio
 } from 'antd';
 import { calculateCashBack } from '../scripts/calculators';
-import '../css/AffordabilityCalculator.css';
+import '../css/CashBackCalculator.css';
 import BarChart from './BarChart';
 
 function CashBackCalculator() {
