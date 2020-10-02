@@ -108,22 +108,30 @@ function CashBackCalculator() {
             >
               <Form.Item label="Vehicle Purchase Price">
                 <Form.Item name="purchasePrice" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber min={0} 
+                  formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={value => value.replace(/\$\s?|(,*)/g, '')}/>
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Cash Back">
                 <Form.Item name="cashBack" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber min={0} 
+                  formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={value => value.replace(/\$\s?|(,*)/g, '')}/>
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Low Interest Rate">
                 <Form.Item name="lowInterestRate" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber min={0} 
+                  formatter={value => `${value}%`}
+                  parser={value => value.replace('%', '')}/>
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Sales Tax Rate">
                 <Form.Item name="taxRate" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber min={0} 
+                  formatter={value => `${value}%`}
+                  parser={value => value.replace('%', '')}/>
                 </Form.Item>
               </Form.Item>
             </Form>
@@ -141,12 +149,16 @@ function CashBackCalculator() {
             >
               <Form.Item label="Value of Trade-in">
                 <Form.Item name="tradeInValue" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber min={0} 
+                  formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={value => value.replace(/\$\s?|(,*)/g, '')}/>
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Amount Owed on Trade-in">
                 <Form.Item name="tradeInOwed" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber min={0} 
+                  formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={value => value.replace(/\$\s?|(,*)/g, '')}/>
                 </Form.Item>
               </Form.Item>
             </Form>
@@ -165,17 +177,23 @@ function CashBackCalculator() {
             >
               <Form.Item label="Loan Term (months)">
                 <Form.Item name="loanTerm" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber min={0} 
+                  formatter={value => `${value} months`}
+                  parser={value => value.replace(' months', '')}/>
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Interest Rate">
                 <Form.Item name="interestRate" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber min={0} 
+                  formatter={value => `${value}%`}
+                  parser={value => value.replace('%', '')}/>
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Down Payment">
                 <Form.Item name="downPayment" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber min={0} 
+                  formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={value => value.replace(/\$\s?|(,*)/g, '')}/>
                 </Form.Item>
               </Form.Item>
             </Form>
