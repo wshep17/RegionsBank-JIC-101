@@ -4,6 +4,7 @@ import MonthlyPaymentCalculator from './MonthlyPaymentCalculator.js';
 import CashBackCalculator from './CashBackCalculator.js';
 import { Tabs } from 'antd';
 import "antd/dist/antd.css";
+import "../css/App.css";
 
 
 export default function Calculator() {

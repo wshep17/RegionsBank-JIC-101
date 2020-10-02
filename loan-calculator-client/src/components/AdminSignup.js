@@ -16,7 +16,7 @@ class AdminSignup extends React.Component {
 	render() {
 		return (
 			<div>
-				<Row gutter={10} style={{paddingTop: '10px'}}>
+				<Row gutter={10} style={{paddingTop: '70px'}}>
 					<Col span={10} style={{margin: 'auto'}}>
 						<Card title="Create An Account!" bordered={true}>
 						Email: <Input placeholder="john@regions.com" name='email' value={this.state.email} onChange={this.handleChange}/>

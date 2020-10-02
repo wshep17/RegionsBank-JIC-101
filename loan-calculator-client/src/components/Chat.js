@@ -1,5 +1,5 @@
 import React from 'react'
 
 export default function Chat() {
-	return (<div>This is the chat page!</div>)
+	return (<div style={{marginTop:'72px'}}>This is the chat page!</div>)
 }

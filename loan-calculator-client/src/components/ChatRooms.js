@@ -27,7 +27,7 @@ class ChatRooms extends React.Component {
 		}
 
 		return(
-			<div>
+			<div style={{marginTop: '72px'}}>
 				The following users have questions. Join their room to address their questions!
 				<br />
 				<ul>{roomsList}</ul>

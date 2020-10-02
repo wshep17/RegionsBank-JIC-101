@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import ChatRooms from './ChatRooms.js'
 import { ContextAPI } from './Context.js'
 import '../css/NavigationBar.css';
-import { Button } from "antd";
+import { Button, Tooltip } from "antd";
+import { HomeOutlined, LoginOutlined, LogoutOutlined } from "@ant-design/icons";
 import firebase from '../scripts/firebase.js'
 
 import {
@@ -28,21 +29,30 @@ class NavigationBar extends Component {
 		const conditionalRender = () => {
 			if (this.context.isAdmin) {
 				return(
-					<li style={{'float': 'right'}} onClick={this.handleLogout.bind(this)}><a><Button type="danger">Logout</Button></a></li>		
+                    <Tooltip title='Logout'>
+                        <Button onClick={this.handleLogout.bind(this)} shape='circle' icon={<LogoutOutlined />} />
+                    </Tooltip>
 				)
 			} else {
 				return(
-					<li style={{'float': 'right'}}
-					    onClick={()=>this.props.history.push('/login')}><a><Button>Login</Button></a></li>		
+                    <Tooltip title='Login'>
+                        <Button onClick={()=>this.props.history.push('/login')} shape='circle' icon={<LoginOutlined />} />	
+                    </Tooltip>
 				)
 			}
 		}
 		return (
-			<ul>
-			  <li><a style={{fontSize: '20px'}}>[Regions Logo here] Regions Loan Calculator</a></li>
-			  <li><a style={{fontSize: '20px'}} onClick={()=>this.props.history.push('/home')}>Home</a></li>
-			  {conditionalRender()}
-			</ul>
+			<div id='header'>
+				<div id='app-title'>
+                    <h1>Regions Loan Calculator</h1>
+                </div>
+                <div id='header-buttons'>
+                    <Tooltip title="Home">
+                        <Button onClick={()=>this.props.history.push('/home')} shape='circle' icon={<HomeOutlined />} />
+                    </Tooltip>
+                    {conditionalRender()}
+                </div>
+			</div>
 		)
 	}
 
