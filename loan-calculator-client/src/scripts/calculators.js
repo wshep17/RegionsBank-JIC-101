@@ -118,43 +118,30 @@ function calculateCashBack(inputs) {
     return [totalInterestPaidData, totalPrincipalPaidData, totalData];
   }
   //Cash Back Calculations
-  const totalCashBack = ((purchasePrice - cashBack) - downPayment - netTradeInWorth) * (1 + taxRate / 100) * (1 + interestRate / 100);
-  const totalPrincipalCashBack = (purchasePrice - cashBack); //loan amount
-  //var totalInterestCashBack = 0; //paid interest
-  var totalInterestCashBack = totalCashBack - totalPrincipalCashBack;
-  //cashback chart display
-  // for (let i = 0; i < numYears; i++) {
-  //   const newLoanAmount = totalCashBack - prevLoanAmount; // update new loan amount based on accumulated principal paid
-    
-  //   const monthlyCashBack = amortize({
-  //     amount: newLoanAmount,
-  //     rate: interestRate,
-  //     totalTerm: loanTerm - prevLoanTerm, // update new loan term: 12 months fewer
-  //     amortizeTerm: 12 // our graph shows per-year data; 12 months in a year
-  //   });
-  //   prevLoanAmount += monthlyCashBack.principal;
-  //   prevLoanTerm += 12;
-  //   totalInterestCashBack += monthlyCashBack.interestRound;
-  // }
-  
-  totalData.push({ 'year': 'Cash Back Option', 'dollars': totalCashBack });
-  totalPrincipalPaidData.push({ 'year': 'Cash Back Option', 'dollars': totalPrincipalCashBack });
-  totalInterestPaidData.push({ 'year': 'Cash Back Option', 'dollars': totalInterestCashBack });
+  const totalCashBack = ((purchasePrice - cashBack) - downPayment - netTradeInWorth) * (1 + taxRate / 100);
+  const monthlyCashBack = amortize({
+    amount: totalCashBack,
+    rate: interestRate,
+    totalTerm: loanTerm, // update new loan term: 12 months fewer
+    amortizeTerm: loanTerm // our graph shows per-year data; 12 months in a year
+  });
+
+  totalData.push({ 'year': 'Cash Back Option', 'dollars': monthlyCashBack.principal + monthlyCashBack.interest });
+  totalPrincipalPaidData.push({ 'year': 'Cash Back Option', 'dollars': monthlyCashBack.principal });
+  totalInterestPaidData.push({ 'year': 'Cash Back Option', 'dollars': monthlyCashBack.interest });
 
   //Low Rate Calculations
-  const totalLowRate = ((purchasePrice) - downPayment - netTradeInWorth) * (1 + taxRate / 100) * (1 + lowInterestRate / 100);
-  const totalPrincipalLowRate = purchasePrice; //loan amount
-  const totalInterestLowRate = totalLowRate - totalPrincipalLowRate; //paid interest
+  const totalLowRate = ((purchasePrice) - downPayment - netTradeInWorth) * (1 + taxRate / 100);
   //low rate chart display
   const monthlyLowRate = amortize({
     amount: totalLowRate,
     rate: lowInterestRate,
     totalTerm: loanTerm,
-    amortizeTerm: 12
+    amortizeTerm: loanTerm
   });
-  totalData.push({ 'year': 'Low Rate Option', 'dollars': totalLowRate });
-  totalPrincipalPaidData.push({ 'year': 'Low Rate Option', 'dollars': totalPrincipalLowRate });
-  totalInterestPaidData.push({ 'year': 'Low Rate Option', 'dollars': totalInterestLowRate });
+  totalData.push({ 'year': 'Low Rate Option', 'dollars': monthlyLowRate.principal + monthlyLowRate.interest });
+  totalPrincipalPaidData.push({ 'year': 'Low Rate Option', 'dollars': monthlyLowRate.principal });
+  totalInterestPaidData.push({ 'year': 'Low Rate Option', 'dollars': monthlyLowRate.interest });
 
   //return graph
   return [totalData, totalPrincipalPaidData, totalInterestPaidData];
