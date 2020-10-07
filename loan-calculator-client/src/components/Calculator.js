@@ -12,7 +12,7 @@ export default function Calculator() {
 	return (
 		<div>
 			<div className='tabs-container'>
-			  <Tabs defaultActiveKey="1" type="card">
+			  <Tabs className='calculator-tabs' defaultActiveKey="1" type="card">
 			    <TabPane tab="Monthly Payment" key="1">
 			      <MonthlyPaymentCalculator />
 			    </TabPane>
