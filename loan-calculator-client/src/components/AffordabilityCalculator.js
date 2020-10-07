@@ -1,4 +1,4 @@
-import React, { useEffect, useState }  from 'react';
+import React, { useState }  from 'react';
 import {
   Collapse,
   Form,
@@ -188,7 +188,7 @@ function AffordabilityCalculator() {
           </div>
         </div>
         <div className='main-outputs-container'>
-          <h2 style={{ 'padding-bottom': '20px' }}>Vehicle Affordability by Loan Term: </h2>
+          <h2 style={{ 'padding-bottom': '15px' }}>Vehicle Affordability by Loan Term</h2>
           <table>
             <tr>
               <td>12 Months</td>
@@ -198,11 +198,11 @@ function AffordabilityCalculator() {
               <td>60 Months</td>
             </tr>
             <tr>
-              <th>$100</th>
-              <th>$100</th>
-              <th>$100</th>
-              <th>$100</th>
-              <th>$100</th>
+              <th>{'$' + (loanData.vehicleAffordability.length > 1 ? loanData.vehicleAffordability[0].dollars.toFixed(0) : '5148')}</th>
+              <th>{'$' + (loanData.vehicleAffordability.length > 1 ? loanData.vehicleAffordability[1].dollars.toFixed(0) : '7796')}</th>
+              <th>{'$' + (loanData.vehicleAffordability.length > 1 ? loanData.vehicleAffordability[2].dollars.toFixed(0) : '10444')}</th>
+              <th>{'$' + (loanData.vehicleAffordability.length > 1 ? loanData.vehicleAffordability[3].dollars.toFixed(0) : '13092')}</th>
+              <th>{'$' + (loanData.vehicleAffordability.length > 1 ? loanData.vehicleAffordability[4].dollars.toFixed(0) : '15740')}</th>
             </tr>
           </table>
         </div>

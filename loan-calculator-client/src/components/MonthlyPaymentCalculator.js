@@ -21,15 +21,15 @@ function MonthlyPaymentCalculator() {
     downPayment: 500
   });
   const [ loanData, setLoanData ] = useState({
-    loanAmount: 24300,
-    monthlyPayment: 708.07,
+    loanAmount: calculateLoanData(inputs).loanAmount,
+    monthlyPayment: calculateLoanData(inputs).monthlyPayment,
     interestPaidData: [{}],
     principalPaidData: [{}],
     endingBalanceData: [{}]
   });
   const [ radioData, setRadioData ] = useState({
     value: 1,
-    chart_data: {key: 1, title: "Loan Payoff Schedule", xAxisTitle: "Year", data: [{}]}
+    chart_data: {key: 1, title: "Loan Payoff Schedule", xAxisTitle: "Year", data: loanData.interestPaidData}
   });
   const { Panel } = Collapse;
 
@@ -219,9 +219,9 @@ function MonthlyPaymentCalculator() {
           </div>
         </div>
         <div className='main-outputs-container'>
-          <h2>Monthly Payment: </h2>
+          <h2>Monthly Payment</h2>
           <h2 style={{ fontWeight: 'bold' }}>{"$" + (loanData && loanData.monthlyPayment ? loanData.monthlyPayment.toFixed(2) : "0")}</h2>
-          <h2>Loan Amount: </h2>
+          <h2>Loan Amount</h2>
           <h2 style={{ fontWeight: 'bold' }}>{"$" + (loanData && loanData.loanAmount ? loanData.loanAmount.toFixed(0) : "0")}</h2>
         </div>
       </div>
