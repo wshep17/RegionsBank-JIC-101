@@ -91,4 +91,60 @@ function calculateAffordability(inputs) {
   return graphData;
 }
 
-export { calculateLoanData, calculateAmortizedLoanData, calculateAffordability};
+function calculateCashBack(inputs) {
+  const {
+    purchasePrice,
+    cashBack,
+    lowInterestRate,
+    taxRate,
+    tradeInValue,
+    tradeInOwed,
+    loanTerm,
+    interestRate,
+    downPayment,
+  } = inputs;
+
+  const netTradeInWorth = tradeInValue - tradeInOwed;
+  const graphData = []
+  const totalInterestPaidData = []
+  const totalPrincipalPaidData = []
+  const totalData = []
+  const numYears = Math.ceil(loanTerm / 12);
+  //const newLoanAmount = 0;
+  var prevLoanAmount = 0;
+  var prevLoanTerm = 0;
+
+  if (purchasePrice < 0) {
+    return [totalInterestPaidData, totalPrincipalPaidData, totalData];
+  }
+  //Cash Back Calculations
+  const totalCashBack = ((purchasePrice - cashBack) - downPayment - netTradeInWorth) * (1 + taxRate / 100);
+  const monthlyCashBack = amortize({
+    amount: totalCashBack,
+    rate: interestRate,
+    totalTerm: loanTerm, // update new loan term: 12 months fewer
+    amortizeTerm: loanTerm // our graph shows per-year data; 12 months in a year
+  });
+
+  totalData.push({ 'year': 'Cash Back Option', 'dollars': monthlyCashBack.principal + monthlyCashBack.interest });
+  totalPrincipalPaidData.push({ 'year': 'Cash Back Option', 'dollars': monthlyCashBack.principal });
+  totalInterestPaidData.push({ 'year': 'Cash Back Option', 'dollars': monthlyCashBack.interest });
+
+  //Low Rate Calculations
+  const totalLowRate = ((purchasePrice) - downPayment - netTradeInWorth) * (1 + taxRate / 100);
+  //low rate chart display
+  const monthlyLowRate = amortize({
+    amount: totalLowRate,
+    rate: lowInterestRate,
+    totalTerm: loanTerm,
+    amortizeTerm: loanTerm
+  });
+  totalData.push({ 'year': 'Low Rate Option', 'dollars': monthlyLowRate.principal + monthlyLowRate.interest });
+  totalPrincipalPaidData.push({ 'year': 'Low Rate Option', 'dollars': monthlyLowRate.principal });
+  totalInterestPaidData.push({ 'year': 'Low Rate Option', 'dollars': monthlyLowRate.interest });
+
+  //return graph
+  return [totalData, totalPrincipalPaidData, totalInterestPaidData];
+}
+
+export { calculateLoanData, calculateAmortizedLoanData, calculateAffordability, calculateCashBack};
