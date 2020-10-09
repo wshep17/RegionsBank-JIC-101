@@ -70,7 +70,7 @@ class AnonUserIdentification extends Component {
   createRoom(room, displayName) {    
     let roomsRef = firebase.database().ref(`private-rooms/${room}`)
     roomsRef.set({
-      "title": `${displayName}'s private room`,
+      "name": displayName,
       "room": room
     })
     //check if current room already exists. if not, set chatbot status to true
