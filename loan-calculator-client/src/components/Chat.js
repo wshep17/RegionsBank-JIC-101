@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
-import firebase from '../scripts/firebase.js'
-import { ContextAPI } from './Context.js'
-import { getChatbotResponse } from '../scripts/chatbot'
+import React, { Component } from 'react';
+import firebase from '../scripts/firebase.js';
+import { ContextAPI } from './Context.js';
+import { getChatbotResponse } from '../scripts/chatbot';
+import { Input } from 'antd';
 
 /**
  * General Component:
@@ -20,6 +21,7 @@ class Chat extends Component {
       //set default status as false so chatbot doesn't auto respond
       status: false
     }
+    this.handleChange = this.handleChange.bind(this);
   }
   componentDidMount() {
     //fetch the messages from the database	
@@ -29,7 +31,7 @@ class Chat extends Component {
   }
   render() {
     return (
-      <div>
+      <div className='chat-container'>
 
         <ul style={{ backgroundColor: "white" }}>
           {this.state.chat.map((each) => {
@@ -37,9 +39,12 @@ class Chat extends Component {
           })}
 
         </ul>
-
-        <input placeholder="message" name="message" value={this.state.message} onChange={this.handleChange.bind(this)}></input>
-        <button onClick={this.handleSend.bind(this)}>Send</button>
+        <Input
+          onPressEnter={this.handleSend.bind(this)}
+          onChange={(event) => this.handleChange(event)}
+          placeholder="Message"
+          value={this.state.message}
+        />
 
       </div>
 
@@ -71,7 +76,7 @@ class Chat extends Component {
     }
   }
   handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value })
+    this.setState({ message: event.target.value })
   }
   handleSend() {
     let user = firebase.auth().currentUser
