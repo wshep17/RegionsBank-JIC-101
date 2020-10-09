@@ -1,14 +1,10 @@
-.calculator-inputs {
-    width: 60%;
-}
-
 .ant-collapse-item {
     border-bottom: none !important;
     background-color: white;
 }
 
 .chart {
-    margin-left: 100px;
+    margin-left: 5%;
 }
 
 #affordability-inputs {
@@ -17,4 +13,16 @@
 
 .ant-form-item-control-input-content {
     padding-right: 20px;
+}
+
+table {
+    width: 90%;
+    margin: auto;
+    text-align: center;
+    font-size: 16px;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 8px;
 }

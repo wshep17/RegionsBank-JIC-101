@@ -29,9 +29,14 @@ class NavigationBar extends Component {
 		const conditionalRender = () => {
 			if (this.context.isAdmin) {
 				return(
-                    <Tooltip title='Logout'>
-                        <Button onClick={this.handleLogout.bind(this)} shape='circle' icon={<LogoutOutlined />} />
-                    </Tooltip>
+					<div>
+						<Tooltip title="Home">
+							<Button onClick={()=>this.props.history.push('/home')} shape='circle' icon={<HomeOutlined />} />
+						</Tooltip>
+						<Tooltip title='Logout'>
+							<Button onClick={this.handleLogout.bind(this)} shape='circle' icon={<LogoutOutlined />} />
+						</Tooltip>
+					</div>
 				)
 			} else {
 				return(
@@ -44,12 +49,9 @@ class NavigationBar extends Component {
 		return (
 			<div id='header'>
 				<div id='app-title'>
-                    <h1>Regions Loan Calculator</h1>
+                    <h1>Loan Calculator</h1>
                 </div>
                 <div id='header-buttons'>
-                    <Tooltip title="Home">
-                        <Button onClick={()=>this.props.history.push('/home')} shape='circle' icon={<HomeOutlined />} />
-                    </Tooltip>
                     {conditionalRender()}
                 </div>
 			</div>

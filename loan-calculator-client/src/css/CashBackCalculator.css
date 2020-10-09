@@ -1,14 +1,6 @@
-.calculator-inputs {
-    width: 60%;
-}
-
 .ant-collapse-item {
     border-bottom: none !important;
     background-color: white;
-}
-
-.chart {
-    margin-left: 100px;
 }
 
 #cashback-inputs {

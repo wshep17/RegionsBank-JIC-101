@@ -12,15 +12,15 @@ import BarChart from './BarChart';
 function CashBackCalculator() {
   // create the inputs for our calculator
   const [ inputs, setInputs ] = useState({
-    purchasePrice: 0,
-    cashBack: 0,
-    lowInterestRate: 0,
-    taxRate: 0,
-    tradeInValue: 0,
+    purchasePrice: 25000,
+    cashBack: 500,
+    lowInterestRate: 1.9,
+    taxRate: 8,
+    tradeInValue: 15000,
     tradeInOwed: 0,
-    loanTerm: 0,
-    interestRate: 0,
-    downPayment: 0
+    loanTerm: 60,
+    interestRate: 4.9,
+    downPayment: 500
   });
 
   const [ loanData, setLoanData ] = useState({
@@ -177,9 +177,7 @@ function CashBackCalculator() {
             >
               <Form.Item label="Loan Term (months)">
                 <Form.Item name="loanTerm" noStyle>
-                  <InputNumber min={0} 
-                  formatter={value => `${value} months`}
-                  parser={value => value.replace(' months', '')}/>
+                  <InputNumber min={0} />
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Interest Rate">
@@ -200,22 +198,44 @@ function CashBackCalculator() {
           </Panel>
         </Collapse>
       </div>
-      <div className='chart-container' style={{'display': 'flex'}}>
-        <div className='chart'>
-          <BarChart data={radioData.chart_data} width={400} height={300} />
+      <div className='calc-outputs'>
+        <div className='chart-container' style={{'display': 'flex'}}>
+          <div className='chart'>
+            <BarChart data={radioData.chart_data} width={400} height={300} />
+          </div>
+          <div className='radio'>
+            <Radio.Group onChange={updateChart} value={radioData.value}>
+              <Radio style={radioStyle} value={1}>
+                Total
+              </Radio>
+              <Radio style={radioStyle} value={2}>
+                Total Principal Paid
+              </Radio>
+              <Radio style={radioStyle} value={3}>
+                Total Interest Paid
+              </Radio>
+            </Radio.Group>
+          </div>
         </div>
-        <div className='radio'>
-          <Radio.Group onChange={updateChart} value={radioData.value}>
-            <Radio style={radioStyle} value={1}>
-              Total
-            </Radio>
-            <Radio style={radioStyle} value={2}>
-              Total Principal Paid
-            </Radio>
-            <Radio style={radioStyle} value={3}>
-              Total Interest Paid
-            </Radio>
-          </Radio.Group>
+        <div className='main-outputs-container'>
+          <h2 style={{ 'padding-bottom': '5px' }}>Low Rate Option</h2>
+          <table>
+            <tr>
+              <td>Total Paid</td>
+            </tr>
+            <tr>
+              <th>{'$' + (loanData.totalData.length > 1 ? loanData.totalData[0].dollars.toFixed(0) : '10979')}</th>
+            </tr>
+          </table>
+          <h2 style={{ 'padding-bottom': '5px', 'padding-top': '10px' }}>Cash Back Option</h2>
+          <table>
+            <tr>
+              <td>Total Paid</td>
+            </tr>
+            <tr>
+              <th>{'$' + (loanData.totalData.length > 1 ? loanData.totalData[1].dollars.toFixed(0) : '10763')}</th>
+            </tr>
+          </table>
         </div>
       </div>
     </div>

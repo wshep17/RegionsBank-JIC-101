@@ -11,25 +11,25 @@ import BarChart from './BarChart'
 
 function MonthlyPaymentCalculator() {
   const [ inputs, setInputs ] = useState({
-    purchasePrice: 0,
-    cashBack: 0,
-    taxRate: 0,
-    tradeInValue: 0,
+    purchasePrice: 25000,
+    cashBack: 500,
+    taxRate: 8,
+    tradeInValue: 1500,
     tradeInOwed: 0,
     loanTerm: 36,
-    interestRate: 0,
-    downPayment: 0
+    interestRate: 4.9,
+    downPayment: 500
   });
   const [ loanData, setLoanData ] = useState({
-    loanAmount: 0,
-    monthlyPayment: 0,
+    loanAmount: calculateLoanData(inputs).loanAmount,
+    monthlyPayment: calculateLoanData(inputs).monthlyPayment,
     interestPaidData: [{}],
     principalPaidData: [{}],
     endingBalanceData: [{}]
   });
   const [ radioData, setRadioData ] = useState({
     value: 1,
-    chart_data: {key: 1, title: "Loan Payoff Schedule", xAxisTitle: "Year", data: [{}]}
+    chart_data: {key: 1, title: "Loan Payoff Schedule", xAxisTitle: "Year", data: loanData.interestPaidData}
   });
   const { Panel } = Collapse;
 
@@ -85,7 +85,7 @@ function MonthlyPaymentCalculator() {
   };
 
   return (
-    <div>
+    <div className='calculator-tab-content'>
       <div className='calculator-inputs'>
         <Collapse bordered={false} defaultActiveKey={['1', '2', '3']}>
           <Panel header="Vehicle Information" key="1">
@@ -102,17 +102,29 @@ function MonthlyPaymentCalculator() {
             >
               <Form.Item label="Vehicle Purchase Price">
                 <Form.Item name="purchasePrice" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber
+                    min={0}
+                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                  />
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Cash Back">
                 <Form.Item name="cashBack" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber
+                    min={0}
+                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                  />
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Sales Tax Rate">
                 <Form.Item name="taxRate" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber
+                    min={0}
+                    formatter={value => `${value}%`}
+                    parser={value => value.replace('%', '')}
+                  />
                 </Form.Item>
               </Form.Item>
             </Form>
@@ -130,12 +142,20 @@ function MonthlyPaymentCalculator() {
             >
               <Form.Item label="Value of Trade-in">
                 <Form.Item name="tradeInValue" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber
+                    min={0}
+                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                  />
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Amount Owed on Trade-in">
                 <Form.Item name="tradeInOwed" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber
+                    min={0}
+                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                  />
                 </Form.Item>
               </Form.Item>
             </Form>
@@ -159,34 +179,50 @@ function MonthlyPaymentCalculator() {
               </Form.Item>
               <Form.Item label="Interest Rate">
                 <Form.Item name="interestRate" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber
+                    min={0}
+                    formatter={value => `${value}%`}
+                    parser={value => value.replace('%', '')}
+                  />
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Down Payment">
                 <Form.Item name="downPayment" noStyle>
-                  <InputNumber min={0} />
+                  <InputNumber
+                    min={0}
+                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                  />
                 </Form.Item>
               </Form.Item>
             </Form>
           </Panel>
         </Collapse>
       </div>
-      <div className='chart-container' style={{'display': 'flex'}}>
-        <div className='chart'>
-          <BarChart data={radioData.chart_data} width={400} height={300} />
+      <div className='calc-outputs'>
+        <div className='chart-container' style={{'display': 'flex'}}>
+          <div className='chart'>
+            <BarChart data={radioData.chart_data} width={400} height={300} />
+          </div>
+          <div className='radio'>
+            <Radio.Group onChange={updateChart} value={radioData.value}>
+              <Radio style={radioStyle} value={1}>
+                Interest Paid
+              </Radio>
+              <Radio style={radioStyle} value={2}>
+                Principal Paid
+              </Radio>
+              <Radio style={radioStyle} value={3}>
+                Ending Balance
+              </Radio>
+            </Radio.Group>
+          </div>
         </div>
-        <div className='radio'>
-          <Radio.Group onChange={updateChart} value={radioData.value}>
-            <Radio style={radioStyle} value={1}>
-              Interest Paid
-            </Radio>
-            <Radio style={radioStyle} value={2}>
-              Principal Paid
-            </Radio>
-            <Radio style={radioStyle} value={3}>
-              Ending Balance
-            </Radio>
-          </Radio.Group>
+        <div className='main-outputs-container'>
+          <h2>Monthly Payment</h2>
+          <h2 style={{ fontWeight: 'bold' }}>{"$" + (loanData && loanData.monthlyPayment ? loanData.monthlyPayment.toFixed(2) : "0")}</h2>
+          <h2>Loan Amount</h2>
+          <h2 style={{ fontWeight: 'bold' }}>{"$" + (loanData && loanData.loanAmount ? loanData.loanAmount.toFixed(0) : "0")}</h2>
         </div>
       </div>
     </div>

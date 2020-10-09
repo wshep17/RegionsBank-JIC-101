@@ -1,3 +1,9 @@
 .tabs-container {
-    margin-top: 60px;
+    margin: 60px 20px;
+}
+
+.ant-tabs-content-holder {
+    border: 1px solid #f0f0f0;
+    border-top: none;
+    margin-top: -17px;
 }
