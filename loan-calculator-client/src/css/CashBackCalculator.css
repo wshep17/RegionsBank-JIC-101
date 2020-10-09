@@ -1,0 +1,12 @@
+.ant-collapse-item {
+    border-bottom: none !important;
+    background-color: white;
+}
+
+#cashback-inputs {
+    display: flex;
+}
+
+.ant-form-item-control-input-content {
+    padding-right: 20px;
+}
