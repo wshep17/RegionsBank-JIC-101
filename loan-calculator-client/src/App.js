@@ -1,11 +1,11 @@
 import React from 'react';
 
 import './css/App.css';
+import './css/index.css';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 
 import Home from './components/Home.js'
@@ -20,84 +20,84 @@ import { ContextAPI } from './components/Context.js'
 import firebase from './scripts/firebase.js'
 
 class App extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            isAdmin: true,
-            isLoading: true,
-            chat_room: ""
-        }
-        this.handleAdminCheck = this.handleAdminCheck.bind(this)
-        this.handleAdminLogin = this.handleAdminLogin.bind(this)
-        this.handleAdminLogout = this.handleAdminLogout.bind(this)
-        this.handleAdminJoinRoom = this.handleAdminJoinRoom.bind(this)
+  constructor(props) {
+    super(props)
+    this.state = {
+      isAdmin: true,
+      isLoading: true,
+      chat_room: ""
     }
-    componentDidMount() {
-        this.handleAdminCheck()
+    this.handleAdminCheck = this.handleAdminCheck.bind(this)
+    this.handleAdminLogin = this.handleAdminLogin.bind(this)
+    this.handleAdminLogout = this.handleAdminLogout.bind(this)
+    this.handleAdminJoinRoom = this.handleAdminJoinRoom.bind(this)
+  }
+  componentDidMount() {
+    this.handleAdminCheck()
+  }
+  render() {
+    const value = {
+      isAdmin: this.state.isAdmin,
+      chat_room: this.state.chat_room,
+      triggerAdminJoinRoom: this.handleAdminJoinRoom,
+      triggerAdminLogin: this.handleAdminLogin,
+      triggerAdminLogout: this.handleAdminLogout
     }
-    render() {
-        const value = {
-            isAdmin: this.state.isAdmin,
-            chat_room: this.state.chat_room,
-            triggerAdminJoinRoom: this.handleAdminJoinRoom,
-            triggerAdminLogin: this.handleAdminLogin,
-            triggerAdminLogout: this.handleAdminLogout
-        }
-        const conditionalRender = () => {
-            //if it's still loading return blank screen
-            if (this.state.isLoading) {
-                return (<div></div>)
-            } else {
-                return (
-                    <ContextAPI.Provider value = {value}>
-                        <NavigationBar />
-                        <Switch>
-                            <Route path='/home' component={Home} />
-                            <Route path='/login' component={AdminLogin} />
-                            <Route path='/signup' component={AdminSignup} />
-                            <Route path='/calculator' component={Calculator} />
-                            <Route path='/chat' component={Chat} />
-                            <PrivateRoute path='/chat-rooms' component={ChatRooms} />
-                            <Route path='/' component={Home} />
-                        </Switch>
-                    </ContextAPI.Provider>
-                )                
-            }
-        }
+    const conditionalRender = () => {
+      //if it's still loading return blank screen
+      if (this.state.isLoading) {
+        return (<div></div>)
+      } else {
         return (
-            <Router>
-                {conditionalRender()}
-            </Router>
+          <ContextAPI.Provider value={value}>
+            <NavigationBar />
+            <Switch>
+              <Route path='/home' component={Home} />
+              <Route path='/login' component={AdminLogin} />
+              <Route path='/signup' component={AdminSignup} />
+              <Route path='/calculator' component={Calculator} />
+              <Route path='/chat' component={Chat} />
+              <PrivateRoute path='/chat-rooms' component={ChatRooms} />
+              <Route path='/' component={Home} />
+            </Switch>
+          </ContextAPI.Provider>
         )
+      }
     }
+    return (
+      <Router>
+        {conditionalRender()}
+      </Router>
+    )
+  }
 
-    handleAdminCheck() {
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                console.log({email: user.email, name: user.displayName})
-                this.setState({isAdmin: true, isLoading: false})
-            } else {
-                this.setState({isAdmin: false, isLoading: false})
-            }
-        })
-    }
+  handleAdminCheck() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log({ email: user.email, name: user.displayName })
+        this.setState({ isAdmin: true, isLoading: false })
+      } else {
+        this.setState({ isAdmin: false, isLoading: false })
+      }
+    })
+  }
 
-    handleAdminLogin() {
-        this.setState({isAdmin: true})
-        console.log("Admin Status: ", this.state.isAdmin)
-    }
+  handleAdminLogin() {
+    this.setState({ isAdmin: true })
+    console.log("Admin Status: ", this.state.isAdmin)
+  }
 
-    handleAdminJoinRoom(room) {
-        this.setState({chat_room: room})
-        
-        console.log("An admin has just joined room: ", this.state.chat_room)
-    }
+  handleAdminJoinRoom(room) {
+    this.setState({ chat_room: room })
 
-    handleAdminLogout() {
-        //console.log('handle log out')
-        this.setState({isAdmin: false})
-        console.log("Admin Status: ", this.state.isAdmin)
-    }
+    console.log("An admin has just joined room: ", this.state.chat_room)
+  }
+
+  handleAdminLogout() {
+    //console.log('handle log out')
+    this.setState({ isAdmin: false })
+    console.log("Admin Status: ", this.state.isAdmin)
+  }
 
 }
 

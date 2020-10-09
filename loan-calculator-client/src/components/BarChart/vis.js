@@ -2,14 +2,17 @@ import * as d3 from 'd3';
 import './style.css';
 
 const draw = (props) => {
-    d3.select('.vis-barchart > *').remove();
+    const key = props.data.key;
+    d3.selectAll(`.vis-barchart.class-${key} > *`).remove();
 
-    const data = props.data;
-    const margin = { top: 50, right: 20, bottom: 40, left: 55 };
+    const data = props.data.data;
+    const title = props.data.title;
+    const xAxisTitle = props.data.xAxisTitle;
+    const margin = { top: 50, right: 20, bottom: 40, left: 70 };
     const width = props.width - margin.left - margin.right;
     const height = props.height - margin.top - margin.bottom;
 
-    let svg = d3.select('.vis-barchart').append('svg')
+    let svg = d3.selectAll(`.vis-barchart.class-${key}`).append('svg')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
         .append("g")
@@ -39,19 +42,19 @@ const draw = (props) => {
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x));
     svg.append("text")
-        .attr("text-anchor", "end")
+        .attr("text-anchor", "middle")
         .attr("x", width/2)
         .attr("y", height + margin.bottom - 5)
-        .text("Year");
+        .text(xAxisTitle);
 
     // Y axis
     svg.append("g")
         .call(d3.axisLeft(y));
     svg.append("text")
-        .attr("text-anchor", "end")
+        .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
-        .attr("x", -margin.top*1.5)
-        .attr("y", -margin.left + 15)
+        .attr("x", -margin.top*2)
+        .attr("y", -margin.left + 20)
         .text("Dollars");
 
     // Title
@@ -60,7 +63,7 @@ const draw = (props) => {
         .attr("x", (width/2))
         .attr("y", 0 - (margin.top/2))
         .style("font-size", "16px")
-        .text("Loan Payoff Schedule");
+        .text(title);
 }
 
 export default draw;

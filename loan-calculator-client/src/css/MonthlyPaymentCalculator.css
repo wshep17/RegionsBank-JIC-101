@@ -1,5 +1,10 @@
 .calculator-inputs {
-    width: 60%;
+    padding-top: 15px;
+}
+
+.calc-outputs {
+    display: flex;
+    padding-top: 15px;
 }
 
 .ant-collapse-item {
@@ -13,4 +18,29 @@
 
 .ant-form-item-control-input-content {
     padding-right: 20px;
+}
+
+.main-outputs-container {
+    border: 1px solid black;
+    margin: auto;
+    height: fit-content;
+    width: 30%;
+    padding-bottom: 10px;
+    min-width: fit-content;
+}
+
+.main-outputs-container h2 {
+    padding: 10px;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+    padding: 0 !important;
+    padding-left: 40px !important;
+}
+
+.ant-collapse-content > .ant-collapse-content-box {
+    padding-bottom: 0 !important;
 }

@@ -28,7 +28,7 @@ class ChatRooms extends Component {
 	}
 	render() {
 		return(
-			<div>
+			<div style={{marginTop: '72px'}}>
 				The following users have questions. Join their room to address their questions!
 				<br />
 				<ul style={{backgroundColor: "white"}}>

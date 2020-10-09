@@ -4,6 +4,7 @@ import MonthlyPaymentCalculator from './MonthlyPaymentCalculator.js';
 import CashBackCalculator from './CashBackCalculator.js';
 import { Tabs } from 'antd';
 import "antd/dist/antd.css";
+import "../css/App.css";
 
 
 export default function Calculator() {
@@ -11,7 +12,7 @@ export default function Calculator() {
 	return (
 		<div>
 			<div className='tabs-container'>
-			  <Tabs defaultActiveKey="1" type="card">
+			  <Tabs className='calculator-tabs' defaultActiveKey="1" type="card">
 			    <TabPane tab="Monthly Payment" key="1">
 			      <MonthlyPaymentCalculator />
 			    </TabPane>

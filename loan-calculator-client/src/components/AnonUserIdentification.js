@@ -78,7 +78,7 @@ class AnonUserIdentification extends Component {
     chatbotRef.once('value', (snapshot) =>{
       let exists = false
       snapshot.forEach((item) => {
-        if (item.key == room) {
+        if (item.key === room) {
           exists = true
         }
       })

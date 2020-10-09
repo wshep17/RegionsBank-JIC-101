@@ -1,28 +1,24 @@
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #580;
+#header {
+  background-color: #528400;
+  margin-bottom: 12px;
+  height: 50px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 5;
 }
 
-li {
-  float: left;
-}
-
-li a {
-  display: block;
+#app-title h1 {
+  padding-left: 12px;
   color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
 }
 
-li a:hover {
-  background-color: #580;
+#header-buttons {
+  position: absolute;
+  top: 8px;
+  right: 6px;
 }
 
-#loginButton {
-  color: black;
-  float: right;
+#header-buttons button {
+  margin-left: 6px;
 }

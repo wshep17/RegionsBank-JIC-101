@@ -1,7 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { Modal, Button } from 'antd';
-import firebase from '../scripts/firebase.js'
-import { ContextAPI } from './Context.js'
+import { ContextAPI } from './Context.js';
 
 import {
   withRouter 
