@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Card, Col, Row } from 'antd';
 import { ContextAPI } from './Context.js';
 import AnonUserIdentification from './AnonUserIdentification.js';
+import { BarChartOutlined, MessageOutlined } from '@ant-design/icons';
+
 
 class Home extends Component {
   /**
@@ -26,7 +28,7 @@ class Home extends Component {
               hoverable={true}
               bordered={true}
               onClick={() => this.props.history.push('/chat-rooms')}
-            ><b>Go to the Chat Rooms!</b></Card>
+            ><b>Go to the Chat Rooms!<MessageOutlined style={{ fontSize: '50px'}}/></b></Card>
           </Col>
         )
       } else {
@@ -45,7 +47,7 @@ class Home extends Component {
                 hoverable={true}
                 bordered={true}
                 onClick={() => this.props.history.push('/calculator')}
-              ><b>Go to the Calculator!</b></Card>
+              ><b>Go to the Calculator!<BarChartOutlined style={{ fontSize: '50px'}}/></b></Card>
             </Col>
             {conditionalRender()}
           </div>
