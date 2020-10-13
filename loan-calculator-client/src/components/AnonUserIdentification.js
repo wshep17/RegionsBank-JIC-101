@@ -23,7 +23,7 @@ class AnonUserIdentification extends Component {
 
   render() {
     return (
-      <div>
+      <div className='anon-user-container'>
         <Button type="primary" onClick={this.showModal.bind(this)}>
           Click to Speak with Regions Representative.
         </Button>

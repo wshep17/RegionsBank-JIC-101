@@ -22,12 +22,12 @@ class ChatRooms extends Component {
       columns: [
         {
           title: 'Name',
-          dataIndex: 'title',
-          key: 'title'
+          dataIndex: 'name',
+          key: 'name'
         },
         {
           title: 'Last Question',
-          dataIndex: 'title',
+          dataIndex: 'name',
           key: 'lastQuestion'
         },
         {
@@ -63,6 +63,7 @@ class ChatRooms extends Component {
   }
 
 	render() {
+    console.log(this.state.chat_rooms);
 		return(
 			<div style={{marginTop: '72px'}}>
         <Table

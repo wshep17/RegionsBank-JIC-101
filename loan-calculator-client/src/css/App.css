@@ -11,3 +11,7 @@
 html, body {
     height: auto !important;
 }
+
+.anon-user-container {
+    margin-top: 60px;
+}
