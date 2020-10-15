@@ -33,7 +33,6 @@ class Video extends Component {
   
         return (
             <div style={{'marginTop': "60px"}}> 
-                <h1>Welcome to FirebaseRTC!</h1>
                 <button id="cameraBtn" onClick={this.openUserMedia.bind(this)}>Open Camera & Microphone</button>
                 <br />
                 <button id="createBtn" onClick={()=>this.createRoom(this.state.exampleRoom)}>Create Room</button>
@@ -253,7 +252,10 @@ class Video extends Component {
             });
             //Step 4c: Finally Delete the Actual Room queried by roomId
             await roomRef.delete();
-
+            document.querySelector('#cameraBtn').disabled = false;
+            document.querySelector('#joinBtn').disabled = true;
+            document.querySelector('#createBtn').disabled = true;
+            document.querySelector('#hangupBtn').disabled = true;
             
             
         }
