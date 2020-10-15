@@ -34,23 +34,33 @@ class Video extends Component {
         return (
             <div style={{'marginTop': "60px"}}> 
                 <h1>Welcome to FirebaseRTC!</h1>
-                <button onClick={this.openUserMedia.bind(this)}>Open Camera & Microphone</button>
+                <button id="cameraBtn" onClick={this.openUserMedia.bind(this)}>Open Camera & Microphone</button>
                 <br />
-                <button onClick={()=>this.createRoom(this.state.exampleRoom)}>Create Room</button>
+                <button id="createBtn" onClick={()=>this.createRoom(this.state.exampleRoom)}>Create Room</button>
                 <br />
-                <button onClick={this.hangUp.bind(this)}>HangUp</button>
+                <button id="hangupBtn" onClick={this.hangUp.bind(this)}>HangUp</button>
                 <br />
                 <input name="roomId"
-                       value={this.state.roomID} 
+                       value={this.state.roomId} 
                        onChange={this.handleChange.bind(this)}>
                 </input>
-                <button onClick={()=>this.joinRoomById(this.state.roomId)}>Join Room</button>
+                <button id="joinBtn" onClick={()=>this.joinRoomById(this.state.roomId)}>Join Room</button>
                 <div id="videos">
                     <video id="localVideo" muted autoPlay playsInline></video>
                     <video id="remoteVideo" autoPlay playsInline></video>
                 </div>
             </div>
         )
+    }
+    componentDidMount() {
+        //set the create room button to be disabled
+        document.querySelector('#createBtn').disabled = true;
+
+        //set the hangup button to be disabled
+        document.querySelector('#hangupBtn').disabled = true;
+        
+        //set the join room to be disabled
+        document.querySelector('#joinBtn').disabled = true;
     }
     handleChange(event) {
         this.setState({ [event.target.name]: event.target.value })
@@ -64,6 +74,12 @@ class Video extends Component {
         remoteStream = new MediaStream();
         document.querySelector('#remoteVideo').srcObject = remoteStream;
         console.log('Stream:', document.querySelector('#localVideo').srcObject);
+
+        document.querySelector('#cameraBtn').disabled = true;
+        document.querySelector('#joinBtn').disabled = false;
+        document.querySelector('#createBtn').disabled = false;
+        document.querySelector('#hangupBtn').disabled = false;
+
     }
     //This function will create a document, specified by the roomId field passed
     async createRoom(roomId) {
