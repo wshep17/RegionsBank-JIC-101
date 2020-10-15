@@ -2,6 +2,18 @@ import React, { Component } from 'react'
 import firebase from '../scripts/firebase.js';
 import '../css/Video.css';
 
+
+/**
+Brute Force Solution:
+1. allow admin to generate a video room id.
+2. send this id over to the caller for them to join it.
+
+Note: limit the ability to generate video room idsto admins only.
+
+*/
+
+
+
 const configuration = {
   iceServers: [
     {
