@@ -66,7 +66,6 @@ class Video extends Component {
         this.setState({ [event.target.name]: event.target.value })
     }
     async openUserMedia(event) {
-        //TODO: Avoid using query selector
         const stream = await navigator.mediaDevices.getUserMedia(
         {video: true, audio: true});
         document.querySelector('#localVideo').srcObject = stream;
