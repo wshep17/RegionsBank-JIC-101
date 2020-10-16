@@ -29,7 +29,7 @@ function AffordabilityCalculator() {
 
   //create an array for vehicleAffordability inputs
   const [ loanData, setLoanData ] = useState({
-    vehiclePrice: 0, //added this
+    vehiclePrice: 0,
     vehicleAffordability: [{}],
   });
 
@@ -49,12 +49,12 @@ function AffordabilityCalculator() {
     });
     setInputs(newInputs);
 
-    const newLoanData = { ...loanData }; //moved this line
+    const newLoanData = { ...loanData };
 
     // using affordability calculator
     newLoanData.vehicleAffordability = calculateAffordability(newInputs);
-    const {vehiclePrice} = calculateAffordability(newInputs); // added this
-    newLoanData.vehiclePrice = vehiclePrice; // added this
+    const {vehiclePrice} = calculateAffordability(newInputs);
+    newLoanData.vehiclePrice = vehiclePrice;
     setLoanData(newLoanData);
 
     updateChart();
@@ -82,6 +82,7 @@ function AffordabilityCalculator() {
     lineHeight: '30px',
   };
 
+  // displays/ updates chart based on user inputs
   return (
     <div>
       <div className='calculator-inputs'>

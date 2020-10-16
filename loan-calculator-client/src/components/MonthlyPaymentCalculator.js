@@ -60,6 +60,7 @@ function MonthlyPaymentCalculator() {
     updateChart();
   };
 
+  // toggle for chart buttons
   const updateChart = (event) => {
     const newRadioData = { ...radioData };
 
@@ -84,6 +85,7 @@ function MonthlyPaymentCalculator() {
     lineHeight: '30px',
   };
 
+  // displays/ updates the chart based on user inputs
   return (
     <div className='calculator-tab-content'>
       <div className='calculator-inputs'>
