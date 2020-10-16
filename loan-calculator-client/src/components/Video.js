@@ -180,7 +180,7 @@ class Video extends Component {
                 peerConnection.addTrack(track, localStream)
             })
 
-            // Functionality to collect ICE candidates
+            //Step 1: Functionality to collect ICE candidates
             const calleeCandidatesCollection = roomRef.collection('calleeCandidates');
             peerConnection.addEventListener('icecandidate', event => {
                 if (!event.candidate) {
@@ -191,7 +191,7 @@ class Video extends Component {
                 calleeCandidatesCollection.add(event.candidate.toJSON());
             });
 
-            // Functionality to add track to the Remote Stream
+            //Step 2: Functionality to add track to the Remote Stream
             peerConnection.addEventListener('track', event => {
                 console.log('Got remote track:', event.streams[0])
                 event.streams[0].getTracks().forEach(track => {
@@ -200,7 +200,7 @@ class Video extends Component {
                 })
             })
 
-            // Functionality to create SDP answer
+            //Step 3: Functionality to create SDP answer
             const offer = roomSnapshot.data().offer
             console.log('Got offer:', offer)
             await peerConnection.setRemoteDescription(new RTCSessionDescription(offer))
@@ -216,7 +216,7 @@ class Video extends Component {
             }
             await roomRef.update(roomWithAnswer)
 
-            // Functionality to Listen for remote ICE candidates
+            //Step 4: Functionality to Listen for remote ICE candidates
             roomRef.collection('callerCandidates').onSnapshot(snapshot => {
                 snapshot.docChanges().forEach(async change => {
                     if (change.type === 'added') {
@@ -250,7 +250,7 @@ class Video extends Component {
         if (this.state.roomId !== "") {
             const db = firebase.firestore();
             const roomRef = db.collection('rooms').doc(this.state.roomId);
-            //Remove the Callee Candidates Collection
+            //Step 4a: Remove the Callee Candidates Collection
             const calleeCandidates = await roomRef.collection('calleeCandidates').get();
             calleeCandidates.forEach(async candidate => {
                 await candidate.ref.delete();
