@@ -24,11 +24,17 @@ class Home extends Component {
       if (this.context.isAdmin) {
         return (
           <Col span={10} style={{ margin: 'auto', padding: '10px' }}>
-            <Card style={{ textAlign: 'center', backgroundColor: '#FFFFCC' }}
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <Card style={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}
               hoverable={true}
               bordered={true}
               onClick={() => this.props.history.push('/chat-rooms')}
-            ><b>Go to the Chat Rooms!<MessageOutlined style={{ fontSize: '50px'}}/></b></Card>
+            ><b style={{ fontSize: '30px'}}>Browse Chat Rooms<br></br><MessageOutlined style={{ fontSize: '60px'}}/></b></Card>
           </Col>
         )
       } else {
@@ -41,13 +47,19 @@ class Home extends Component {
       <div>
         <AnonUserIdentification />
         <Row gutter={20}>
-          <div style={{ margin: 'auto', width: '50%', paddingTop: '60px' }}>
+          <div style={{ margin: 'auto', display: 'flex', width: '50%', paddingTop: '60px' }}>
             <Col span={10} style={{ margin: 'auto', padding: '10px' }}>
-              <Card style={{ textAlign: 'center', backgroundColor: '#CCFFCC' }}
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+              <Card style={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}
                 hoverable={true}
                 bordered={true}
                 onClick={() => this.props.history.push('/calculator')}
-              ><b>Go to the Calculator!<BarChartOutlined style={{ fontSize: '50px'}}/></b></Card>
+              ><b style={{ fontSize: '30px'}}>Use Loan Calculators<br></br><BarChartOutlined style={{ fontSize: '60px'}}/></b></Card>
             </Col>
             {conditionalRender()}
           </div>
