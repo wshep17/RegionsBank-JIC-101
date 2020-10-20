@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import {
+  Button,
   Collapse,
   Form,
+  Input,
   InputNumber,
-  Radio
+  Radio,
+  Select
 } from 'antd';
 import { calculateLoanData, calculateAmortizedLoanData } from '../scripts/calculators';
 import '../css/MonthlyPaymentCalculator.css';
@@ -27,6 +30,13 @@ function MonthlyPaymentCalculator() {
     principalPaidData: [{}],
     endingBalanceData: [{}]
   });
+  const [ dropdownData, setDropdownData ] = useState({
+    value: "",
+    values: []
+  });
+  const [ enteredName, setEnteredName ] = useState({
+    name: null
+  })
   const [ radioData, setRadioData ] = useState({
     value: 1,
     chart_data: {key: 1, title: "Loan Payoff Schedule", xAxisTitle: "Year", data: loanData.interestPaidData}
@@ -78,6 +88,44 @@ function MonthlyPaymentCalculator() {
 
     setRadioData(newRadioData);
   }
+
+  const onNameChange = (event) => {
+    console.log(event.target.value);
+    setEnteredName({name: event.target.value});
+  }
+
+  const handleLoadClick = () => {
+    console.log("Load");
+
+    // Load selected value's data into inputs (or graph)
+  }
+
+  const handleAddClick = () => {
+    console.log("Add");
+
+    const newDropdownData = { ...dropdownData };
+    // only add new name if it doesn't already exist
+    if (!newDropdownData.values.includes(enteredName.name)) {
+      newDropdownData.values.push(enteredName.name);
+    }
+    setDropdownData(newDropdownData);
+
+    console.log(dropdownData);
+  }
+
+  const handleSelectChange = (value) => {
+    console.log(`Selected: ${value}`);
+    const newDropdownData = { ...dropdownData };
+    newDropdownData.value = value;
+    setDropdownData(newDropdownData);
+  }
+
+  const { Option } = Select;
+
+  const multipleDataStyle = {
+    display: 'flex',
+    paddingLeft: '20px'
+  };
 
   const radioStyle = {
     display: 'block',
@@ -200,6 +248,14 @@ function MonthlyPaymentCalculator() {
             </Form>
           </Panel>
         </Collapse>
+      </div>
+      <div className='multiple-inputs' style={multipleDataStyle}>
+        <Input placeholder="Loan name" style={{ width: 200, margin: 10 }} onChange={onNameChange}></Input>
+        <Button type="primary" style={{ margin: 10 }} onClick={handleAddClick}>Add</Button>
+        <Button type="primary" style={{ margin: 10 }} onClick={handleLoadClick}>Load</Button>
+        <Select defaultValue="None" style={{ width: 120, margin:10 }} onChage={handleSelectChange}>
+          {dropdownData.values.map((elem) => <Option value={elem}>{elem}</Option>)}
+        </Select>
       </div>
       <div className='calc-outputs'>
         <div className='chart-container' style={{'display': 'flex'}}>
