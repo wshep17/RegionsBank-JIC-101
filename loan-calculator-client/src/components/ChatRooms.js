@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
-import ConfirmationScreen from './ConfirmationScreen.js'
-import firebase from '../scripts/firebase.js'
-import { ContextAPI } from './Context.js'
+import React, { Component } from 'react';
+import firebase from '../scripts/firebase.js';
+import { ContextAPI } from './Context.js';
+import { Button, Popconfirm, Table } from 'antd';
+import '../css/Chat.css';
 
 import {
   withRouter 
@@ -17,39 +18,78 @@ class ChatRooms extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			chat_rooms: []
+      chat_rooms: [],
+      columns: [
+        {
+          title: 'Name',
+          dataIndex: 'title',
+          key: 'title'
+        },
+        {
+          title: 'Last Question',
+          dataIndex: 'title',
+          key: 'lastQuestion'
+        },
+        {
+          title: 'Action',
+          key: 'action',
+          render: (record) => (
+            <Popconfirm
+              title="Continue to this private chat room?"
+              onConfirm={() => this.handleOk(record)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="link">Join Chat Room</Button>
+            </Popconfirm>
+          ),
+        },
+      ]
 		}
-		this.fetchRooms = this.fetchRooms.bind(this)
-	}
+    this.fetchRooms = this.fetchRooms.bind(this);
+    this.handleOk = this.handleOk.bind(this);
+  }
+  
 	componentDidMount() {
 		//fetch the chat rooms from the database
-		this.fetchRooms()
+		this.fetchRooms();
+  }
+  
+   
+  handleOk(record) {
+    this.setState({visible: false})
+    this.adminJoinRoom(record.room)
+    this.props.history.push('/chat')
+  }
 
-	}
 	render() {
 		return(
 			<div style={{marginTop: '72px'}}>
-				The following users have questions. Join their room to address their questions!
-				<br />
-				<ul style={{backgroundColor: "white"}}>
-					{this.state.chat_rooms.map((each) => {
-						return (<div><li onClick={()=>this.adminJoinRoom(each.room)}><ConfirmationScreen name={each.title} /></li><br /></div>)
-					})}
-				</ul>
+        <Table
+          columns={this.state.columns}
+          dataSource={this.state.chat_rooms}
+          pagination={{ pageSize: 20 }}
+          scroll={{ y: 500 }}
+        />
 			</div>
 		)
 	}
 
 	//This function will fetch all the rooms from the database
 	fetchRooms() {
-		let chatRoomsRef = firebase.database().ref(`private-rooms`)
+		let chatRoomsRef = firebase.database().ref(`private-rooms`);
 		chatRoomsRef.on('value', (snapshot) => {
-			let list = []
+			let list = [];
 			snapshot.forEach((item) => {
-				list.push(item.val())
+        let data = {
+          ...item.val(),
+          key: list.length,
+          onClick: ()=>this.adminJoinRoom(item.room)
+        };
+				list.push(data);
 			})
-			this.setState({chat_rooms: list})
-		})
+			this.setState({chat_rooms: list});
+    });
 	}
 
 	//This function will allow the admin to join this room
@@ -57,7 +97,7 @@ class ChatRooms extends Component {
 		console.log(room)
 		// Set the chat_room to "room" in the state in App.js (Possible through the Context API) 
 		this.context.triggerAdminJoinRoom(room)
-	}
+  }
 }
 
 

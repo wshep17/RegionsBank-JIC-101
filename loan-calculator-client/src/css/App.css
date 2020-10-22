@@ -7,3 +7,7 @@
     border-top: none;
     margin-top: -17px;
 }
+
+html, body {
+    height: auto !important;
+}
