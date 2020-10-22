@@ -24,12 +24,6 @@ class Home extends Component {
       if (this.context.isAdmin) {
         return (
           <Col span={10} style={{ margin: 'auto', padding: '10px' }}>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
             <Card style={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}
               hoverable={true}
               bordered={true}
@@ -44,17 +38,11 @@ class Home extends Component {
       }
     }
     return (
-      <div>
+      <div style={{ paddingTop: '60px' }}>
         <AnonUserIdentification />
         <Row gutter={20}>
-          <div style={{ margin: 'auto', display: 'flex', width: '50%', paddingTop: '60px' }}>
+          <div style={{ margin: 'auto',  width: '50%', display: 'flex' }}>
             <Col span={10} style={{ margin: 'auto', padding: '10px' }}>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
               <Card style={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}
                 hoverable={true}
                 bordered={true}
