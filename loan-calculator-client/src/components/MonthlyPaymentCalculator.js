@@ -11,6 +11,8 @@ import {
 import { calculateLoanData, calculateAmortizedLoanData } from '../scripts/calculators';
 import '../css/MonthlyPaymentCalculator.css';
 import BarChart from './BarChart'
+import ReactTooltip from 'react-tooltip';
+
 
 function MonthlyPaymentCalculator() {
   const [ inputs, setInputs ] = useState({
@@ -159,6 +161,12 @@ function MonthlyPaymentCalculator() {
     lineHeight: '30px',
   };
 
+  // const options = [
+  //   { label: 'Thing 1', value: 1},
+  //   { label: 'Thing 2', value: 2},
+  // ];
+
+
   // displays/ updates the chart based on user inputs
   return (
     <div className='calculator-tab-content'>
@@ -279,11 +287,13 @@ function MonthlyPaymentCalculator() {
         </Collapse>
       </div>
       <div className='multiple-inputs' style={multipleDataStyle}>
-        <Input placeholder="Loan name" style={{ width: 200, margin: 10 }} onChange={onNameChange}></Input>
+        <Input placeholder="Loan name" style={{ width: 200, margin: 10 }} onChange={onNameChange} data-tip='Save multiple loan alternatives'></Input>
+        <ReactTooltip place="bottom"/>
         <Button type="primary" style={{ margin: 10 }} onClick={handleSaveClick}>Save</Button>
-        <Select defaultValue="None" style={{ width: 120, margin:10 }} onChange={handleSelectChange}>
-          {Object.keys(dropdownData.inputValues).map((elem) => <Option value={elem}>{elem}</Option>)}
+        <Select defaultValue="None" style={{ width: 120, margin:10 }} onChange={handleSelectChange} data-tip='Choose loans to compare'>
+          {Object.keys(dropdownData.inputValues).map((elem) =><Option value={elem}>{elem}</Option>)}
         </Select>
+        <ReactTooltip place="bottom"/>
         <Button type="primary" style={{ margin: 10 }} onClick={handleLoadClick}>Load</Button>
       </div>
       <div className='calc-outputs'>
