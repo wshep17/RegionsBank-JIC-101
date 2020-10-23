@@ -290,8 +290,7 @@ function MonthlyPaymentCalculator() {
         <Input placeholder="Loan name" style={{ width: 200, margin: 10 }} onChange={onNameChange} data-tip='Save multiple loan alternatives'></Input>
         <ReactTooltip place="bottom"/>
         <Button type="primary" style={{ margin: 10 }} onClick={handleSaveClick}>Save</Button>
-        <Select defaultValue="None" style={{ width: 120, margin:10 }} onChange={handleSelectChange} data-tip='Choose loans to compare'>
-          {Object.keys(dropdownData.inputValues).map((elem) =><Option value={elem}>{elem}</Option>)}
+        <Select placeholder="Please select" style={{ width: 200, margin:10 }} onChange={handleSelectChange} mode="multiple" data-tip='Choose loans to compare'>          {Object.keys(dropdownData.inputValues).map((elem) =><Option value={elem}>{elem}</Option>)}
         </Select>
         <ReactTooltip place="bottom"/>
         <Button type="primary" style={{ margin: 10 }} onClick={handleLoadClick}>Load</Button>
