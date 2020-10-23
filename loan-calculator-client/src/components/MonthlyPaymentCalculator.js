@@ -47,6 +47,7 @@ function MonthlyPaymentCalculator() {
   }, [inputs]);
 
   const { Panel } = Collapse;
+  const { Option } = Select;
 
   const onInputsChange = (formData) => {
     const newInputs = { ...inputs };
@@ -146,8 +147,6 @@ function MonthlyPaymentCalculator() {
     newDropdownData.selectedValue = value;
     setDropdownData(newDropdownData);
   }
-
-  const { Option } = Select;
 
   const multipleDataStyle = {
     display: 'flex',
