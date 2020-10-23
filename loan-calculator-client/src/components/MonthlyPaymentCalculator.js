@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   Collapse,
@@ -41,6 +41,11 @@ function MonthlyPaymentCalculator() {
     value: 1,
     chart_data: {key: 1, title: "Loan Payoff Schedule", xAxisTitle: "Year", data: loanData.interestPaidData}
   });
+  useEffect(() => {
+    updateCalculationData(inputs);
+    updateChart();
+  }, [inputs]);
+
   const { Panel } = Collapse;
 
   const onInputsChange = (formData) => {
