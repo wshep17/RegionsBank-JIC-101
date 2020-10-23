@@ -106,7 +106,7 @@ function calculateAffordability(inputs) {
 }
 
 /*
-  calculateCashBack() takes inputs from users then 
+  calculateCashBack() takes inputs from users then
   calculates a monthly loan rate based on a low interest rate
   and cash back rate to compare which saves more money
 */
@@ -124,13 +124,9 @@ function calculateCashBack(inputs) {
   } = inputs;
 
   const netTradeInWorth = tradeInValue - tradeInOwed;
-  const graphData = []
   const totalInterestPaidData = []
   const totalPrincipalPaidData = []
   const totalData = []
-  const numYears = Math.ceil(loanTerm / 12);
-  var prevLoanAmount = 0;
-  var prevLoanTerm = 0;
 
   if (purchasePrice < 0) {
     return [totalInterestPaidData, totalPrincipalPaidData, totalData];
