@@ -31,8 +31,8 @@ function MonthlyPaymentCalculator() {
     endingBalanceData: [{}]
   });
   const [ dropdownData, setDropdownData ] = useState({
-    value: "",
-    values: []
+    selectedValue: "",
+    inputValues: {}
   });
   const [ enteredName, setEnteredName ] = useState({
     name: null
@@ -55,18 +55,7 @@ function MonthlyPaymentCalculator() {
     });
     setInputs(newInputs);
 
-    const newLoanData = { ...loanData };
-    const {loanAmount, monthlyPayment} = calculateLoanData(newInputs);
-    newLoanData.loanAmount = loanAmount;
-    newLoanData.monthlyPayment = monthlyPayment;
-
-    // using amortize package
-    const [newInterestPaidData, newPrincipalPaidData, newEndingBalanceData] = calculateAmortizedLoanData(newInputs);
-    newLoanData.interestPaidData = newInterestPaidData;
-    newLoanData.principalPaidData = newPrincipalPaidData;
-    newLoanData.endingBalanceData = newEndingBalanceData;
-    setLoanData(newLoanData);
-
+    updateCalculationData(newInputs);
     updateChart();
   };
 
@@ -90,33 +79,66 @@ function MonthlyPaymentCalculator() {
   }
 
   const onNameChange = (event) => {
-    console.log(event.target.value);
     setEnteredName({name: event.target.value});
   }
 
-  const handleLoadClick = () => {
-    console.log("Load");
+  const updateCalculationData = (newInputs) => {
+    const newLoanData = { ...loanData };
+    const { loanAmount, monthlyPayment } = calculateLoanData(newInputs);
+    newLoanData.loanAmount = loanAmount;
+    newLoanData.monthlyPayment = monthlyPayment;
 
-    // Load selected value's data into inputs (or graph)
+    // using amortize package
+    const [newInterestPaidData, newPrincipalPaidData, newEndingBalanceData] = calculateAmortizedLoanData(newInputs);
+    newLoanData.interestPaidData = newInterestPaidData;
+    newLoanData.principalPaidData = newPrincipalPaidData;
+    newLoanData.endingBalanceData = newEndingBalanceData;
+    setLoanData(newLoanData);
   }
 
-  const handleAddClick = () => {
-    console.log("Add");
+  // To allow us to access form elements
+  const [formOne] = Form.useForm();
+  const [formTwo] = Form.useForm();
+  const [formThree] = Form.useForm();
 
+  const handleLoadClick = () => {
+    // Load selected value's data into input boxes
+    const newInputs = { ...dropdownData.inputValues[dropdownData.selectedValue] };
+    formOne.setFieldsValue({
+      purchasePrice: newInputs.purchasePrice,
+      cashBack: newInputs.cashBack,
+      taxRate: newInputs.taxRate
+    });
+    formTwo.setFieldsValue({
+      tradeInValue: newInputs.tradeInValue,
+      tradeInOwed: newInputs.tradeInOwed
+    });
+    formThree.setFieldsValue({
+      loanTerm: newInputs.loanTerm,
+      interestRate: newInputs.interestRate,
+      downPayment: newInputs.downPayment
+    });
+
+    // Also load data into the current state
+    setInputs(newInputs);
+
+    // Finally, update chart
+    updateCalculationData(newInputs);
+    updateChart();
+  }
+
+  const handleSaveClick = () => {
     const newDropdownData = { ...dropdownData };
-    // only add new name if it doesn't already exist
-    if (!newDropdownData.values.includes(enteredName.name)) {
-      newDropdownData.values.push(enteredName.name);
-    }
+    const currentInputData = { ...inputs };
+    newDropdownData.inputValues[enteredName.name] = currentInputData;
     setDropdownData(newDropdownData);
-
     console.log(dropdownData);
   }
 
   const handleSelectChange = (value) => {
     console.log(`Selected: ${value}`);
     const newDropdownData = { ...dropdownData };
-    newDropdownData.value = value;
+    newDropdownData.selectedValue = value;
     setDropdownData(newDropdownData);
   }
 
@@ -140,6 +162,7 @@ function MonthlyPaymentCalculator() {
         <Collapse bordered={false} defaultActiveKey={['1', '2', '3']}>
           <Panel header="Vehicle Information" key="1">
             <Form
+              form={formOne}
               name="monthly-payment-inputs"
               fields={[
                 { name: ["purchasePrice"], value: inputs.purchasePrice },
@@ -181,6 +204,7 @@ function MonthlyPaymentCalculator() {
           </Panel>
           <Panel header="Trade-In Information" key="2">
           <Form
+              form={formTwo}
               name="monthly-payment-inputs"
               fields={[
                 { name: ["tradeInValue"], value: inputs.tradeInValue },
@@ -212,6 +236,7 @@ function MonthlyPaymentCalculator() {
           </Panel>
           <Panel header="Loan Information" key="3">
             <Form
+              form={formThree}
               name="monthly-payment-inputs"
               fields={[
                 { name: ["loanTerm"], value: inputs.loanTerm },
@@ -251,10 +276,10 @@ function MonthlyPaymentCalculator() {
       </div>
       <div className='multiple-inputs' style={multipleDataStyle}>
         <Input placeholder="Loan name" style={{ width: 200, margin: 10 }} onChange={onNameChange}></Input>
-        <Button type="primary" style={{ margin: 10 }} onClick={handleAddClick}>Add</Button>
+        <Button type="primary" style={{ margin: 10 }} onClick={handleSaveClick}>Save</Button>
         <Button type="primary" style={{ margin: 10 }} onClick={handleLoadClick}>Load</Button>
-        <Select defaultValue="None" style={{ width: 120, margin:10 }} onChage={handleSelectChange}>
-          {dropdownData.values.map((elem) => <Option value={elem}>{elem}</Option>)}
+        <Select defaultValue="None" style={{ width: 120, margin:10 }} onChange={handleSelectChange}>
+          {Object.keys(dropdownData.inputValues).map((elem) => <Option value={elem}>{elem}</Option>)}
         </Select>
       </div>
       <div className='calc-outputs'>
