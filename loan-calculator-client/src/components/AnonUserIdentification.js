@@ -54,8 +54,8 @@ class AnonUserIdentification extends Component {
     }
   }
 
+  // Saves anonymous user information to Firestore (name, uid, chatbot status)
   handleOk() {
-    //Purpose: Save Anonymous User leveraging Firebase(result not visible in schema)
     firebase.auth().signInAnonymously()
     .then(async () => {
       /**Purpose: Save Anonymous User in Firebase Firestore(result visible in schema)
@@ -68,7 +68,7 @@ class AnonUserIdentification extends Component {
       const anonUsersRef = await db.collection('anon-users').doc(user.uid)
       anonUsersRef.set({
         "anon_name": this.state.name, 
-        "anon_uid": user.uid
+        "anon_uid": user.uid,
       })
 
       //create a room out of their uid
@@ -85,7 +85,8 @@ class AnonUserIdentification extends Component {
     let roomsRef = await db.collection('chat-rooms').doc(room_name)
     roomsRef.set({
       "creator_name": creator_name,
-      "creator_uid": creator_uid
+      "creator_uid": creator_uid,
+      "status": true
     })
   }
 
