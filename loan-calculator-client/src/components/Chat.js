@@ -75,14 +75,14 @@ class Chat extends Component {
       room_id = user.uid
     }
 
-    // Retrieve chatbot status
+    // Subscribe to chatbot status
     let roomRef = await db.collection('chat-rooms').doc(room_id)
     roomRef.onSnapshot(snapshot => {
       let status = snapshot.data().status
       this.setState({ status: status })
     })
 
-    // Retrieve each document in messages(collection) and "order by" timestamp in asc(ascending)
+    // Subscribe to messages(collection) and order each message(document) by timestamp in ascending order
     let messagesRef = await db.collection('chat-rooms').doc(room_id).collection('messages')
     messagesRef.orderBy('timestamp', 'asc').onSnapshot(snapshot => {
       let messages = []
@@ -100,7 +100,7 @@ class Chat extends Component {
     // Create an instance of Firebase Firestore database
     let db = firebase.firestore()
 
-    // Retrieve room id and user name
+    // Retrieve(one time) room id and user name
     let room_id = ""
     let name = ""
     if (this.context.isAdmin) {
