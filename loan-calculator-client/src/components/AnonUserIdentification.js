@@ -51,6 +51,8 @@ class AnonUserIdentification extends Component {
         this.setState({ visible: true})
       })
       .catch((err) => console.log(err))
+    } else {
+      this.setState({ visible: true})
     }
   }
 

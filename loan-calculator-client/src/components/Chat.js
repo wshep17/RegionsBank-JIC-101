@@ -55,27 +55,28 @@ class Chat extends Component {
   async fetchMessages() {
     let user = firebase.auth().currentUser;
     let db = firebase.firestore();
+    if (user) {
+      //Retrieve the room that admin joined
+      let adminUsersRef = await db.collection('admin-users').doc(user.uid).get()
+      let admin_room_location = (adminUsersRef.exists) ? (adminUsersRef.data().admin_room_location) : ("")
 
-    //Retrieve the room that admin joined
-    let adminUsersRef = await db.collection('admin-users').doc(user.uid).get()
-    let admin_room_location = (adminUsersRef.exists) ? (adminUsersRef.data().admin_room_location) : ("")
+      //Retrieve the room that the anonymous user is associated with, aka their uid :)
+      let anonUsersRef = await db.collection('anon-users').doc(user.uid).get()
+      let anon_room_location = (anonUsersRef.exists) ? (anonUsersRef.data().anon_uid) : ("")
 
-    //Retrieve the room that the anonymous user is associated with, aka their uid :)
-    let anonUsersRef = await db.collection('anon-users').doc(user.uid).get()
-    let anon_room_location = (anonUsersRef.exists) ? (anonUsersRef.data().anon_uid) : ("")
+      //Assign a room_id depending on the current user being an admin or not
+      let room_id = (this.context.isAdmin) ? (admin_room_location) : (anon_room_location)
 
-    //Assign a room_id depending on the current user being an admin or not
-    let room_id = (this.context.isAdmin) ? (admin_room_location) : (anon_room_location)
-
-    //Retrieve each document in messages(collection) and "order by" timestamp in asc(ascending)
-    let roomsRef = await db.collection('chat-rooms').doc(room_id).collection('messages')
-    roomsRef.orderBy('timestamp', 'asc').onSnapshot(snapshot => {
-      let list = []
-      snapshot.forEach((item) => {
-        list.push(item.data())
+      //Retrieve each document in messages(collection) and "order by" timestamp in asc(ascending)
+      let roomsRef = await db.collection('chat-rooms').doc(room_id).collection('messages')
+      roomsRef.orderBy('timestamp', 'asc').onSnapshot(snapshot => {
+        let list = []
+        snapshot.forEach((item) => {
+          list.push(item.data())
+        })
+        this.setState({ chat: list, message: ""})
       })
-      this.setState({ chat: list, message: ""})
-    })
+    }
   }
 
 
