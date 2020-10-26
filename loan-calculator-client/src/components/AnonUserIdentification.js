@@ -42,61 +42,50 @@ class AnonUserIdentification extends Component {
     this.setState({[event.target.name]: event.target.value})
   }
   showModal() {
-    this.setState({
-      visible: true,
-    })
+    let user = firebase.auth().currentUser
+    if (user) {
+      //sign out of current anonymous user 
+      firebase.auth().signOut()
+      .then(() => {
+        console.log('Anonymous User signed out successfully')
+        this.setState({ visible: true})
+      })
+      .catch((err) => console.log(err))
+    }
   }
 
   handleOk() {
-    var user
+    //Purpose: Save Anonymous User leveraging Firebase(result not visible in schema)
     firebase.auth().signInAnonymously()
-    .then(() => {
-      user = firebase.auth().currentUser
-      user.updateProfile({
-        displayName: this.state.name,
-        photoURL: user.uid
-      }).then(() => {
-        //create a room out of their uid
-        this.createRoom(user.uid, user.displayName)
-        this.setState({visible: false})
-        this.props.history.push('/chat')
-        console.log('anonPrivateRoom: ', user.photoURL)
+    .then(async () => {
+      /**Purpose: Save Anonymous User in Firebase Firestore(result visible in schema)
+         Note the following changes, from old_commit -> updated_commit: 
+         (a) photoURL -> uid
+         (b) displayName -> name
+      */
+      let user = await firebase.auth().currentUser
+      const db = firebase.firestore() 
+      const anonUsersRef = await db.collection('anon-users').doc(user.uid)
+      anonUsersRef.set({
+        "anon_name": this.state.name, 
+        "anon_uid": user.uid
       })
+
+      //create a room out of their uid
+      this.createRoom(user.uid, this.state.name, user.uid)
+      this.setState({visible: false})
+      this.props.history.push('/chat')
     })
     .catch((err) => console.log(err))
   }
 
   //This function will create another room in the database
-  createRoom(room, displayName) {    
-    let roomsRef = firebase.database().ref(`private-rooms/${room}`)
+  async createRoom(room_name, creator_name, creator_uid) {    
+    const db = firebase.firestore();    
+    let roomsRef = await db.collection('chat-rooms').doc(room_name)
     roomsRef.set({
-      "name": displayName,
-      "room": room
-    })
-    //check if current room already exists. if not, set chatbot status to true
-    let chatbotRef  = firebase.database().ref(`chatbot`)
-    chatbotRef.once('value', (snapshot) =>{
-      let exists = false
-      snapshot.forEach((item) => {
-        if (item.key === room) {
-          exists = true
-        }
-      })
-      if (!exists) {
-        console.log("New chatroom... Setting chatbot status to true")
-        let roomStatusRef = firebase.database().ref(`chatbot/${room}`)
-        roomStatusRef.set({
-          "status": true
-        })
-        let messageRef = firebase.database().ref(`messages/room:${room}`)
-        messageRef.push({
-          "name": "Chatbot",
-          "message": "Hi! How can I help you today?",
-          "uid": "bot",
-        })
-      } else {
-        console.log("Chatroom already exists")
-      }
+      "creator_name": creator_name,
+      "creator_uid": creator_uid
     })
   }
 

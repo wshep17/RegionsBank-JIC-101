@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import firebase from '../scripts/firebase.js';
+import Video from './Video.js'
 import { ContextAPI } from './Context.js';
-import { getChatbotResponse } from '../scripts/chatbot';
 import { Input } from 'antd';
+
+//TODO: Get a working chat application up and running again with firestore :(
+
 
 /**
  * General Component:
@@ -17,32 +20,28 @@ class Chat extends Component {
 
     this.state = {
       message: "",
-      chat: [],
-      //set default status as false so chatbot doesn't auto respond
-      status: false
+      chat: []
     }
     this.handleChange = this.handleChange.bind(this);
   }
   componentDidMount() {
     //fetch the messages from the database	
     this.fetchMessages()
-    //fetch chatroom status
-    this.fetchStatus()
   }
   render() {
     return (
       <div className='chat-container'>
-
+        <Video />
         <ul style={{ backgroundColor: "white" }}>
           {this.state.chat.map((each) => {
-            return (<div><li>{each.name}: {each.message}</li><br /></div>)
+            return (<div><li>{each.sender_name}: {each.message}</li><br /></div>)
           })}
 
         </ul>
         <Input
           onPressEnter={this.handleSend.bind(this)}
           onChange={(event) => this.handleChange(event)}
-          placeholder="Message"
+          placeholder="Message (Press ENTER to send)"
           value={this.state.message}
         />
 
@@ -50,85 +49,69 @@ class Chat extends Component {
 
     )
   }
-  fetchMessages() {
-    let user = firebase.auth().currentUser
-    if (user && user.photoURL) {
-      //if you're an anonymous user
-      let messageRef = firebase.database().ref(`messages/room:${user.photoURL}`)
-      messageRef.on('value', (snapshot) => {
-        var list = []
-        snapshot.forEach((item) => {
-          list.push(item.val())
-        })
-        this.setState({ chat: list, message: "" })
-      })
-    }
-    if (user && this.context.chat_room) {
-      //if you're an admin user
-      let messageRef = firebase.database().ref(`messages/room:${this.context.chat_room}`)
-      messageRef.on('value', (snapshot) => {
-        var list = []
-        snapshot.forEach((item) => {
-          list.push(item.val())
-        })
-        this.setState({ chat: list, message: "" })
-      })
-    }
-  }
   handleChange(event) {
     this.setState({ message: event.target.value })
   }
-  handleSend() {
-    let user = firebase.auth().currentUser
-    if (user && user.photoURL) {
-      //if you're an anonymous user
-      let messageRef = firebase.database().ref(`messages/room:${user.photoURL}`)
-      messageRef.push({
-        "name": user.displayName,
-        "message": this.state.message,
-        "uid": user.uid,
+  async fetchMessages() {
+    let user = firebase.auth().currentUser;
+    let db = firebase.firestore();
+
+    //Retrieve the room that admin joined
+    let adminUsersRef = await db.collection('admin-users').doc(user.uid).get()
+    let admin_room_location = (adminUsersRef.exists) ? (adminUsersRef.data().admin_room_location) : ("")
+
+    //Retrieve the room that the anonymous user is associated with, aka their uid :)
+    let anonUsersRef = await db.collection('anon-users').doc(user.uid).get()
+    let anon_room_location = (anonUsersRef.exists) ? (anonUsersRef.data().anon_uid) : ("")
+
+    //Assign a room_id depending on the current user being an admin or not
+    let room_id = (this.context.isAdmin) ? (admin_room_location) : (anon_room_location)
+
+    //Retrieve each document in messages(collection) and "order by" timestamp in asc(ascending)
+    let roomsRef = await db.collection('chat-rooms').doc(room_id).collection('messages')
+    roomsRef.orderBy('timestamp', 'asc').onSnapshot(snapshot => {
+      let list = []
+      snapshot.forEach((item) => {
+        list.push(item.data())
       })
-      if (this.state.status) {
-        this.handleChatbotResponse(user, this.state.message)
-      }
-    }
-    if (user && this.context.chat_room) {
-      //if you're an admin user
-      let messageRef = firebase.database().ref(`messages/room:${this.context.chat_room}`)
-      messageRef.push({
-        "name": user.displayName,
-        "message": this.state.message,
-        "uid": user.uid,
-      })
-    }
-  }
-  handleChatbotResponse(user, userMessage) {
-    let response = getChatbotResponse(userMessage)
-    if (!response.status) {
-      let chatbotRef = firebase.database().ref(`chatbot/${user.photoURL}`)
-      chatbotRef.set({
-        "status": false
-      })
-      this.setState({ status: false })
-    }
-    let messageRef = firebase.database().ref(`messages/room:${user.photoURL}`)
-    messageRef.push({
-      "name": "Chatbot",
-      "message": response.message,
-      "uid": "bot",
+      this.setState({ chat: list, message: ""})
     })
   }
-  fetchStatus() {
+
+
+  async handleSend() {
+    //Retrieve the currently logged in user
     let user = firebase.auth().currentUser
-    if (user && user.photoURL) {
-      let statusRef = firebase.database().ref(`chatbot/${user.photoURL}`)
-      statusRef.on('value', (snapshot) => {
-        let snap = snapshot.val()
-        if (snap) {
-          this.setState({ status: snap.status })
-        }
-      })
-    }
+
+    //Create an instnace of Firebase Firestore database
+    let db = firebase.firestore()
+
+    //Retrieve the room that admin joined & their name
+    let adminUsersRef = await db.collection('admin-users').doc(user.uid).get()
+    let admin_room_location = (adminUsersRef.exists) ? (adminUsersRef.data().admin_room_location) : ("")
+    let admin_name = (adminUsersRef.exists) ? (adminUsersRef.data().admin_name) : ("") 
+
+    //Retrieve the name & room that the anonymous user is associated with, aka their uid :)
+    let anonUsersRef = await db.collection('anon-users').doc(user.uid).get()
+    let anon_room_location = (anonUsersRef.exists) ? (anonUsersRef.data().anon_uid) : ("")
+    let anon_name = (anonUsersRef.exists) ? (anonUsersRef.data().anon_name) : ("")
+
+    //Assign a room_id depending on the current user being an admin or not
+    let room_id = (this.context.isAdmin) ? (admin_room_location) : (anon_room_location) 
+
+    //Assign a name depending on who is sending the message
+    let name = (this.context.isAdmin) ? (admin_name) : (anon_name)
+
+    //Create Location to store all the messages
+    let messagesRef = db.collection('chat-rooms').doc(room_id).collection('messages').doc()
+
+    // //Post the message to the database(Note: this will generate a random/unique key)
+    messagesRef.set({
+      "sender_name": name,
+      "message": this.state.message,
+      "uid": user.uid,
+      "timestamp": firebase.firestore.FieldValue.serverTimestamp()
+    })
   }
 }
 

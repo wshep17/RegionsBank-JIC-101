@@ -24,9 +24,9 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isAdmin: true,
+      isAdmin: false,
       isLoading: true,
-      chat_room: ""
+      admin_room_location: ""
     }
     this.handleAdminCheck = this.handleAdminCheck.bind(this)
     this.handleAdminLogin = this.handleAdminLogin.bind(this)
@@ -39,7 +39,7 @@ class App extends React.Component {
   render() {
     const value = {
       isAdmin: this.state.isAdmin,
-      chat_room: this.state.chat_room,
+      admin_room_location: this.state.admin_room_location,
       triggerAdminJoinRoom: this.handleAdminJoinRoom,
       triggerAdminLogin: this.handleAdminLogin,
       triggerAdminLogout: this.handleAdminLogout
@@ -75,7 +75,7 @@ class App extends React.Component {
 
   handleAdminCheck() {
     firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
+      if (user && user.email) {
         console.log({ email: user.email, name: user.displayName })
         this.setState({ isAdmin: true, isLoading: false })
       } else {
@@ -84,20 +84,21 @@ class App extends React.Component {
     })
   }
 
+
   handleAdminLogin() {
     this.setState({ isAdmin: true })
     console.log("Admin Status: ", this.state.isAdmin)
   }
 
   handleAdminJoinRoom(room) {
-    this.setState({ chat_room: room })
-
-    console.log("An admin has just joined room: ", this.state.chat_room)
+    this.setState({ admin_room_location: room }, function() {
+      console.log("An admin has just joined room: ", this.state.admin_room_location)
+    })
   }
 
   handleAdminLogout() {
     //console.log('handle log out')
-    this.setState({ isAdmin: false })
+    this.setState({ isAdmin: false , admin_room_location: ""})
     console.log("Admin Status: ", this.state.isAdmin)
   }
 

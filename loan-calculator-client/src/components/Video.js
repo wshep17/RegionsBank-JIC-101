@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import firebase from '../scripts/firebase.js';
+import { ContextAPI } from './Context.js';
 import '../css/Video.css';
 
 
@@ -8,7 +9,7 @@ Brute Force Solution:
 1. allow admin to generate a video room id.
 2. send this id over to the caller for them to join it.
 
-Note: limit the ability to generate video room idsto admins only.
+Note: limit the ability to generate video room ids to admins only.
 
 */
 
@@ -30,11 +31,16 @@ let localStream = null;
 let remoteStream = null;
 
 class Video extends Component {
+    static contextType = ContextAPI
     constructor(props) {
         super(props)
         this.state = {
             roomId: "",
-            exampleRoom: "WilliamRoom"
+            exampleRoom: "WilliamRoom",
+            createRoomBtn_visible: false,
+            hangupBtn_visible: false,
+            roomInput_visible: false,
+            videoScreen_visible: false
         }
         this.joinRoomById = this.joinRoomById.bind(this)
         this.createRoom = this.createRoom.bind(this)
@@ -42,60 +48,64 @@ class Video extends Component {
 
 
     render() {
-  
         return (
-            <div style={{'marginTop': "60px"}}> 
-                <button id="cameraBtn" onClick={this.openUserMedia.bind(this)}>Open Camera & Microphone</button>
+            <div style={{'marginTop': "60px"}}>
+                <button id="cameraBtn" onClick={this.openUserMedia.bind(this)}>Open Camera & Microphone</button> 
                 <br />
-                <button id="createBtn" onClick={()=>this.createRoom(this.state.exampleRoom)}>Create Room</button>
+                {this.context.isAdmin && this.state.createRoomBtn_visible && <button id="createRoomBtn" onClick={this.createRoom}>Create Room</button>}
                 <br />
-                <button id="hangupBtn" onClick={this.hangUp.bind(this)}>HangUp</button>
+                {this.state.hangupBtn_visible && <button id="hangupBtn" onClick={this.hangUp.bind(this)}>HangUp</button>}
                 <br />
-                <input name="roomId"
-                       value={this.state.roomId} 
-                       onChange={this.handleChange.bind(this)}>
-                </input>
-                <button id="joinBtn" onClick={()=>this.joinRoomById(this.state.roomId)}>Join Room</button>
-                <div id="videos">
-                    <video id="localVideo" muted autoPlay playsInline></video>
-                    <video id="remoteVideo" autoPlay playsInline></video>
-                </div>
+                {this.state.roomInput_visible && !this.context.isAdmin &&
+                    <div>
+                        <input name="roomId"
+                               value={this.state.roomId} 
+                               onChange={this.handleChange.bind(this)}>
+                        </input>
+                        <button id="joinBtn" onClick={()=>this.joinRoomById(this.state.roomId)}>Join Room</button>
+                        </div>
+                }
+                {this.state.videoScreen_visible &&
+                    <div id="videos">
+                        <video id="localVideo" muted autoPlay playsInline></video>
+                        <video id="remoteVideo" autoPlay playsInline></video>
+                    </div>
+                }
             </div>
         )
     }
     componentDidMount() {
+        //console.log("isAdmin: ", this.context.isAdmin)
+
         //set the create room button to be disabled
-        document.querySelector('#createBtn').disabled = true;
+        //document.querySelector('#createRoomBtn').disabled = true;
 
         //set the hangup button to be disabled
-        document.querySelector('#hangupBtn').disabled = true;
+        //document.querySelector('#hangupBtn').disabled = true;
         
         //set the join room to be disabled
-        document.querySelector('#joinBtn').disabled = true;
+        //document.querySelector('#joinBtn').disabled = true;
     }
     handleChange(event) {
         this.setState({ [event.target.name]: event.target.value })
     }
-    async openUserMedia(event) {
-        const stream = await navigator.mediaDevices.getUserMedia(
-        {video: true, audio: true});
-        document.querySelector('#localVideo').srcObject = stream;
-        localStream = stream;
-        remoteStream = new MediaStream();
-        document.querySelector('#remoteVideo').srcObject = remoteStream;
-        console.log('Stream:', document.querySelector('#localVideo').srcObject);
-
-        document.querySelector('#cameraBtn').disabled = true;
-        document.querySelector('#joinBtn').disabled = false;
-        document.querySelector('#createBtn').disabled = false;
-        document.querySelector('#hangupBtn').disabled = false;
-
+    openUserMedia(event) {
+        //reveal the screens
+        this.setState({videoScreen_visible: true, createRoomBtn_visible: true, roomInput_visible: true}, async function() {
+            const stream = await navigator.mediaDevices.getUserMedia(
+            {video: true, audio: true});
+            document.querySelector('#localVideo').srcObject = stream;
+            localStream = stream;
+            remoteStream = new MediaStream();
+            document.querySelector('#remoteVideo').srcObject = remoteStream;
+            console.log('Stream:', document.querySelector('#localVideo').srcObject);           
+        })
     }
     //This function will create a document, specified by the roomId field passed
-    async createRoom(roomId) {
+    async createRoom() {
         // Step 1: Initialize the Core Video-Room Database Reference
         const db = firebase.firestore();
-        const roomRef = await db.collection('rooms').doc(roomId);
+        const roomRef = await db.collection('video-rooms').doc();
 
         console.log('Create PeerConnection with configuration: ', configuration);
 
@@ -131,9 +141,41 @@ class Video extends Component {
             }
         }
         await roomRef.set(roomWithOffer);
-        this.setState({roomId: roomId}, function() {
-            console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
-        })
+
+        //update the admin user with their own private room channel
+        let user = firebase.auth().currentUser
+        if (user) {
+            let adminUsersRef = await db.collection('admin-users').doc(user.uid)
+
+            //Update 
+            adminUsersRef.update({
+                "admin_video_room": roomRef.id
+            })
+            .then(() => {
+                this.setState({roomId: roomRef.id}, async function() {
+                    console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
+
+                    //Send this room as a message over to the other user to join
+                    adminUsersRef.get().then((doc) => {
+                        if (doc.exists) {
+                            let messagesRef = db.collection('chat-rooms')
+                                                .doc(doc.data().admin_room_location)
+                                                .collection('messages')
+                                                .doc()
+                            messagesRef.set({
+                                "sender_name": doc.data().admin_name,
+                                "message": `Copy and paste my room: ${roomRef.id}`,
+                                "uid": user.uid,
+                                "timestamp": firebase.firestore.FieldValue.serverTimestamp()
+                            })
+                        } else {
+                            console.log("no such document")
+                        }
+                    }).catch((err) => console.log(err))
+                })                
+            })
+            .catch((err) => console.log(err))
+        }
         
 
         //Step 6: Functionality to add tracks to the Remote Stream
@@ -169,7 +211,7 @@ class Video extends Component {
 
     async joinRoomById(roomId) {
         const db = firebase.firestore();
-        const roomRef = db.collection('rooms').doc(`${roomId}`);
+        const roomRef = db.collection('video-rooms').doc(`${roomId}`);
         const roomSnapshot = await roomRef.get();
         console.log('Got room:', roomSnapshot.exists);
 
@@ -249,7 +291,7 @@ class Video extends Component {
         //Step 4: Functionality to delete the room in the database
         if (this.state.roomId !== "") {
             const db = firebase.firestore();
-            const roomRef = db.collection('rooms').doc(this.state.roomId);
+            const roomRef = db.collection('video-rooms').doc(this.state.roomId);
             //Step 4a: Remove the Callee Candidates Collection
             const calleeCandidates = await roomRef.collection('calleeCandidates').get();
             calleeCandidates.forEach(async candidate => {
@@ -266,7 +308,7 @@ class Video extends Component {
             await roomRef.delete();
             document.querySelector('#cameraBtn').disabled = false;
             document.querySelector('#joinBtn').disabled = true;
-            document.querySelector('#createBtn').disabled = true;
+            document.querySelector('#createRoomBtn').disabled = true;
             document.querySelector('#hangupBtn').disabled = true;
             
             
