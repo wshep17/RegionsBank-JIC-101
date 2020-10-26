@@ -36,7 +36,6 @@ class Chat extends Component {
   }
 
   render() {
-    console.log(this.state.chat)
     return (
       <div className='chat-container'>
         <Video />
@@ -76,24 +75,22 @@ class Chat extends Component {
       room_id = user.uid
     }
 
+    // Retrieve chatbot status
+    let roomRef = await db.collection('chat-rooms').doc(room_id)
+    roomRef.onSnapshot(snapshot => {
+      let status = snapshot.data().status
+      this.setState({ status: status })
+    })
+
     // Retrieve each document in messages(collection) and "order by" timestamp in asc(ascending)
     let messagesRef = await db.collection('chat-rooms').doc(room_id).collection('messages')
-    let messages = []
     messagesRef.orderBy('timestamp', 'asc').onSnapshot(snapshot => {
+      let messages = []
       snapshot.forEach((item) => {
         messages.push(item.data())
       })
+      this.setState({ chat: messages, message: ""})
     })
-
-    // Retrieve chatbot status
-    let status = false
-    let roomRef = await db.collection('chat-rooms').doc(room_id)
-    roomRef.onSnapshot(snapshot => {
-      status = snapshot.data().status
-    })
-
-    // Set state
-    this.setState({ chat: messages, message: "", status: status })
   }
 
   async handleSend() {
