@@ -1,0 +1,48 @@
+.user-chat-popup {
+    width: 25%;
+    max-width: 400px;
+    position: fixed;
+    bottom: 0;
+    right: 20px;
+    border: 1px solid black;
+    border-bottom: none;
+    padding: 5px;
+    height: 65%;
+    background: white;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.user-chat-header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.user-chat-header button {
+    margin-left: 5px;
+}
+
+#closed-chat {
+    visibility: hidden;
+    height: 0;
+    bottom: -10px;
+}
+
+#minimized-chat {
+    height: 35px;
+}
+
+#open-chat {
+    animation-duration: 0.3s;
+    animation-name: slideIn;
+}
+
+@keyframes slideIn {
+    from {
+        height: 0;
+    }
+
+    to {
+        height: 65%;
+    }
+}

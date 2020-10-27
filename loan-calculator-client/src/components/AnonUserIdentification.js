@@ -24,8 +24,8 @@ class AnonUserIdentification extends Component {
   render() {
     return (
       <div>
-        <Button type="primary" onClick={this.showModal.bind(this)}>
-          Click to Speak with Regions Representative.
+        <Button className='open-chat-button' onClick={this.showModal.bind(this)}>
+          Chat with an Advisor
         </Button>
         <Modal
           title="Enter your name below"
