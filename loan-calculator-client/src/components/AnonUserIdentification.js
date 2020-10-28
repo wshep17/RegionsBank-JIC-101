@@ -69,12 +69,12 @@ class AnonUserIdentification extends Component {
       anonUsersRef.set({
         "anon_name": this.state.name, 
         "anon_uid": user.uid,
+      }).then(() => {
+        //create a room out of their uid
+        this.createRoom(user.uid, this.state.name, user.uid)
+        this.setState({ visible: false })
+        this.props.history.push('/chat')
       })
-
-      //create a room out of their uid
-      this.createRoom(user.uid, this.state.name, user.uid)
-      this.setState({visible: false})
-      this.props.history.push('/chat')
     })
     .catch((err) => console.log(err))
   }
