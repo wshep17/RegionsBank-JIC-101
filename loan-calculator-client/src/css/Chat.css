@@ -18,3 +18,53 @@
   font-size: 16px;
   transform: rotate(270deg);
 }
+
+.chat-messages {
+  height: calc(100% - 55px);
+  overflow: scroll;
+}
+
+.chat-input {
+  padding: 5px;
+}
+
+#user-message-block {
+  padding: 5px;
+}
+
+#user-name {
+  font-size: 10px;
+  margin: 0;
+  padding-left: 5px;
+}
+
+#user-message {
+  background: #117788;
+  color: white;
+  border-radius: 12px;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 3px 10px;
+}
+
+#admin-message-block {
+  padding: 5px;
+}
+
+#admin-name {
+  font-size: 10px;
+  margin: 0;
+  padding-left: 5px;
+}
+
+#admin-message {
+  background: white;
+  border-radius: 12px;
+  width: fit-content;
+  padding: 3px 10px;
+}
+
+#admin-message p,
+#user-message p {
+  margin: 0;
+}

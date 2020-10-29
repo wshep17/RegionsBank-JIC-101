@@ -6,7 +6,6 @@
     right: 20px;
     border: 1px solid black;
     border-bottom: none;
-    padding: 5px;
     height: 65%;
     background: white;
     border-top-left-radius: 3px;
@@ -16,6 +15,7 @@
 .user-chat-header {
     display: flex;
     justify-content: flex-end;
+    padding: 5px;
 }
 
 .user-chat-header button {

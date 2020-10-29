@@ -8,7 +8,7 @@ import { Input } from 'antd';
  * General Component:
  * Chatroom
  */
-class Chat extends Component {
+class AdminChat extends Component {
 
   static contextType = ContextAPI
 
@@ -30,47 +30,27 @@ class Chat extends Component {
     this.fetchStatus()
   }
   render() {
+    console.log('render');
     return (
-      <div style={{ background: '#eeeeee', height: '100%' }}>
-        <div className='chat-messages'>
+      <div className='chat-container'>
+
+        <ul style={{ backgroundColor: "white" }}>
           {this.state.chat.map((each) => {
-            return this.renderMessage(each.name, each.message)
+            return (<div><li>{each.name}: {each.message}</li><br /></div>)
           })}
-        </div>
-        <div className='chat-input'>
-          <Input
-            onPressEnter={this.handleSend.bind(this)}
-            onChange={(event) => this.handleChange(event)}
-            placeholder="Message"
-            value={this.state.message}
-          />
-        </div>
+
+        </ul>
+        <Input
+          onPressEnter={this.handleSend.bind(this)}
+          onChange={(event) => this.handleChange(event)}
+          placeholder="Message"
+          value={this.state.message}
+        />
+
       </div>
+
     )
   }
-
-  renderMessage(name, message) {
-    let user = firebase.auth().currentUser;
-    if (name == user.displayName) {
-      return (
-       <div id='user-message-block'>
-         <p id='user-name'>{name}</p>
-         <div id='user-message'>
-           <p>{message}</p>
-         </div>
-       </div> 
-      );
-    }
-    return (
-      <div id='admin-message-block'>
-        <p id='admin-name'>{name}</p>
-        <div id='admin-message'>
-          <p>{message}</p>
-        </div>
-      </div> 
-    );
-  }
-
   fetchMessages() {
     let user = firebase.auth().currentUser
     if (user && user.photoURL) {
@@ -154,4 +134,4 @@ class Chat extends Component {
 }
 
 
-export default Chat;
+export default AdminChat;

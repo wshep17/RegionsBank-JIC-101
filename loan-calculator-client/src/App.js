@@ -15,7 +15,7 @@ import AdminSignup from './components/AdminSignup.js'
 import AdminLogin from './components/AdminLogin.js'
 import PrivateRoute from './components/PrivateRoute.js'
 import NavigationBar from './components/NavigationBar.js'
-import Chat from './components/Chat.js'
+import AdminChat from './components/AdminChat.js'
 import { ContextAPI } from './components/Context.js'
 import firebase from './scripts/firebase.js'
 
@@ -56,7 +56,7 @@ class App extends React.Component {
               <Route path='/login' component={AdminLogin} />
               <Route path='/signup' component={AdminSignup} />
               <Route path='/calculator' component={Calculator} />
-              <Route path='/chat' component={Chat} />
+              <Route path='/chat' component={AdminChat} />
               <PrivateRoute path='/chat-rooms' component={ChatRooms} />
               <Route path='/' component={Home} />
             </Switch>
