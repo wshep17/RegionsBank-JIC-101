@@ -30,16 +30,18 @@ class Chat extends Component {
   }
 
   render() {
+    let prevName = '';
     return (
       <div style={{ background: '#eeeeee', height: '100%' }}>
-        <div className='chat-messages'>
+        <div className={this.state.status ? '' : 'chat-messages'}>
           {this.state.chat.map((each) => {
-            console.log(each);
-            return this.renderMessage(each.sender_name, each.message)
+            let showName = prevName !== each.sender_name;
+            prevName = each.sender_name;
+            return this.renderMessage(each.sender_name, each.message, showName)
           })}
         </div>
         {this.state.status ? (
-          <div>
+          <div className='chatbot-buttons'>
             {getChatbotBtns(this.state.context).map((btn) =>{
               return (<Button onClick={() => this.handleChatbotResponse(btn)}>{btn.text}</Button>);
             })}
@@ -58,11 +60,11 @@ class Chat extends Component {
     )
   }
 
-  renderMessage(name, message) {
+  renderMessage(name, message, showName) {
     if (this.state.name === name) {
       return (
-       <div className='user-message-block'>
-         <p className='user-name'>{name}</p>
+       <div className={showName ? 'user-message-block' : 'user-message-block-cont'}>
+         {showName && <p className='user-name'>{name}</p>}
          <div className='user-message'>
            <p>{message}</p>
          </div>
@@ -70,8 +72,8 @@ class Chat extends Component {
       );
     }
     return (
-      <div className='admin-message-block'>
-        <p className='admin-name'>{name}</p>
+      <div className={showName ? 'admin-message-block' : 'admin-message-block-cont'}>
+        {showName && <p className='admin-name'>{name}</p>}
         <div className='admin-message'>
           <p>{message}</p>
         </div>

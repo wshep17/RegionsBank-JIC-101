@@ -1,6 +1,6 @@
 .user-chat-popup {
     width: 25%;
-    max-width: 400px;
+    min-width: 400px;
     position: fixed;
     bottom: 0;
     right: 20px;

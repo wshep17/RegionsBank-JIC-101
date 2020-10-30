@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import firebase from '../scripts/firebase.js';
 import Video from './Video.js';
 import { ContextAPI } from './Context.js';
 import Chat from './Chat.js';
@@ -28,7 +27,7 @@ class AdminChat extends Component {
   render() {
     return (
       <div className='chat-container'>
-        { false && <Video />}
+        <Video />
         <Chat />
       </div>
     )

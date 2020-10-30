@@ -28,14 +28,32 @@
   padding: 5px;
 }
 
+.chatbot-buttons {
+  display: flex;
+  flex-direction: column;
+  width: 96%;
+  margin: auto;
+  padding-top: 5px;
+}
+
 .user-message-block {
   padding: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-message-block-cont {
+  padding: 5px;
+  padding-top: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .user-name {
   font-size: 10px;
   margin: 0;
-  padding-left: 5px;
+  padding-right: 5px;
+  margin-left: auto;
 }
 
 .user-message {
@@ -45,10 +63,16 @@
   width: -moz-fit-content;
   width: fit-content;
   padding: 3px 10px;
+  margin-left: auto;
 }
 
 .admin-message-block {
   padding: 5px;
+}
+
+.admin-message-block-cont {
+  padding: 5px;
+  padding-top: 0;
 }
 
 .admin-name {

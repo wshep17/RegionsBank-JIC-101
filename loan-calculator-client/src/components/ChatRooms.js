@@ -34,14 +34,24 @@ class ChatRooms extends Component {
           title: 'Action',
           key: 'action',
           render: (record) => (
-            <Popconfirm
-              title="Continue to this private chat room?"
-              onConfirm={() => this.handleOk(record)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button type="link">Join Chat Room</Button>
-            </Popconfirm>
+            <div>
+              <Popconfirm
+                title="Continue to this private chat room?"
+                onConfirm={() => this.handleOk(record)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button type="link">Join Chat Room</Button>
+              </Popconfirm>
+              <Popconfirm
+                title="Delete this chat room?"
+                onConfirm={() => {}}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button type="link">Delete</Button>
+              </Popconfirm>
+            </div>
           ),
         },
       ]
@@ -62,7 +72,7 @@ class ChatRooms extends Component {
   }
 
 	render() {
-    //console.log(this.state.chat_rooms);
+    console.log(this.state.chat_rooms);
 		return(
 			<div style={{marginTop: '72px'}}>
         <Table
@@ -87,8 +97,10 @@ class ChatRooms extends Component {
         let data = {
           ...item.data(),
           key: list.length
+        };
+        if (!data.status) { //only want to display rooms that need an admin
+          list.push(data);
         }
-				list.push(data)
 			})
 			this.setState({chat_rooms: list})
     })
@@ -117,11 +129,6 @@ class ChatRooms extends Component {
     let adminUsersRef = await db.collection('admin-users').doc(user.uid)
     let adminUsersSnapShot = await adminUsersRef.get()
 
-    console.log(adminUsersSnapShot);
-
-    //DELETE THIS BEFORE MERGING
-    this.props.history.push('/chat')
-
     if (adminUsersSnapShot.exists) {
       adminUsersRef.update({
         "admin_room_location": room
@@ -129,7 +136,7 @@ class ChatRooms extends Component {
       .then(() => {
         this.props.history.push('/chat')
       })
-      //this.context.triggerAdminJoinRoom(room)
+      this.context.triggerAdminJoinRoom(room)
     } 
   }
 }
