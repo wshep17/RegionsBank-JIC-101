@@ -23,9 +23,9 @@ class AnonUserIdentification extends Component {
 
   render() {
     return (
-      <div>
-        <Button className='open-chat-button' onClick={this.showModal.bind(this)}>
-          Chat with an Advisor
+      <div className='anon-user-container'>
+        <Button type="primary" onClick={this.showModal.bind(this)}>
+          Click to Speak with Regions Representative.
         </Button>
         <Modal
           title="Enter your name below"
@@ -42,61 +42,70 @@ class AnonUserIdentification extends Component {
     this.setState({[event.target.name]: event.target.value})
   }
   showModal() {
-    this.setState({
-      visible: true,
-    })
+    let user = firebase.auth().currentUser
+    if (user) {
+      //sign out of current anonymous user 
+      firebase.auth().signOut()
+      .then(() => {
+        console.log('Anonymous User signed out successfully')
+        this.setState({ visible: true})
+      })
+      .catch((err) => console.log(err))
+    } else {
+      this.setState({ visible: true})
+    }
   }
 
+  // Saves anonymous user information to Firestore (name, uid, chatbot status)
   handleOk() {
-    var user
     firebase.auth().signInAnonymously()
-    .then(() => {
-      user = firebase.auth().currentUser
-      user.updateProfile({
-        displayName: this.state.name,
-        photoURL: user.uid
-      }).then(() => {
+    .then(async () => {
+      /**Purpose: Save Anonymous User in Firebase Firestore(result visible in schema)
+         Note the following changes, from old_commit -> updated_commit: 
+         (a) photoURL -> uid
+         (b) displayName -> name
+      */
+      let user = await firebase.auth().currentUser
+      const db = firebase.firestore() 
+      const anonUsersRef = await db.collection('anon-users').doc(user.uid)
+      anonUsersRef.set({
+        "anon_name": this.state.name, 
+        "anon_uid": user.uid,
+      }).then(async () => {
         //create a room out of their uid
-        this.createRoom(user.uid, user.displayName)
-        this.setState({visible: false})
+        const roomRef = db.collection('chat-rooms').doc(user.uid);
+        const doc = await roomRef.get();
+
+        // If the chatroom does not already exist, create a new room
+        if (!doc.exists) {
+          this.createRoom(user.uid, this.state.name, user.uid)
+        }
+        this.setState({ visible: false })
         this.props.history.push('/chat')
-        console.log('anonPrivateRoom: ', user.photoURL)
       })
     })
     .catch((err) => console.log(err))
   }
 
-  //This function will create another room in the database
-  createRoom(room, displayName) {    
-    let roomsRef = firebase.database().ref(`private-rooms/${room}`)
-    roomsRef.set({
-      "name": displayName,
-      "room": room
+  //This function will create another room in the database and send a greeting from the chatbot
+  async createRoom(room_name, creator_name, creator_uid) {    
+    const db = firebase.firestore();    
+    let roomRef = await db.collection('chat-rooms').doc(room_name)
+    roomRef.set({
+      "creator_name": creator_name,
+      "creator_uid": creator_uid,
+      "status": true
     })
-    //check if current room already exists. if not, set chatbot status to true
-    let chatbotRef  = firebase.database().ref(`chatbot`)
-    chatbotRef.once('value', (snapshot) =>{
-      let exists = false
-      snapshot.forEach((item) => {
-        if (item.key === room) {
-          exists = true
-        }
-      })
-      if (!exists) {
-        console.log("New chatroom... Setting chatbot status to true")
-        let roomStatusRef = firebase.database().ref(`chatbot/${room}`)
-        roomStatusRef.set({
-          "status": true
-        })
-        let messageRef = firebase.database().ref(`messages/room:${room}`)
-        messageRef.push({
-          "name": "Chatbot",
-          "message": "Hi! How can I help you today?",
-          "uid": "bot",
-        })
-      } else {
-        console.log("Chatroom already exists")
-      }
+    
+    // Create reference to the location where messages are stored
+    let messagesRef = roomRef.collection('messages').doc()
+
+    // Post the message to the database (Note: this will generate a random/unique key)
+    messagesRef.set({
+      "sender_name": "Chatbot",
+      "message": "Hi! What can I assist you with?",
+      "uid": "Chatbot",
+      "timestamp": firebase.firestore.FieldValue.serverTimestamp()
     })
   }
 
