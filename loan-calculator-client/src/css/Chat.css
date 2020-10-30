@@ -11,6 +11,11 @@
   border-radius: 5px;
 }
 
+.button-chat-format {
+  padding-bottom: 16px;
+  overflow: scroll;
+}
+
 .open-chat-button {
   position: fixed;
   right: -70px;

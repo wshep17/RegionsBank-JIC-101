@@ -32,7 +32,7 @@ class Chat extends Component {
   render() {
     let prevName = '';
     return (
-      <div style={{ background: '#eeeeee', height: '100%' }}>
+      <div style={{ background: '#eeeeee', height: '100%' }} className={this.state.status ? 'button-chat-format' : ''}>
         <div className={this.state.status ? '' : 'chat-messages'}>
           {this.state.chat.map((each) => {
             let showName = prevName !== each.sender_name;
