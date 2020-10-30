@@ -1,5 +1,12 @@
+/*
+  class for all loan calculations
+*/
 var amortize = require('amortize');
 
+/*
+  calculateLoanData() takes inputs from users then
+  calculates a monthly loan rate with a flat interest rate
+*/
 function calculateLoanData(inputs) {
   const {
     purchasePrice,
@@ -19,6 +26,10 @@ function calculateLoanData(inputs) {
   return { loanAmount: loanAmount, monthlyPayment: monthlyPayment };
 }
 
+/*
+  calculateAmortizedLoanData() takes inputs from users then
+  calculates a monthly loan rate with a compounding interest rate
+*/
 function calculateAmortizedLoanData(inputs) {
   const {
     purchasePrice,
@@ -61,7 +72,10 @@ function calculateAmortizedLoanData(inputs) {
   return [interestPaidData, principalPaidData, endingBalanceData];
 }
 
-
+/*
+  calculateAffordability() takes inputs from users then
+  calculates what kind of loan/ vehicle price the user can afford
+*/
 function calculateAffordability(inputs) {
   const {
     monthlyPayment,
@@ -91,6 +105,11 @@ function calculateAffordability(inputs) {
   return graphData;
 }
 
+/*
+  calculateCashBack() takes inputs from users then
+  calculates a monthly loan rate based on a low interest rate
+  and cash back rate to compare which saves more money
+*/
 function calculateCashBack(inputs) {
   const {
     purchasePrice,
@@ -105,14 +124,9 @@ function calculateCashBack(inputs) {
   } = inputs;
 
   const netTradeInWorth = tradeInValue - tradeInOwed;
-  const graphData = []
   const totalInterestPaidData = []
   const totalPrincipalPaidData = []
   const totalData = []
-  const numYears = Math.ceil(loanTerm / 12);
-  //const newLoanAmount = 0;
-  var prevLoanAmount = 0;
-  var prevLoanTerm = 0;
 
   if (purchasePrice < 0) {
     return [totalInterestPaidData, totalPrincipalPaidData, totalData];
@@ -136,8 +150,8 @@ function calculateCashBack(inputs) {
   const monthlyLowRate = amortize({
     amount: totalLowRate,
     rate: lowInterestRate,
-    totalTerm: loanTerm,
-    amortizeTerm: loanTerm
+    totalTerm: loanTerm, // update new loan term: 12 months fewer
+    amortizeTerm: loanTerm // our graph shows per-year data; 12 months in a year
   });
   totalData.push({ 'year': 'Low Rate Option', 'dollars': monthlyLowRate.principal + monthlyLowRate.interest });
   totalPrincipalPaidData.push({ 'year': 'Low Rate Option', 'dollars': monthlyLowRate.principal });

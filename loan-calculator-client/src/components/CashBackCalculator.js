@@ -64,7 +64,8 @@ function CashBackCalculator() {
 
     updateChart();
   };
-
+  
+  // toggle for chart buttons
   const updateChart = (event) => {
     const newRadioData = { ...radioData };
 
@@ -89,6 +90,7 @@ function CashBackCalculator() {
     lineHeight: '30px',
   };
 
+  // displays/ updates the chart based on user inputs
   return (
     <div>
       <div className='calculator-inputs'>

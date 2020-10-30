@@ -1,3 +1,6 @@
+/*
+  class for organizing and displaying the loan calculators
+*/
 import React from 'react'
 import AffordabilityCalculator from './AffordabilityCalculator.js';
 import MonthlyPaymentCalculator from './MonthlyPaymentCalculator.js';
