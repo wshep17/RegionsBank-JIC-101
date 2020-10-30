@@ -2,12 +2,12 @@ const whatIsQuestion = "What is...";
 const loanQuestion = "Loan-based questions";
 const interestQuestion = "What is an interest payment?";
 const loanTermQuestion = "What is a loan term?";
-const redirectQuestion = "Chat with regions representative";
+const redirectQuestion = "Chat with regions representative.";
 const principalBalanceQuestion = "Why are the Principal Balance and the Payoff Amount Different?";
 const autoLoanQuestion = "How does this auto loan work?";
 const latePaymentQuestion = "How is this loan affected by late payments?";
 
-const interestResponse = "I have no idea.";
+const interestResponse = "An interst payment is the payment from a borrow to a lender of an amount above repayment of the amount borrowed, at a particular rate.";
 const loanTermResponse = "The loan term is the length of time that you have to repay the loan."
 const principalBalanceResponse = "The Payoff Amount represents the principal balance, plus accrued interest and any applicable fees. This is the amount you would have to pay to fully pay off your car."
 const autoLoanResponse = "This is a simple interest loan. Interest is accrued against the remaining principle daily over the life of the loan. As the principal is paid off, the monthly interest decreases, meaning more of our payment goes towards principal each month."

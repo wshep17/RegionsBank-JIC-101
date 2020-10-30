@@ -71,9 +71,15 @@ class AnonUserIdentification extends Component {
       anonUsersRef.set({
         "anon_name": this.state.name, 
         "anon_uid": user.uid,
-      }).then(() => {
+      }).then(async () => {
         //create a room out of their uid
-        this.createRoom(user.uid, this.state.name, user.uid)
+        const roomRef = db.collection('chat-rooms').doc(user.uid);
+        const doc = await roomRef.get();
+
+        // If the chatroom does not already exist, create a new room
+        if (!doc.exists) {
+          this.createRoom(user.uid, this.state.name, user.uid)
+        }
         this.setState({ visible: false })
         this.props.history.push('/chat')
       })
@@ -81,14 +87,25 @@ class AnonUserIdentification extends Component {
     .catch((err) => console.log(err))
   }
 
-  //This function will create another room in the database
+  //This function will create another room in the database and send a greeting from the chatbot
   async createRoom(room_name, creator_name, creator_uid) {    
     const db = firebase.firestore();    
-    let roomsRef = await db.collection('chat-rooms').doc(room_name)
-    roomsRef.set({
+    let roomRef = await db.collection('chat-rooms').doc(room_name)
+    roomRef.set({
       "creator_name": creator_name,
       "creator_uid": creator_uid,
       "status": true
+    })
+    
+    // Create reference to the location where messages are stored
+    let messagesRef = roomRef.collection('messages').doc()
+
+    // Post the message to the database (Note: this will generate a random/unique key)
+    messagesRef.set({
+      "sender_name": "Chatbot",
+      "message": "Hi! What can I assist you with?",
+      "uid": "Chatbot",
+      "timestamp": firebase.firestore.FieldValue.serverTimestamp()
     })
   }
 

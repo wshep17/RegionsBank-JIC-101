@@ -165,24 +165,6 @@ class Chat extends Component {
       "timestamp": firebase.firestore.FieldValue.serverTimestamp()
     })
   }
-
-
-  async sendChatbotResponse(response) {
-
-    // Create an instance of Firebase Firestore database
-    let db = firebase.firestore()
-
-    // Create reference to the location where messages are stored
-    let messagesRef = db.collection('chat-rooms').doc(this.state.room_id).collection('messages').doc()
-
-    // Post the message to the database (Note: this will generate a random/unique key)
-    messagesRef.set({
-      "sender_name": "Chatbot",
-      "message": response,
-      "uid": "Chatbot",
-      "timestamp": firebase.firestore.FieldValue.serverTimestamp()
-    })
-  }
 }
 
 
