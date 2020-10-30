@@ -22,8 +22,8 @@ class ChatRooms extends Component {
       columns: [
         {
           title: 'Name',
-          dataIndex: 'title',
-          key: 'title'
+          dataIndex: 'name',
+          key: 'name'
         },
         {
           title: 'Last Question',

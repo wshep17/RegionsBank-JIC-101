@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Chat from './Chat.js';
 import firebase from '../scripts/firebase.js';
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
 import { CloseOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 import "../css/App.css";
@@ -17,6 +17,8 @@ export default function ApplicantChat() {
   */
   const [chatOpen, setChatOpen] = useState(false);
   const [chatMinimized, setChatMinimized] = useState(false);
+  const [name, setName] = useState('');
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
   const handleOk = () => {
     var user
@@ -24,13 +26,15 @@ export default function ApplicantChat() {
       .then(() => {
         user = firebase.auth().currentUser
         user.updateProfile({
-          displayName: 'Kate',
+          displayName: name,
           photoURL: user.uid
         }).then(() => {
           //create a room out of their uid
           createRoom(user.uid, user.displayName)
           console.log('anonPrivateRoom: ', user.photoURL)
         })
+        setChatMinimized(false);
+        setIsSignedIn(true);
       })
       .catch((err) => console.log(err))
   };
@@ -71,9 +75,29 @@ export default function ApplicantChat() {
 
   if (!chatOpen) {
     return (
-      <Button className='open-chat-button' onClick={() => { setChatOpen(true); setChatMinimized(false); handleOk(); }}>
+      <Button
+        className='open-chat-button'
+        onClick={() => {
+          setChatOpen(true);
+          if (firebase.auth().currentUser !== null) {
+            setIsSignedIn(true);
+            setChatMinimized(false);
+          }
+        }}
+      >
         Chat with an Advisor
       </Button>
+    );
+  } else if (!isSignedIn) {
+    return (
+      <Modal
+        title="Enter your name below"
+        visible={chatOpen && !isSignedIn}
+        onOk={handleOk}
+        onCancel={() => setChatOpen(false)}
+      >
+        <input placeholder="Name" name="name" value={name} onChange={(event) => setName(event.target.value)}></input>
+      </Modal>
     );
   }
   return (

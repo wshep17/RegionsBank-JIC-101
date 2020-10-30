@@ -73,7 +73,7 @@ class App extends React.Component {
 
   handleAdminCheck() {
     firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
+      if (user && !user.isAnonymous) {
         console.log({ email: user.email, name: user.displayName })
         this.setState({ isAdmin: true, isLoading: false })
       } else {

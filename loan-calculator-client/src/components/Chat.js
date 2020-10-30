@@ -51,20 +51,20 @@ class Chat extends Component {
 
   renderMessage(name, message) {
     let user = firebase.auth().currentUser;
-    if (name == user.displayName) {
+    if (name === user.displayName) {
       return (
-       <div id='user-message-block'>
-         <p id='user-name'>{name}</p>
-         <div id='user-message'>
+       <div className='user-message-block'>
+         <p className='user-name'>{name}</p>
+         <div className='user-message'>
            <p>{message}</p>
          </div>
        </div> 
       );
     }
     return (
-      <div id='admin-message-block'>
-        <p id='admin-name'>{name}</p>
-        <div id='admin-message'>
+      <div className='admin-message-block'>
+        <p className='admin-name'>{name}</p>
+        <div className='admin-message'>
           <p>{message}</p>
         </div>
       </div> 
