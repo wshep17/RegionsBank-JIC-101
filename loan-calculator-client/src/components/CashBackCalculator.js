@@ -220,7 +220,7 @@ function CashBackCalculator() {
           </div>
         </div>
         <div className='main-outputs-container'>
-          <h2 style={{ 'padding-bottom': '5px' }}>Low Rate Option</h2>
+          <h2 style={{ 'padding-bottom': '5px' }}>Cash Back Option</h2>
           <table>
             <tr>
               <td>Total Paid</td>
@@ -229,7 +229,7 @@ function CashBackCalculator() {
               <th>{'$' + (loanData.totalData.length > 1 ? loanData.totalData[0].dollars.toFixed(0) : '10979')}</th>
             </tr>
           </table>
-          <h2 style={{ 'padding-bottom': '5px', 'padding-top': '10px' }}>Cash Back Option</h2>
+          <h2 style={{ 'padding-bottom': '5px', 'padding-top': '10px' }}>Low Rate Option</h2>
           <table>
             <tr>
               <td>Total Paid</td>

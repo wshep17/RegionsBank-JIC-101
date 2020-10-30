@@ -41,17 +41,28 @@ class AdminSignup extends React.Component {
 		this.setState({ [event.target.name]: event.target.value })
 	}
 
-	handleSubmitForm() {
+	async handleSubmitForm() {
+		const db = firebase.firestore();
+		
 		var data = {
 			name: this.state.name,
 			email: this.state.email,
-			password: this.state.password
+			password: this.state.password,
 		}
+
+		//Save user leveraging Firebase Authentication API(result not visible in schema)
 		firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
-		.then(() => {
+		.then(async function () { 
 			let user = firebase.auth().currentUser
-			user.updateProfile({
-				displayName: data.name
+
+			/**
+			   Save user in Firebase Firestore(result visible in schema)
+			   Note: The document can be accessed from the current user's uid
+			*/
+			const adminUsersRef = await db.collection('admin-users').doc(user.uid);
+			await adminUsersRef.set({
+				"admin_name": data.name,
+				"admin_uid": user.uid
 			})
 		})
 		.then(() => {
