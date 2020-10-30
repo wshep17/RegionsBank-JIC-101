@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
+  Button,
   Collapse,
   Form,
+  Input,
   InputNumber,
-  Radio
+  Radio,
+  Select
 } from 'antd';
 import { calculateLoanData, calculateAmortizedLoanData } from '../scripts/calculators';
 import '../css/MonthlyPaymentCalculator.css';
 import BarChart from './BarChart'
+import ReactTooltip from 'react-tooltip';
+
 
 function MonthlyPaymentCalculator() {
   const [ inputs, setInputs ] = useState({
@@ -27,11 +32,24 @@ function MonthlyPaymentCalculator() {
     principalPaidData: [{}],
     endingBalanceData: [{}]
   });
+  const [ dropdownData, setDropdownData ] = useState({
+    selectedValue: "",
+    inputValues: {}
+  });
+  const [ enteredName, setEnteredName ] = useState({
+    name: null
+  })
   const [ radioData, setRadioData ] = useState({
     value: 1,
     chart_data: {key: 1, title: "Loan Payoff Schedule", xAxisTitle: "Year", data: loanData.interestPaidData}
   });
+  useEffect(() => {
+    updateCalculationData(inputs);
+    updateChart();
+  }, [inputs]);
+
   const { Panel } = Collapse;
+  const { Option } = Select;
 
   const onInputsChange = (formData) => {
     const newInputs = { ...inputs };
@@ -45,21 +63,11 @@ function MonthlyPaymentCalculator() {
     });
     setInputs(newInputs);
 
-    const newLoanData = { ...loanData };
-    const {loanAmount, monthlyPayment} = calculateLoanData(newInputs);
-    newLoanData.loanAmount = loanAmount;
-    newLoanData.monthlyPayment = monthlyPayment;
-
-    // using amortize package
-    const [newInterestPaidData, newPrincipalPaidData, newEndingBalanceData] = calculateAmortizedLoanData(newInputs);
-    newLoanData.interestPaidData = newInterestPaidData;
-    newLoanData.principalPaidData = newPrincipalPaidData;
-    newLoanData.endingBalanceData = newEndingBalanceData;
-    setLoanData(newLoanData);
-
+    updateCalculationData(newInputs);
     updateChart();
   };
 
+  // toggle for chart buttons
   const updateChart = (event) => {
     const newRadioData = { ...radioData };
 
@@ -78,18 +86,95 @@ function MonthlyPaymentCalculator() {
     setRadioData(newRadioData);
   }
 
+  const onNameChange = (event) => {
+    setEnteredName({name: event.target.value});
+  }
+
+  const updateCalculationData = (newInputs) => {
+    const newLoanData = { ...loanData };
+    const { loanAmount, monthlyPayment } = calculateLoanData(newInputs);
+    newLoanData.loanAmount = loanAmount;
+    newLoanData.monthlyPayment = monthlyPayment;
+
+    // using amortize package
+    const [newInterestPaidData, newPrincipalPaidData, newEndingBalanceData] = calculateAmortizedLoanData(newInputs);
+    newLoanData.interestPaidData = newInterestPaidData;
+    newLoanData.principalPaidData = newPrincipalPaidData;
+    newLoanData.endingBalanceData = newEndingBalanceData;
+    setLoanData(newLoanData);
+  }
+
+  // To allow us to access form elements
+  const [formOne] = Form.useForm();
+  const [formTwo] = Form.useForm();
+  const [formThree] = Form.useForm();
+
+  const handleLoadClick = () => {
+    // Load selected value's data into input boxes
+    const newInputs = { ...dropdownData.inputValues[dropdownData.selectedValue] };
+    formOne.setFieldsValue({
+      purchasePrice: newInputs.purchasePrice,
+      cashBack: newInputs.cashBack,
+      taxRate: newInputs.taxRate
+    });
+    formTwo.setFieldsValue({
+      tradeInValue: newInputs.tradeInValue,
+      tradeInOwed: newInputs.tradeInOwed
+    });
+    formThree.setFieldsValue({
+      loanTerm: newInputs.loanTerm,
+      interestRate: newInputs.interestRate,
+      downPayment: newInputs.downPayment
+    });
+
+    // Also load data into the current state
+    setInputs(newInputs);
+
+    // Finally, update chart
+    updateCalculationData(newInputs);
+    updateChart();
+  }
+
+  const handleSaveClick = () => {
+    const newDropdownData = { ...dropdownData };
+    const currentInputData = { ...inputs };
+    newDropdownData.inputValues[enteredName.name] = currentInputData;
+    setDropdownData(newDropdownData);
+    console.log(dropdownData);
+  }
+
+  const handleSelectChange = (value) => {
+    console.log(`Selected: ${value}`);
+    const newDropdownData = { ...dropdownData };
+    newDropdownData.selectedValue = value;
+    setDropdownData(newDropdownData);
+  }
+
+  const multipleDataStyle = {
+    display: 'flex',
+    paddingLeft: '20px'
+  };
+
   const radioStyle = {
     display: 'block',
     height: '30px',
     lineHeight: '30px',
   };
 
+  // const options = [
+  //   { label: 'Thing 1', value: 1},
+  //   { label: 'Thing 2', value: 2},
+  // ];
+
+
+  // displays/ updates the chart based on user inputs
   return (
     <div className='calculator-tab-content'>
       <div className='calculator-inputs'>
         <Collapse bordered={false} defaultActiveKey={['1', '2', '3']}>
           <Panel header="Vehicle Information" key="1">
             <Form
+              form={formOne}
               name="monthly-payment-inputs"
               fields={[
                 { name: ["purchasePrice"], value: inputs.purchasePrice },
@@ -131,6 +216,7 @@ function MonthlyPaymentCalculator() {
           </Panel>
           <Panel header="Trade-In Information" key="2">
           <Form
+              form={formTwo}
               name="monthly-payment-inputs"
               fields={[
                 { name: ["tradeInValue"], value: inputs.tradeInValue },
@@ -162,6 +248,7 @@ function MonthlyPaymentCalculator() {
           </Panel>
           <Panel header="Loan Information" key="3">
             <Form
+              form={formThree}
               name="monthly-payment-inputs"
               fields={[
                 { name: ["loanTerm"], value: inputs.loanTerm },
@@ -198,6 +285,16 @@ function MonthlyPaymentCalculator() {
             </Form>
           </Panel>
         </Collapse>
+      </div>
+      <div className='multiple-inputs' style={multipleDataStyle}>
+        <Input placeholder="Loan name" style={{ width: 200, margin: 10 }} onChange={onNameChange} data-tip='Save multiple loan alternatives'></Input>
+        <ReactTooltip place="bottom"/>
+        <Button type="primary" style={{ margin: 10 }} onClick={handleSaveClick}>Save</Button>
+        <Select defaultValue="None" style={{ width: 120, margin:10 }} onChange={handleSelectChange} data-tip='Choose loans to compare'>
+          {Object.keys(dropdownData.inputValues).map((elem) =><Option value={elem}>{elem}</Option>)}
+        </Select>
+        <ReactTooltip place="bottom"/>
+        <Button type="primary" style={{ margin: 10 }} onClick={handleLoadClick}>Load</Button>
       </div>
       <div className='calc-outputs'>
         <div className='chart-container' style={{'display': 'flex'}}>
