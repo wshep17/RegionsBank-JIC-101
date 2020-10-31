@@ -36,9 +36,14 @@ class NavigationBar extends Component {
         )
       } else {
         return (
-          <Tooltip title='Login'>
-            <Button onClick={() => this.props.history.push('/login')} shape='circle' icon={<LoginOutlined />} />
-          </Tooltip>
+          <div>
+            <Tooltip title="Home">
+              <Button onClick={() => this.props.history.push('/home')} shape='circle' icon={<HomeOutlined />} />
+            </Tooltip>
+            <Tooltip title='Login'>
+              <Button onClick={() => this.props.history.push('/login')} shape='circle' icon={<LoginOutlined />} />
+            </Tooltip>
+          </div>
         )
       }
     }

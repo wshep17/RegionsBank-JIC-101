@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
 import firebase from '../scripts/firebase.js';
-import Video from './Video.js'
 import { ContextAPI } from './Context.js';
 import { Input, Button } from 'antd';
 import { getChatbotResponse, getChatbotBtns } from '../scripts/chatbot';
-
-//TODO: Get a working chat application up and running again with firestore :(
-
 
 /**
  * General Component:
@@ -34,40 +30,83 @@ class Chat extends Component {
   }
 
   render() {
-    // Method of input dependent on chatbot status
-    let input;
-    if (this.state.status) {
-      input = []
-      let btns =  getChatbotBtns(this.state.context)
-      btns.forEach(btn => {
-      let promptBtn = <Button onClick={() => this.handleChatbotResponse(btn)}>{btn.text}</Button>
-        input.push(promptBtn)
-      })
-    } else {
-      input = <Input
-        onPressEnter={this.handleSend.bind(this)}
-        onChange={(event) => this.handleChange(event)}
-        placeholder="Message (Press ENTER to send)"
-        value={this.state.message}
-      />
-    }
-
+    let prevName = '';
     return (
-      <div className='chat-container'>
-        <Video />
-        <ul style={{ backgroundColor: "white" }}>
+      <div style={{ background: '#eeeeee', height: '100%' }} className={this.state.status ? 'button-chat-format' : ''}>
+        <div className={this.state.status ? '' : 'chat-messages'}>
           {this.state.chat.map((each) => {
-            return (<div><li>{each.sender_name}: {each.message}</li><br /></div>)
+            let showName = prevName !== each.sender_name;
+            prevName = each.sender_name;
+            return this.renderMessage(each.sender_name, each.message, showName)
           })}
-
-        </ul>
-        {input}
-
+        </div>
+        {this.state.status ? (
+          <div className='chatbot-buttons'>
+            {getChatbotBtns(this.state.context).map((btn) =>{
+              return (<Button onClick={() => this.handleChatbotResponse(btn)}>{btn.text}</Button>);
+            })}
+          </div>
+        ) : (
+          <div className='chat-input'>
+            <Input
+              onPressEnter={this.handleSend.bind(this)}
+              onChange={(event) => this.handleChange(event)}
+              placeholder="Message"
+              value={this.state.message}
+            />
+          </div>
+        )}
       </div>
-
     )
   }
 
+  renderMessage(name, message, showName) {
+    if (this.state.name === name) {
+      return (
+       <div className={showName ? 'user-message-block' : 'user-message-block-cont'}>
+         {showName && <p className='user-name'>{name}</p>}
+         <div className='user-message'>
+           <p>{message}</p>
+         </div>
+       </div> 
+      );
+    }
+    return (
+      <div className={showName ? 'admin-message-block' : 'admin-message-block-cont'}>
+        {showName && <p className='admin-name'>{name}</p>}
+        <div className='admin-message'>
+          <p>{message}</p>
+        </div>
+      </div> 
+    );
+  }
+  
+
+  fetchMessages() {
+    let user = firebase.auth().currentUser
+    if (user && user.photoURL) {
+      //if you're an anonymous user
+      let messageRef = firebase.database().ref(`messages/room:${user.photoURL}`)
+      messageRef.on('value', (snapshot) => {
+        var list = []
+        snapshot.forEach((item) => {
+          list.push(item.val())
+        })
+        this.setState({ chat: list, message: "" })
+      })
+    }
+    if (user && this.context.chat_room) {
+      //if you're an admin user
+      let messageRef = firebase.database().ref(`messages/room:${this.context.chat_room}`)
+      messageRef.on('value', (snapshot) => {
+        var list = []
+        snapshot.forEach((item) => {
+          list.push(item.val())
+        })
+        this.setState({ chat: list, message: "" })
+      })
+    }
+  }
   handleChange(event) {
     this.setState({ message: event.target.value })
   }
