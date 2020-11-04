@@ -28,9 +28,15 @@ function MonthlyPaymentCalculator() {
   const [ loanData, setLoanData ] = useState({
     loanAmount: calculateLoanData(inputs).loanAmount,
     monthlyPayment: calculateLoanData(inputs).monthlyPayment,
-    interestPaidData: [{}],
-    principalPaidData: [{}],
-    endingBalanceData: [{}]
+    // interestPaidData: [{}],
+    // principalPaidData: [{}],
+    // endingBalanceData: [{}]
+
+    // previously an array of objects, now we want an object containing arrays
+    // of objects, with keys being the loan name
+    interestPaidData: { default: [{}] },
+    principalPaidData: { default: [{}] },
+    endingBalanceData: { default: [{}] }
   });
   const [ dropdownData, setDropdownData ] = useState({
     selectedValue: "",
@@ -41,7 +47,7 @@ function MonthlyPaymentCalculator() {
   })
   const [ radioData, setRadioData ] = useState({
     value: 1,
-    chart_data: {key: 1, title: "Loan Payoff Schedule", xAxisTitle: "Year", data: loanData.interestPaidData}
+    chart_data: {key: 1, title: "Loan Payoff Schedule", xAxisTitle: "Year", data: loanData.interestPaidData, isMultiBarChart: false}
   });
   useEffect(() => {
     updateCalculationData(inputs);
@@ -98,9 +104,9 @@ function MonthlyPaymentCalculator() {
 
     // using amortize package
     const [newInterestPaidData, newPrincipalPaidData, newEndingBalanceData] = calculateAmortizedLoanData(newInputs);
-    newLoanData.interestPaidData = newInterestPaidData;
-    newLoanData.principalPaidData = newPrincipalPaidData;
-    newLoanData.endingBalanceData = newEndingBalanceData;
+    newLoanData.interestPaidData.default = newInterestPaidData;
+    newLoanData.principalPaidData.default = newPrincipalPaidData;
+    newLoanData.endingBalanceData.default = newEndingBalanceData;
     setLoanData(newLoanData);
   }
 
@@ -290,7 +296,8 @@ function MonthlyPaymentCalculator() {
         <Input placeholder="Loan name" style={{ width: 200, margin: 10 }} onChange={onNameChange} data-tip='Save multiple loan alternatives'></Input>
         <ReactTooltip place="bottom"/>
         <Button type="primary" style={{ margin: 10 }} onClick={handleSaveClick}>Save</Button>
-        <Select placeholder="Please select" style={{ width: 200, margin:10 }} onChange={handleSelectChange} mode="multiple" data-tip='Choose loans to compare'>          {Object.keys(dropdownData.inputValues).map((elem) =><Option value={elem}>{elem}</Option>)}
+        <Select placeholder="Please select" style={{ width: 200, margin:10 }} onChange={handleSelectChange} mode="multiple" data-tip='Choose loans to compare'>
+          { Object.keys(dropdownData.inputValues).map((elem) => <Option value={elem}> {elem} </Option>) }
         </Select>
         <ReactTooltip place="bottom"/>
         <Button type="primary" style={{ margin: 10 }} onClick={handleLoadClick}>Load</Button>

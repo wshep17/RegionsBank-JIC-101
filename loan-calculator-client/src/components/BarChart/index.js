@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import draw from './vis';
+import handleChartType from './vis';
 
 export default class BarChart extends Component {
 
     componentDidMount() {
-        draw(this.props);
+        handleChartType(this.props);
     }
 
     componentDidUpdate(preProps) {
-        draw(this.props);
+        handleChartType(this.props);
     }
 
     render() {
