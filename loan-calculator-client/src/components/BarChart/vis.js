@@ -56,6 +56,11 @@ const drawMulti = (props) => {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    // Color
+    var color = d3.scaleOrdinal()
+        .domain(multipleLoanNames)
+        .range(["#ca0020", "#f4a582", "#d5d5d5", "#92c5de", "#0571b0"]);
+
     // Scale x-axis (years)
     let x = d3.scaleBand()
         .range([0, width])
@@ -66,7 +71,7 @@ const drawMulti = (props) => {
     var xSubgroup = d3.scaleBand()
         .domain(multipleLoanNames)
         .range([0, x.bandwidth()])
-        .padding([0.05])
+        .padding([0.05]);
 
     // Scale y-axis
     let y = d3.scaleLinear()
@@ -89,7 +94,8 @@ const drawMulti = (props) => {
         .attr("x", d => xSubgroup(d.group))
         .attr("y", d => y(d.dollars))
         .attr("width", xSubgroup.bandwidth())
-        .attr("height", d => height - y(d.dollars));
+        .attr("height", d => height - y(d.dollars))
+        .attr("fill", function (d) { return color(d.group); });
 
     // Title
     svg.append("text")
@@ -116,6 +122,26 @@ const drawMulti = (props) => {
         .attr("x", -margin.top * 2)
         .attr("y", -margin.left + 20)
         .text("Dollars");
+
+    //Legend
+    var legend = svg.selectAll(".legend")
+        .data(newDataArrayMulti[0].values.map(function (d) { return d.group; }).reverse())
+        .enter().append("g")
+        .attr("class", "legend")
+        .attr("transform", function (d, i) { return "translate(0," + i * 20 + ")"; })
+        .style("opacity", "0");
+    legend.append("rect")
+        .attr("x", width - 18)
+        .attr("width", 18)
+        .attr("height", 18)
+        .style("fill", function (d) { return color(d); });
+    legend.append("text")
+        .attr("x", width - 24)
+        .attr("y", 9)
+        .attr("dy", ".35em")
+        .style("text-anchor", "end")
+        .text(function (d) { return d; });
+    legend.transition().duration(500).delay(function (d, i) { return 1300 + 100 * i; }).style("opacity", "1");
 }
 
 const drawSingle = (props) => {
@@ -152,7 +178,8 @@ const drawSingle = (props) => {
         .attr("x", d => x(d.year))
         .attr("width", x.bandwidth())
         .attr("y", d => y(d.dollars))
-        .attr("height", d => height - y(d.dollars));
+        .attr("height", d => height - y(d.dollars))
+        .attr("fill", "#528400");
 
     // X axis
     svg.append("g")
