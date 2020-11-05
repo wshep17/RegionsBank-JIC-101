@@ -146,14 +146,47 @@ function MonthlyPaymentCalculator() {
     const currentInputData = { ...inputs };
     newDropdownData.inputValues[enteredName.name] = currentInputData;
     setDropdownData(newDropdownData);
-    console.log(dropdownData);
+    // console.log(dropdownData);
   }
 
   const handleSelectChange = (value) => {
-    console.log(`Selected: ${value}`);
-    const newDropdownData = { ...dropdownData };
-    newDropdownData.selectedValue = value;
-    setDropdownData(newDropdownData);
+    // console.log(`Selected: ${value}`);
+    // console.log(value);
+
+    // const newDropdownData = { ...dropdownData };
+    // newDropdownData.selectedValue = value;
+    // setDropdownData(newDropdownData);
+
+    if (value.length >= 2) {
+      // we have multiple selections
+      // clear current interestPaidData, principalPaidData, and endingBalanceData
+      // and reinsert default data from before
+      // then for name in `value`, insert corresponding chart data into
+      // interestPaidData, principalPaidData, and endingBalanceData
+
+      const newRadioData = { ...radioData };
+      newRadioData.chart_data.isMultiBarChart = true;
+      setRadioData(newRadioData);
+
+      const newLoanData = { ...loanData };
+      for (let i = 0; i < value.length; i++) {
+        const newInputs = { ...dropdownData.inputValues[value[i]] };
+        const [newInterestPaidData, newPrincipalPaidData, newEndingBalanceData] = calculateAmortizedLoanData(newInputs);
+        newLoanData.interestPaidData[value[i]] = newInterestPaidData;
+        newLoanData.principalPaidData[value[i]] = newPrincipalPaidData;
+        newLoanData.endingBalanceData[value[i]] = newEndingBalanceData;
+      }
+      // console.log(newLoanData);
+      setLoanData(newLoanData);
+    } else {
+      const newRadioData = { ...radioData };
+      newRadioData.chart_data.isMultiBarChart = false;
+      setRadioData(newRadioData);
+
+      const newDropdownData = { ...dropdownData };
+      newDropdownData.selectedValue = value;
+      setDropdownData(newDropdownData);
+    }
   }
 
   const multipleDataStyle = {
