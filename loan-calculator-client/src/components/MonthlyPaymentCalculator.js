@@ -28,9 +28,6 @@ function MonthlyPaymentCalculator() {
   const [ loanData, setLoanData ] = useState({
     loanAmount: calculateLoanData(inputs).loanAmount,
     monthlyPayment: calculateLoanData(inputs).monthlyPayment,
-    // interestPaidData: [{}],
-    // principalPaidData: [{}],
-    // endingBalanceData: [{}]
 
     // previously an array of objects, now we want an object containing arrays
     // of objects, with keys being the loan name
@@ -150,20 +147,12 @@ function MonthlyPaymentCalculator() {
   }
 
   const handleSelectChange = (value) => {
-    // console.log(`Selected: ${value}`);
-    // console.log(value);
-
-    // const newDropdownData = { ...dropdownData };
-    // newDropdownData.selectedValue = value;
-    // setDropdownData(newDropdownData);
-
     if (value.length >= 2) {
       // we have multiple selections
       // clear current interestPaidData, principalPaidData, and endingBalanceData
       // and reinsert default data from before
       // then for name in `value`, insert corresponding chart data into
       // interestPaidData, principalPaidData, and endingBalanceData
-
       const newRadioData = { ...radioData };
       newRadioData.chart_data.isMultiBarChart = true;
       setRadioData(newRadioData);
@@ -176,7 +165,6 @@ function MonthlyPaymentCalculator() {
         newLoanData.principalPaidData[value[i]] = newPrincipalPaidData;
         newLoanData.endingBalanceData[value[i]] = newEndingBalanceData;
       }
-      // console.log(newLoanData);
       setLoanData(newLoanData);
     } else {
       const newRadioData = { ...radioData };
@@ -199,12 +187,6 @@ function MonthlyPaymentCalculator() {
     height: '30px',
     lineHeight: '30px',
   };
-
-  // const options = [
-  //   { label: 'Thing 1', value: 1},
-  //   { label: 'Thing 2', value: 2},
-  // ];
-
 
   // displays/ updates the chart based on user inputs
   return (

@@ -19,8 +19,6 @@ const drawMulti = (props) => {
     const dataFirst = Object.values(props.data.data)[0];
     const newDataArray = [];
     var multipleLoanNames = Object.keys(data);
-    // console.log("multipleLoanNames:", multipleLoanNames);
-    // console.log("data:", data);
 
     // Create new data array of objects for multibar graph
     for (let i = 0; i < multipleLoanNames.length; i++) {
@@ -45,7 +43,6 @@ const drawMulti = (props) => {
             newDataArrayMulti[j].values.push({ group: loanName, dollars: currentDollars })
         }
     }
-    // console.log("newDataArrayMulti:", newDataArrayMulti);
 
     const title = props.data.title;
     const xAxisTitle = props.data.xAxisTitle;
@@ -81,12 +78,10 @@ const drawMulti = (props) => {
         .enter().append("g")
         .attr("class", "g")
         .attr("transform", function (d) {
-            // console.log("d:", d);
             return "translate(" + x(d.year) + ",0)";
         })
     bars.selectAll("rect")
         .data(function (d) {
-            // console.log("d.values:", d.values);
             return d.values;
         })
     .enter().append("rect")
