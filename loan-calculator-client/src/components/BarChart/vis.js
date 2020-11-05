@@ -125,7 +125,7 @@ const drawMulti = (props) => {
 
     //Legend
     var legend = svg.selectAll(".legend")
-        .data(newDataArrayMulti[0].values.map(function (d) { return d.group; }).reverse())
+        .data(newDataArrayMulti[0].values.map(function (d) { return d.group; }))
         .enter().append("g")
         .attr("class", "legend")
         .attr("transform", function (d, i) { return "translate(0," + i * 20 + ")"; })

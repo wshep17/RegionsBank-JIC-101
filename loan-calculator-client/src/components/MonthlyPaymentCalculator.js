@@ -36,7 +36,7 @@ function MonthlyPaymentCalculator() {
     endingBalanceData: { default: [{}] }
   });
   const [ dropdownData, setDropdownData ] = useState({
-    selectedValue: "",
+    selectedValue: [],
     inputValues: {}
   });
   const [ enteredName, setEnteredName ] = useState({
@@ -47,7 +47,10 @@ function MonthlyPaymentCalculator() {
     chart_data: {key: 1, title: "Loan Payoff Schedule", xAxisTitle: "Year", data: loanData.interestPaidData, isMultiBarChart: false}
   });
   useEffect(() => {
-    updateCalculationData(inputs);
+    if (radioData.chart_data.isMultiBarChart === false) {
+      // only run this for single loan bar chart
+      updateCalculationData(inputs);
+    }
     updateChart();
   }, [inputs]);
 
@@ -113,29 +116,34 @@ function MonthlyPaymentCalculator() {
   const [formThree] = Form.useForm();
 
   const handleLoadClick = () => {
-    // Load selected value's data into input boxes
-    const newInputs = { ...dropdownData.inputValues[dropdownData.selectedValue] };
-    formOne.setFieldsValue({
-      purchasePrice: newInputs.purchasePrice,
-      cashBack: newInputs.cashBack,
-      taxRate: newInputs.taxRate
-    });
-    formTwo.setFieldsValue({
-      tradeInValue: newInputs.tradeInValue,
-      tradeInOwed: newInputs.tradeInOwed
-    });
-    formThree.setFieldsValue({
-      loanTerm: newInputs.loanTerm,
-      interestRate: newInputs.interestRate,
-      downPayment: newInputs.downPayment
-    });
+    if (radioData.chart_data.isMultiBarChart === true) {
+      // handle load for multiple graphs
+      updateChart();
+    } else {
+      // Load selected value's data into input boxes
+      const newInputs = { ...dropdownData.inputValues[dropdownData.selectedValue[0]] };
+      formOne.setFieldsValue({
+        purchasePrice: newInputs.purchasePrice,
+        cashBack: newInputs.cashBack,
+        taxRate: newInputs.taxRate
+      });
+      formTwo.setFieldsValue({
+        tradeInValue: newInputs.tradeInValue,
+        tradeInOwed: newInputs.tradeInOwed
+      });
+      formThree.setFieldsValue({
+        loanTerm: newInputs.loanTerm,
+        interestRate: newInputs.interestRate,
+        downPayment: newInputs.downPayment
+      });
 
-    // Also load data into the current state
-    setInputs(newInputs);
+      // Also load data into the current state
+      setInputs(newInputs);
 
-    // Finally, update chart
-    updateCalculationData(newInputs);
-    updateChart();
+      // Finally, update chart
+      updateCalculationData(newInputs);
+      updateChart();
+    }
   }
 
   const handleSaveClick = () => {
@@ -149,23 +157,41 @@ function MonthlyPaymentCalculator() {
   const handleSelectChange = (value) => {
     if (value.length >= 2) {
       // we have multiple selections
-      // clear current interestPaidData, principalPaidData, and endingBalanceData
-      // and reinsert default data from before
-      // then for name in `value`, insert corresponding chart data into
-      // interestPaidData, principalPaidData, and endingBalanceData
       const newRadioData = { ...radioData };
       newRadioData.chart_data.isMultiBarChart = true;
       setRadioData(newRadioData);
 
-      const newLoanData = { ...loanData };
+      // clear current interestPaidData, principalPaidData, and endingBalanceData
+      // and reinsert default data from before
+      // then for loan name in `value`, insert corresponding chart data into
+      // interestPaidData, principalPaidData, and endingBalanceData
+      const oldLoanData = { ...loanData };
+      const newLoanData = {
+        loanAmount: oldLoanData.loanAmount,
+        monthlyPayment: oldLoanData.monthlyPayment,
+        interestPaidData: { default: oldLoanData.interestPaidData.default },
+        principalPaidData: { default: oldLoanData.principalPaidData.default },
+        endingBalanceData: { default: oldLoanData.endingBalanceData.default }
+      };
+
+      // const newLoanData = { ...loanData };
+      // calculate and insert new data from current multi-selection
       for (let i = 0; i < value.length; i++) {
-        const newInputs = { ...dropdownData.inputValues[value[i]] };
+        const loanName = value[i];
+        const newInputs = { ...dropdownData.inputValues[loanName] };
         const [newInterestPaidData, newPrincipalPaidData, newEndingBalanceData] = calculateAmortizedLoanData(newInputs);
-        newLoanData.interestPaidData[value[i]] = newInterestPaidData;
-        newLoanData.principalPaidData[value[i]] = newPrincipalPaidData;
-        newLoanData.endingBalanceData[value[i]] = newEndingBalanceData;
+        newLoanData.interestPaidData[loanName] = newInterestPaidData;
+        newLoanData.principalPaidData[loanName] = newPrincipalPaidData;
+        newLoanData.endingBalanceData[loanName] = newEndingBalanceData;
       }
+      // console.log(newLoanData);
       setLoanData(newLoanData);
+
+      const newDropdownData = { ...dropdownData };
+      newDropdownData.selectedValue = value;
+      setDropdownData(newDropdownData);
+
+      updateChart();
     } else {
       const newRadioData = { ...radioData };
       newRadioData.chart_data.isMultiBarChart = false;
