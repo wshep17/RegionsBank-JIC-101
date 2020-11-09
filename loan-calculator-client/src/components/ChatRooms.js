@@ -45,7 +45,7 @@ class ChatRooms extends Component {
               </Popconfirm>
               <Popconfirm
                 title="Delete this chat room?"
-                onConfirm={() => this.deleteChatroom(record)}
+                onConfirm={() => this.deleteChatroom(record).then(this.fetchRooms())}
                 okText="Yes"
                 cancelText="No"
               >
