@@ -81,32 +81,6 @@ class Chat extends Component {
     );
   }
   
-
-  fetchMessages() {
-    let user = firebase.auth().currentUser
-    if (user && user.photoURL) {
-      //if you're an anonymous user
-      let messageRef = firebase.database().ref(`messages/room:${user.photoURL}`)
-      messageRef.on('value', (snapshot) => {
-        var list = []
-        snapshot.forEach((item) => {
-          list.push(item.val())
-        })
-        this.setState({ chat: list, message: "" })
-      })
-    }
-    if (user && this.context.chat_room) {
-      //if you're an admin user
-      let messageRef = firebase.database().ref(`messages/room:${this.context.chat_room}`)
-      messageRef.on('value', (snapshot) => {
-        var list = []
-        snapshot.forEach((item) => {
-          list.push(item.val())
-        })
-        this.setState({ chat: list, message: "" })
-      })
-    }
-  }
   handleChange(event) {
     this.setState({ message: event.target.value })
   }
