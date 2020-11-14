@@ -8,6 +8,8 @@ import {
 import { calculateAffordability } from '../scripts/calculators';
 import '../css/AffordabilityCalculator.css';
 import BarChart from './BarChart';
+import ReactTooltip from 'react-tooltip';
+import { InfoCircleTwoTone } from '@ant-design/icons';
 
 function AffordabilityCalculator() {
   // create the inputs for our calculator
@@ -105,6 +107,17 @@ function AffordabilityCalculator() {
                     formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                     parser={value => value.replace(/\$\s?|(,*)/g, '')}
                   />
+                  <InfoCircleTwoTone 
+                    data-tip='The vehicle loan payment you can afford to make each month' 
+                    style={{ margin: 2 }}
+                  />
+                  <ReactTooltip 
+                    place="bottom" 
+                    class='tooltip-style' 
+                    effect='solid'
+                    type='info'
+                    offset="{'top': -5}"
+                  />
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Interest Rate">
@@ -112,7 +125,12 @@ function AffordabilityCalculator() {
                   <InputNumber 
                     min={0} 
                     formatter={value => `${value}%`}
-                    parser={value => value.replace('%', '')}/>
+                    parser={value => value.replace('%', '')}
+                  />
+                  <InfoCircleTwoTone 
+                    data-tip='The rate at which interest will be charged on your outstanding vehicle loan balance' 
+                    style={{ margin: 2 }}
+                  />
                 </Form.Item>
               </Form.Item>
             </Form>
@@ -136,7 +154,12 @@ function AffordabilityCalculator() {
                   <InputNumber 
                     min={0} 
                     formatter={value => `${value}%`}
-                    parser={value => value.replace('%', '')}/>
+                    parser={value => value.replace('%', '')}
+                  />
+                  <InfoCircleTwoTone 
+                    data-tip='The sales tax rate that you will pay when you purchase your vehicle' 
+                    style={{ margin: 1 }}
+                  />
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Cash rebate/back">
@@ -144,7 +167,12 @@ function AffordabilityCalculator() {
                   <InputNumber 
                     min={0}
                     formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                    parser={value => value.replace(/\$\s?|(,*)/g, '')} />
+                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                  />
+                  <InfoCircleTwoTone 
+                    data-tip='The amount of the dealer or manufacturer incentive to purchase a specific vehicle' 
+                    style={{ margin: 1 }}
+                  />
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Value of your trade-in">
@@ -152,7 +180,12 @@ function AffordabilityCalculator() {
                   <InputNumber 
                     min={0} 
                     formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                    parser={value => value.replace(/\$\s?|(,*)/g, '')}/>
+                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                  />
+                  <InfoCircleTwoTone 
+                    data-tip='What the dealer will give you for a used vehicle at trade-in' 
+                    style={{ margin: 1 }}
+                  />
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Amount owed on trade-in">
@@ -160,7 +193,12 @@ function AffordabilityCalculator() {
                   <InputNumber 
                     min={0} 
                     formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                    parser={value => value.replace(/\$\s?|(,*)/g, '')}/>
+                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                  />
+                  <InfoCircleTwoTone 
+                    data-tip='The balance on any outstanding loan that may exist for your trade-in' 
+                    style={{ margin: 1 }}
+                  />
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Down payment amount">
@@ -168,7 +206,12 @@ function AffordabilityCalculator() {
                   <InputNumber
                     min={0} 
                     formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                    parser={value => value.replace(/\$\s?|(,*)/g, '')}/>
+                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                  />
+                  <InfoCircleTwoTone 
+                    data-tip='The amount of money you will pay up front for your vehicle' 
+                    style={{ margin: 1 }}
+                  />
                 </Form.Item>
               </Form.Item>
             </Form>

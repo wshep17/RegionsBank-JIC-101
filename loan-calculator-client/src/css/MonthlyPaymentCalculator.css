@@ -44,3 +44,7 @@
 .ant-collapse-content > .ant-collapse-content-box {
     padding-bottom: 0 !important;
 }
+
+.tooltip-style {
+    padding: 2px;
+}
