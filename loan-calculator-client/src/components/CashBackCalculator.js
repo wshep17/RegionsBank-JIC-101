@@ -8,9 +8,6 @@ import {
 import { calculateCashBack } from '../scripts/calculators';
 import '../css/CashBackCalculator.css';
 import BarChart from './BarChart';
-import ReactTooltip from 'react-tooltip';
-import { InfoCircleTwoTone } from '@ant-design/icons';
-
 
 function CashBackCalculator() {
   // create the inputs for our calculator
@@ -114,64 +111,29 @@ function CashBackCalculator() {
               <Form.Item label="Vehicle Purchase Price">
                 <Form.Item name="purchasePrice" noStyle>
                   <InputNumber min={0} 
-                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                  />
-                  <InfoCircleTwoTone 
-                    data-tip='The price you pay for your vehicle including extras and upgrades' 
-                    data-effect='solid'
-                    data-type='info'
-                    style={{ margin: 2 }}
-                  />
-                  <ReactTooltip 
-                    place="bottom" 
-                    class='tooltip-style' 
-                    effect='solid'
-                    type='info'
-                    offset="{'top': -5}"
-                  />
+                  formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={value => value.replace(/\$\s?|(,*)/g, '')}/>
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Cash Back">
                 <Form.Item name="cashBack" noStyle>
                   <InputNumber min={0} 
-                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                  />
-                  <InfoCircleTwoTone 
-                    data-tip='The amount of the dealer or manufacturer incentive to purchase a specific vehicle' 
-                    data-effect='solid'
-                    data-type='info'
-                    style={{ margin: 2 }}
-                  />
+                  formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={value => value.replace(/\$\s?|(,*)/g, '')}/>
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Low Interest Rate">
                 <Form.Item name="lowInterestRate" noStyle>
                   <InputNumber min={0} 
-                    formatter={value => `${value}%`}
-                    parser={value => value.replace('%', '')}
-                  />
-                  <InfoCircleTwoTone 
-                    data-tip='The special incentive low interest rate offered on this vehicle loan' 
-                    data-effect='solid'
-                    data-type='info'
-                    style={{ margin: 2 }}
-                  />
+                  formatter={value => `${value}%`}
+                  parser={value => value.replace('%', '')}/>
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Sales Tax Rate">
                 <Form.Item name="taxRate" noStyle>
                   <InputNumber min={0} 
-                    formatter={value => `${value}%`}
-                    parser={value => value.replace('%', '')}
-                  />
-                  <InfoCircleTwoTone 
-                    data-tip='The sales tax rate that you will pay when you purchase your vehicle' 
-                    data-effect='solid'
-                    data-type='info'
-                    style={{ margin: 2 }}
-                  />
+                  formatter={value => `${value}%`}
+                  parser={value => value.replace('%', '')}/>
                 </Form.Item>
               </Form.Item>
             </Form>
@@ -190,29 +152,15 @@ function CashBackCalculator() {
               <Form.Item label="Value of Trade-in">
                 <Form.Item name="tradeInValue" noStyle>
                   <InputNumber min={0} 
-                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                  />
-                  <InfoCircleTwoTone 
-                    data-tip='What the dealer will give you for a used vehicle at trade-in' 
-                    data-effect='solid'
-                    data-type='info'
-                    style={{ margin: 2 }}
-                  />
+                  formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={value => value.replace(/\$\s?|(,*)/g, '')}/>
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Amount Owed on Trade-in">
                 <Form.Item name="tradeInOwed" noStyle>
                   <InputNumber min={0} 
-                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                  />
-                  <InfoCircleTwoTone 
-                    data-tip='The balance on any outstanding loan that may exist for your trade-in' 
-                    data-effect='solid'
-                    data-type='info'
-                    style={{ margin: 2 }}
-                  />
+                  formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={value => value.replace(/\$\s?|(,*)/g, '')}/>
                 </Form.Item>
               </Form.Item>
             </Form>
@@ -232,40 +180,20 @@ function CashBackCalculator() {
               <Form.Item label="Loan Term (months)">
                 <Form.Item name="loanTerm" noStyle>
                   <InputNumber min={0} />
-                  <InfoCircleTwoTone 
-                    data-tip='The lenth of time you have to repay your loan in months' 
-                    data-effect='solid'
-                    data-type='info'
-                    style={{ margin: 2 }}
-                  />
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Interest Rate">
                 <Form.Item name="interestRate" noStyle>
                   <InputNumber min={0} 
-                    formatter={value => `${value}%`}
-                    parser={value => value.replace('%', '')}
-                  />
-                  <InfoCircleTwoTone 
-                    data-tip='The rate at which interest will be charged on your outstanding vehicle loan balance' 
-                    data-effect='solid'
-                    data-type='info'
-                    style={{ margin: 2 }}
-                  />
+                  formatter={value => `${value}%`}
+                  parser={value => value.replace('%', '')}/>
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Down Payment">
                 <Form.Item name="downPayment" noStyle>
                   <InputNumber min={0} 
-                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                  />
-                  <InfoCircleTwoTone 
-                    data-tip='The amount of money you will pay up front for your vehicle' 
-                    data-effect='solid'
-                    data-type='info'
-                    style={{ margin: 2 }}
-                  />
+                  formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={value => value.replace(/\$\s?|(,*)/g, '')}/>
                 </Form.Item>
               </Form.Item>
             </Form>

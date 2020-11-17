@@ -39,13 +39,8 @@
 .ant-collapse > .ant-collapse-item > .ant-collapse-header {
     padding: 0 !important;
     padding-left: 40px !important;
-    color: #528400 !important;
 }
 
 .ant-collapse-content > .ant-collapse-content-box {
     padding-bottom: 0 !important;
-}
-
-.tooltip-style {
-    padding: 2px;
 }
