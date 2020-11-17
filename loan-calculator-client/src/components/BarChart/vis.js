@@ -148,7 +148,10 @@ const drawSingle = (props) => {
     const key = props.data.key;
     d3.selectAll(`.vis-barchart.class-${key} > *`).remove();
 
-    const data = props.data.data.default;
+    let data = props.data.data;
+    if (props.data.data.default !== undefined) {
+        data = props.data.data.default;
+    }
     const title = props.data.title;
     const xAxisTitle = props.data.xAxisTitle;
     const margin = { top: 50, right: 20, bottom: 40, left: 70 };
