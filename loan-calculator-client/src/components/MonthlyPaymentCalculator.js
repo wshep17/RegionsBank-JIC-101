@@ -12,7 +12,6 @@ import { calculateLoanData, calculateAmortizedLoanData } from '../scripts/calcul
 import '../css/MonthlyPaymentCalculator.css';
 import BarChart from './BarChart'
 import ReactTooltip from 'react-tooltip';
-import { InfoCircleTwoTone } from '@ant-design/icons';
 
 
 function MonthlyPaymentCalculator() {
@@ -193,17 +192,6 @@ function MonthlyPaymentCalculator() {
                     formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                     parser={value => value.replace(/\$\s?|(,*)/g, '')}
                   />
-                  <InfoCircleTwoTone 
-                    data-tip='The price you pay for your vehicle including extras and upgrades' 
-                    style={{ margin: 2 }}
-                  />
-                  <ReactTooltip 
-                    place="bottom" 
-                    class='tooltip-style' 
-                    effect='solid'
-                    type='info'
-                    offset="{'top': -5}"
-                  />
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Cash Back">
@@ -213,10 +201,6 @@ function MonthlyPaymentCalculator() {
                     formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                     parser={value => value.replace(/\$\s?|(,*)/g, '')}
                   />
-                  <InfoCircleTwoTone 
-                    data-tip='The amount of the dealer or manufacturer incentive to purchase a specific vehicle' 
-                    style={{ margin: 2 }}
-                  />
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Sales Tax Rate">
@@ -225,10 +209,6 @@ function MonthlyPaymentCalculator() {
                     min={0}
                     formatter={value => `${value}%`}
                     parser={value => value.replace('%', '')}
-                  />
-                  <InfoCircleTwoTone 
-                    data-tip='The sales tax rate that you will pay when you purchase your vehicle' 
-                    style={{ margin: 2 }}
                   />
                 </Form.Item>
               </Form.Item>
@@ -253,10 +233,6 @@ function MonthlyPaymentCalculator() {
                     formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                     parser={value => value.replace(/\$\s?|(,*)/g, '')}
                   />
-                  <InfoCircleTwoTone 
-                    data-tip='What the dealer will give you for a used vehicle at trade-in' 
-                    style={{ margin: 2 }}
-                  />
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Amount Owed on Trade-in">
@@ -265,10 +241,6 @@ function MonthlyPaymentCalculator() {
                     min={0}
                     formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                     parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                  />
-                  <InfoCircleTwoTone 
-                    data-tip='The balance on any outstanding loan that may exist for your trade-in' 
-                    style={{ margin: 2 }}
                   />
                 </Form.Item>
               </Form.Item>
@@ -290,10 +262,6 @@ function MonthlyPaymentCalculator() {
               <Form.Item label="Loan Term (months)">
                 <Form.Item name="loanTerm" noStyle>
                   <InputNumber min={0} />
-                  <InfoCircleTwoTone 
-                    data-tip='The length of time you have to repay your loan in months' 
-                    style={{ margin: 2 }}
-                  />
                 </Form.Item>
               </Form.Item>
               <Form.Item label="Interest Rate">
@@ -302,10 +270,6 @@ function MonthlyPaymentCalculator() {
                     min={0}
                     formatter={value => `${value}%`}
                     parser={value => value.replace('%', '')}
-                  />
-                  <InfoCircleTwoTone 
-                    data-tip='The rate at which interest will be charged on you routstanding vehicle loan balance' 
-                    style={{ margin: 2 }}
                   />
                 </Form.Item>
               </Form.Item>
@@ -316,10 +280,6 @@ function MonthlyPaymentCalculator() {
                     formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                     parser={value => value.replace(/\$\s?|(,*)/g, '')}
                   />
-                  <InfoCircleTwoTone 
-                    data-tip='The amount of money you will pay up front for your vehicle' 
-                    style={{ margin: 2 }}
-                  />
                 </Form.Item>
               </Form.Item>
             </Form>
@@ -327,21 +287,13 @@ function MonthlyPaymentCalculator() {
         </Collapse>
       </div>
       <div className='multiple-inputs' style={multipleDataStyle}>
-        <Input 
-          placeholder="Loan name" 
-          style={{ width: 200, margin: 10 }} 
-          onChange={onNameChange} 
-          data-tip='Save multiple loan alternatives'
-        ></Input>
+        <Input placeholder="Loan name" style={{ width: 200, margin: 10 }} onChange={onNameChange} data-tip='Save multiple loan alternatives'></Input>
+        <ReactTooltip place="bottom"/>
         <Button type="primary" style={{ margin: 10 }} onClick={handleSaveClick}>Save</Button>
-        <Select 
-          defaultValue="None" 
-          style={{ width: 120, margin:10 }} 
-          onChange={handleSelectChange} 
-          data-tip='Choose loans to compare'
-        >
+        <Select defaultValue="None" style={{ width: 120, margin:10 }} onChange={handleSelectChange} data-tip='Choose loans to compare'>
           {Object.keys(dropdownData.inputValues).map((elem) =><Option value={elem}>{elem}</Option>)}
         </Select>
+        <ReactTooltip place="bottom"/>
         <Button type="primary" style={{ margin: 10 }} onClick={handleLoadClick}>Load</Button>
       </div>
       <div className='calc-outputs'>
