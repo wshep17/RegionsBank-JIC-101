@@ -451,7 +451,6 @@ class MediaPortal extends Component {
 
             await anonUsersRef.get().then((doc) => {
                 if (doc.exists) {
-                    console.log("lol")
                     anonUsersRef.update({"anon_video_room": ""})
                 } else {
                     console.log(`Anonymous User with uid: ${user.uid} does not exist.` )
