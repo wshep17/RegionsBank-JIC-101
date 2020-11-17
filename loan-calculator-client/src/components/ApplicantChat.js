@@ -146,7 +146,7 @@ class ApplicantChat extends React.Component {
   }
 
   activateVideoPortal() {
-    console.log('yolo')
+    //console.log('yolo')
     this.setState({videoPortal: true}, function() {
       console.log('videoPortal: ', this.state.videoPortal)
     })
