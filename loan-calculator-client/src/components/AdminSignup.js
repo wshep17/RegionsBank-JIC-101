@@ -23,7 +23,7 @@ class AdminSignup extends React.Component {
 						Name: <Input placeholder="John Doe" name='name' value={this.state.name} onChange={this.handleChange}/>
 						<br />
 						<br />
-						Email: <Input placeholder="john@regions.com" name='email' value={this.state.email} onChange={this.handleChange}/>
+						Email: <Input placeholder="john@bank.com" name='email' value={this.state.email} onChange={this.handleChange}/>
 						<br />
 						<br />
 						Password: <Input.Password placeholder="p@$$w0r6" name='password' value={this.state.password} onChange={this.handleChange}/>
