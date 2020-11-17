@@ -56,7 +56,7 @@ class App extends React.Component {
               <Route path='/login' component={AdminLogin} />
               <Route path='/signup' component={AdminSignup} />
               <Route path='/calculator' component={Calculator} />
-              <Route path='/chat' component={MediaPortal} />
+              <PrivateRoute path='/chat' component={MediaPortal} />
               <PrivateRoute path='/chat-rooms' component={ChatRooms} />
               <Route path='/' component={Home} />
             </Switch>

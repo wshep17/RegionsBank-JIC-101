@@ -48,8 +48,8 @@ class MediaPortal extends Component {
             roomInput_visible: false,
             videoScreen_visible: false,
             menuOpen: false,
-            sound: true,
-            video: true,
+            sound: false,
+            video: false,
             mediaActivated: false //camera & mic must be properly setup before user create/join room
         }
         this.localVideo = React.createRef()
