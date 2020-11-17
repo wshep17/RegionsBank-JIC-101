@@ -1,8 +1,11 @@
 import React from 'react';
 import Chat from './Chat.js';
+import MediaPortal from './MediaPortal.js'
+import NavigationBar from './NavigationBar.js'
 import firebase from '../scripts/firebase.js';
 import { Button, Modal } from 'antd';
-import { CloseOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
+import { CloseOutlined, CaretUpOutlined, CaretDownOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import NewWindow from 'react-new-window'
 import "antd/dist/antd.css";
 import "../css/App.css";
 import "../css/ApplicantChat.css";
@@ -21,8 +24,70 @@ class ApplicantChat extends React.Component {
       chatOpen: false,
       chatMinimized: false,
       name: '',
-      isSignedIn: false
-    };
+      isSignedIn: false,
+      videoPortal: false
+    }
+    this.activateVideoPortal = this.activateVideoPortal.bind(this)
+  }
+
+  render() {
+    const objectFeatures = {
+      width: "1800",
+      height: "1500"
+    }
+    if (!this.state.chatOpen) {
+      return (
+        <Button
+          className='open-chat-button'
+          onClick={() => {
+            this.setState({ chatOpen: true })
+            if (firebase.auth().currentUser !== null) {
+              this.setState({
+                isSignedIn: true,
+                chatMinimized: false
+              })
+            }
+          }}
+        >
+          Chat with an Advisor
+        </Button>
+      );
+    } else if (!this.state.isSignedIn) {
+      return (
+        <Modal
+          title="Enter your name below"
+          visible={this.state.chatOpen && !this.state.isSignedIn}
+          onOk={this.handleOk}
+          onCancel={() => this.setState({ chatOpen: false })}
+        >
+          <input placeholder="Name" name="name" value={this.state.name} onChange={(event) => this.setState({ name: event.target.value })}></input>
+        </Modal>
+      );
+    }
+    return (
+      <div className='user-chat-popup' id={this.state.chatMinimized ? 'minimized-chat' : 'open-chat'}>
+        <div className='user-chat-header'>
+          <Button icon={< VideoCameraOutlined />} type='text' size='small' shape='circle' onClick={this.activateVideoPortal}/>
+          {this.state.chatMinimized ? (
+            <Button icon={<CaretUpOutlined />} type='text' size='small' shape='circle' onClick={() => this.setState({ chatMinimized: false })} />
+          ) : (
+              <Button icon={<CaretDownOutlined />} type='text' size='small' shape='circle' onClick={() => this.setState({ chatMinimized: true })} />
+            )
+          }
+          <Button icon={<CloseOutlined />} type='text' size='small' shape='circle' onClick={() => this.setState({ chatOpen: false })} />
+        </div>
+        <div style={{ height: 'calc(100% - 20px)' }}>
+          <Chat/>
+        </div>
+        {this.state.videoPortal && (
+          <NewWindow features={objectFeatures} title="videoPortal" onUnload={() => this.setState({videoPortal: false})}>
+            <NavigationBar />
+            <MediaPortal/>
+          </NewWindow>
+        )}
+
+      </div>
+    )
   }
 
   // Saves anonymous user information to Firestore (name, uid, chatbot status)
@@ -80,54 +145,12 @@ class ApplicantChat extends React.Component {
     })
   }
 
-  render() {
-    if (!this.state.chatOpen) {
-      return (
-        <Button
-          className='open-chat-button'
-          onClick={() => {
-            this.setState({ chatOpen: true });
-            if (firebase.auth().currentUser !== null) {
-              this.setState({
-                isSignedIn: true,
-                chatMinimized: false
-              });
-            }
-          }}
-        >
-          Chat with an Advisor
-        </Button>
-      );
-    } else if (!this.state.isSignedIn) {
-      return (
-        <Modal
-          title="Enter your name below"
-          visible={this.state.chatOpen && !this.state.isSignedIn}
-          onOk={this.handleOk}
-          onCancel={() => this.setState({ chatOpen: false})}
-        >
-          <input placeholder="Name" name="name" value={this.state.name} onChange={(event) => this.setState({ name: event.target.value })}></input>
-        </Modal>
-      );
-    }
-    return (
-      <div className='user-chat-popup' id={this.state.chatMinimized ? 'minimized-chat' : 'open-chat'}>
-        <div className='user-chat-header'>
-          {this.state.chatMinimized ? (
-            <Button icon={<CaretUpOutlined />} type='text' size='small' shape='circle' onClick={() => this.setState({ chatMinimized: false })} />
-          ) : (
-              <Button icon={<CaretDownOutlined />} type='text' size='small' shape='circle' onClick={() => this.setState({ chatMinimized: true })} />
-            )
-          }
-          <Button icon={<CloseOutlined />} type='text' size='small' shape='circle' onClick={() => this.setState({ chatOpen: false })} />
-        </div>
-        <div style={{ height: 'calc(100% - 20px)' }}>
-          <Chat/>
-        </div>
-      </div>
-  
-    );
-  } 
+  activateVideoPortal() {
+    console.log('yolo')
+    this.setState({videoPortal: true}, function() {
+      console.log('videoPortal: ', this.state.videoPortal)
+    })
+  }
 }
 
 export default ApplicantChat;
