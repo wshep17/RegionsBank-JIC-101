@@ -32,7 +32,7 @@ class Chat extends Component {
   render() {
     let prevName = '';
     return (
-      <div style={{ background: '#eeeeee', height: '100%' }} className={this.state.status ? 'button-chat-format' : ''}>
+      <div style={{ background: '#f0f0f0', height: '100%' }} className={this.state.status ? 'button-chat-format' : ''}>
         <div className={this.state.status ? '' : 'chat-messages'}>
           {this.state.chat.map((each) => {
             let showName = prevName !== each.sender_name;
@@ -81,32 +81,6 @@ class Chat extends Component {
     );
   }
   
-
-  fetchMessages() {
-    let user = firebase.auth().currentUser
-    if (user && user.photoURL) {
-      //if you're an anonymous user
-      let messageRef = firebase.database().ref(`messages/room:${user.photoURL}`)
-      messageRef.on('value', (snapshot) => {
-        var list = []
-        snapshot.forEach((item) => {
-          list.push(item.val())
-        })
-        this.setState({ chat: list, message: "" })
-      })
-    }
-    if (user && this.context.chat_room) {
-      //if you're an admin user
-      let messageRef = firebase.database().ref(`messages/room:${this.context.chat_room}`)
-      messageRef.on('value', (snapshot) => {
-        var list = []
-        snapshot.forEach((item) => {
-          list.push(item.val())
-        })
-        this.setState({ chat: list, message: "" })
-      })
-    }
-  }
   handleChange(event) {
     this.setState({ message: event.target.value })
   }
@@ -135,8 +109,10 @@ class Chat extends Component {
     // Subscribe to chatbot status
     let roomRef = await db.collection('chat-rooms').doc(room_id)
     roomRef.onSnapshot(snapshot => {
-      let status = snapshot.data().status
-      this.setState({ status: status })
+      if (snapshot.data()) {
+        let status = snapshot.data().status
+        this.setState({ status: status })
+      }
     })
 
     // Subscribe to messages(collection) and order each message(document) by timestamp in ascending order

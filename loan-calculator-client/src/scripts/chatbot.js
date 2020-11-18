@@ -2,17 +2,16 @@ const whatIsQuestion = "What is...";
 const loanQuestion = "Loan-based questions";
 const interestQuestion = "What is an interest payment?";
 const loanTermQuestion = "What is a loan term?";
-const redirectQuestion = "Chat with an advisor";
+const redirectQuestion = "Chat with a financial advisor";
 const principalBalanceQuestion = "Why are the Principal Balance and the Payoff Amount Different?";
 const autoLoanQuestion = "How does this auto loan work?";
 const latePaymentQuestion = "How is this loan affected by late payments?";
-
 const interestResponse = "An interst payment is the payment from a borrow to a lender of an amount above repayment of the amount borrowed, at a particular rate.";
 const loanTermResponse = "The loan term is the length of time that you have to repay the loan."
 const principalBalanceResponse = "The Payoff Amount represents the principal balance, plus accrued interest and any applicable fees. This is the amount you would have to pay to fully pay off your car."
 const autoLoanResponse = "This is a simple interest loan. Interest is accrued against the remaining principle daily over the life of the loan. As the principal is paid off, the monthly interest decreases, meaning more of our payment goes towards principal each month."
 const latePaymentResponse = "Late payments can result in late fees. It will also cause more interest to accrue between payments. This means you would pay more interest over the life of the loan."
-const redirectResponse = "Please wait while I connect you with a loan advisor...";
+const redirectResponse = "Please wait while I connect you with a financial advisor...";
 
 function getChatbotResponse(context) {
     let response;

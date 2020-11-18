@@ -45,7 +45,7 @@ class ChatRooms extends Component {
               </Popconfirm>
               <Popconfirm
                 title="Delete this chat room?"
-                onConfirm={() => {}}
+                onConfirm={() => this.deleteChatroom(record).then(this.fetchRooms())}
                 okText="Yes"
                 cancelText="No"
               >
@@ -58,6 +58,7 @@ class ChatRooms extends Component {
 		}
     this.fetchRooms = this.fetchRooms.bind(this);
     this.handleOk = this.handleOk.bind(this);
+    this.deleteChatroom = this.deleteChatroom.bind(this);
   }
   
 	componentDidMount() {
@@ -138,6 +139,38 @@ class ChatRooms extends Component {
       })
       this.context.triggerAdminJoinRoom(room)
     } 
+  }
+
+  //Deletes the current chatroom(document) and its messages(documents in subcollection)
+  async deleteChatroom(room_info) {
+
+    //Retrieve an instance of our Firestore Database
+    const db = firebase.firestore()
+
+    //Delete messages(documents in subcollection) in the chatroom
+    let messagesRef = await db.collection('chat-rooms').doc(room_info.creator_uid).collection('messages')
+    await messagesRef.get().then(async (messages) => {
+      if (messages.size !== 0) {
+        const batch = db.batch()
+        messages.forEach(message => {
+          batch.delete(message.ref)
+        })
+        await batch.commit()
+
+        //Prevents exploding the stack
+        process.nextTick(() => {
+          this.deleteChatroom(room_info)
+        })
+      }
+    });
+
+    //Delete chatroom(document)
+    let roomRef = await db.collection('chat-rooms').doc(room_info.creator_uid)
+    roomRef.delete();
+
+    //Delete anon-user(document)
+    let userRef = await db.collection('anon-users').doc(room_info.creator_uid)
+    userRef.delete();
   }
 }
 
