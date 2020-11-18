@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Card, Col, Row } from 'antd';
 import { ContextAPI } from './Context.js';
-import AnonUserIdentification from './AnonUserIdentification.js';
 import { BarChartOutlined, MessageOutlined } from '@ant-design/icons';
 
 
@@ -39,7 +38,6 @@ class Home extends Component {
     }
     return (
       <div style={{ paddingTop: '60px' }}>
-        <AnonUserIdentification />
         <Row gutter={20}>
           <div style={{ margin: 'auto',  width: '50%', display: 'flex' }}>
             <Col span={10} style={{ margin: 'auto', padding: '10px' }}>

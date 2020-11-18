@@ -8,6 +8,7 @@ import CashBackCalculator from './CashBackCalculator.js';
 import { Tabs } from 'antd';
 import "antd/dist/antd.css";
 import "../css/App.css";
+import ApplicantChat from './ApplicantChat.js';
 
 
 export default function Calculator() {
@@ -27,6 +28,7 @@ export default function Calculator() {
 			    </TabPane>
 			  </Tabs>
 			</div>
+			<ApplicantChat />
 		</div>
 	)
 }

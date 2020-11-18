@@ -22,26 +22,36 @@ class ChatRooms extends Component {
       columns: [
         {
           title: 'Name',
-          dataIndex: 'title',
-          key: 'title'
+          dataIndex: 'creator_name',
+          key: 'creator_name'
         },
         {
           title: 'Last Question',
-          dataIndex: 'title',
+          dataIndex: 'lastQuestion',
           key: 'lastQuestion'
         },
         {
           title: 'Action',
           key: 'action',
           render: (record) => (
-            <Popconfirm
-              title="Continue to this private chat room?"
-              onConfirm={() => this.handleOk(record)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button type="link">Join Chat Room</Button>
-            </Popconfirm>
+            <div>
+              <Popconfirm
+                title="Continue to this private chat room?"
+                onConfirm={() => this.handleOk(record)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button type="link">Join Chat Room</Button>
+              </Popconfirm>
+              <Popconfirm
+                title="Delete this chat room?"
+                onConfirm={() => {}}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button type="link">Delete</Button>
+              </Popconfirm>
+            </div>
           ),
         },
       ]
@@ -57,12 +67,12 @@ class ChatRooms extends Component {
   
    
   handleOk(record) {
-    this.setState({visible: false})
-    this.adminJoinRoom(record.room)
-    this.props.history.push('/chat')
+    this.setState({visible: false}, function() {})
+    this.adminJoinRoom(record.creator_uid)
   }
 
 	render() {
+    console.log(this.state.chat_rooms);
 		return(
 			<div style={{marginTop: '72px'}}>
         <Table
@@ -76,27 +86,58 @@ class ChatRooms extends Component {
 	}
 
 	//This function will fetch all the rooms from the database
-	fetchRooms() {
-		let chatRoomsRef = firebase.database().ref(`private-rooms`);
-		chatRoomsRef.on('value', (snapshot) => {
-			let list = [];
+	async fetchRooms() {
+		//let chatRoomsRef = firebase.database().ref(`private-rooms`);
+    const db = firebase.firestore()
+    let chatRoomsRef = await db.collection('chat-rooms')
+
+		chatRoomsRef.onSnapshot(snapshot => {
+			let list = []
 			snapshot.forEach((item) => {
         let data = {
-          ...item.val(),
-          key: list.length,
-          onClick: ()=>this.adminJoinRoom(item.room)
+          ...item.data(),
+          key: list.length
         };
-				list.push(data);
+        if (!data.status) { //only want to display rooms that need an admin
+          list.push(data);
+        }
 			})
-			this.setState({chat_rooms: list});
-    });
+			this.setState({chat_rooms: list})
+    })
+
+    // //TODO: fetch the room that the admin is in here
+    // let user = firebase.auth().currentUser
+    // const adminUsersRef = await db.collection('admin-users').doc(user.uid)
+
+    // if (adminUsersRef.get().exists) {
+    //   var room = adminUsersRef.data().joined_room
+    //   this.adminJoinRoom(room)
+    // }
 	}
 
-	//This function will allow the admin to join this room
-	adminJoinRoom(room) {
-		console.log(room)
-		// Set the chat_room to "room" in the state in App.js (Possible through the Context API) 
-		this.context.triggerAdminJoinRoom(room)
+	//This function will allow the admin to join the room
+	async adminJoinRoom(room) {
+		//console.log(room)
+
+    //Fetch the currently logged in user
+    let user = firebase.auth().currentUser
+
+    //Retrieve an instance of our Firestore Database
+    const db = firebase.firestore()
+
+    //Save the room in the database that the admin just joined
+    let adminUsersRef = await db.collection('admin-users').doc(user.uid)
+    let adminUsersSnapShot = await adminUsersRef.get()
+
+    if (adminUsersSnapShot.exists) {
+      adminUsersRef.update({
+        "admin_room_location": room
+      })
+      .then(() => {
+        this.props.history.push('/chat')
+      })
+      this.context.triggerAdminJoinRoom(room)
+    } 
   }
 }
 

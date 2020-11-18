@@ -214,6 +214,12 @@ function MonthlyPaymentCalculator() {
     lineHeight: '30px',
   };
 
+  // const options = [
+  //   { label: 'Thing 1', value: 1},
+  //   { label: 'Thing 2', value: 2},
+  // ];
+
+
   // displays/ updates the chart based on user inputs
   return (
     <div className='calculator-tab-content'>
