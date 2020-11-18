@@ -27,8 +27,8 @@ class ChatRooms extends Component {
         },
         {
           title: 'Last Question',
-          dataIndex: 'lastQuestion',
-          key: 'lastQuestion'
+          dataIndex: 'last_question',
+          key: 'last_question'
         },
         {
           title: 'Action',
@@ -100,9 +100,12 @@ class ChatRooms extends Component {
           key: list.length
         };
         if (!data.status) { //only want to display rooms that need an admin
+          if (data.last_question) {
+            data.last_question = new Date(data.last_question.seconds * 1000).toString()
+          }
           list.push(data);
         }
-			})
+      })
 			this.setState({chat_rooms: list})
     })
 

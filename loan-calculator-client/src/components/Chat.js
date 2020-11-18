@@ -134,13 +134,22 @@ class Chat extends Component {
     // Create reference to the location where messages are stored
     let messagesRef = db.collection('chat-rooms').doc(this.state.room_id).collection('messages').doc()
 
+    let timestamp = firebase.firestore.FieldValue.serverTimestamp()
+
     // Post the message to the database (Note: this will generate a random/unique key)
     messagesRef.set({
       "sender_name": this.state.name,
       "message": this.state.message,
       "uid": user.uid,
-      "timestamp": firebase.firestore.FieldValue.serverTimestamp()
+      "timestamp": timestamp
     })
+
+    if (!this.context.isAdmin) {
+      let roomRef = db.collection('chat-rooms').doc(this.state.room_id)
+      roomRef.update({
+        "last_question": timestamp
+      })
+    }
   }
 
   async handleChatbotResponse(btn) {
@@ -170,13 +179,21 @@ class Chat extends Component {
     // Create reference to the location where messages are stored
     let messagesRef = db.collection('chat-rooms').doc(this.state.room_id).collection('messages').doc()
 
+    let timestamp = firebase.firestore.FieldValue.serverTimestamp()
     // Post the message to the database (Note: this will generate a random/unique key)
     messagesRef.set({
       "sender_name": name,
       "message": response,
       "uid": uid,
-      "timestamp": firebase.firestore.FieldValue.serverTimestamp()
+      "timestamp": timestamp
     })
+
+    if (uid !== "Chatbot") {
+      let roomRef = db.collection('chat-rooms').doc(this.state.room_id)
+      roomRef.update({
+        "last_question": timestamp
+      })
+    }
   }
 }
 
