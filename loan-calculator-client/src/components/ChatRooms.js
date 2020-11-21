@@ -27,8 +27,8 @@ class ChatRooms extends Component {
         },
         {
           title: 'Last Question',
-          dataIndex: 'lastQuestion',
-          key: 'lastQuestion'
+          dataIndex: 'last_question',
+          key: 'last_question'
         },
         {
           title: 'Action',
@@ -100,9 +100,12 @@ class ChatRooms extends Component {
           key: list.length
         };
         if (!data.status) { //only want to display rooms that need an admin
+          if (data.last_question) {
+            data.last_question = new Date(data.last_question.seconds * 1000).toString()
+          }
           list.push(data);
         }
-			})
+      })
 			this.setState({chat_rooms: list})
     })
 
@@ -146,7 +149,7 @@ class ChatRooms extends Component {
 
     //Retrieve an instance of our Firestore Database
     const db = firebase.firestore()
-
+    
     //Delete messages(documents in subcollection) in the chatroom
     let messagesRef = await db.collection('chat-rooms').doc(room_info.creator_uid).collection('messages')
     await messagesRef.get().then(async (messages) => {
@@ -166,6 +169,9 @@ class ChatRooms extends Component {
 
     //Delete chatroom(document)
     let roomRef = await db.collection('chat-rooms').doc(room_info.creator_uid)
+    roomRef.update({
+      delete: true
+    })
     roomRef.delete();
 
     //Delete anon-user(document)
