@@ -35,7 +35,7 @@ class Chat extends Component {
   render() {
     let prevName = '';
     return (
-      <div style={{ background: '#eeeeee', height: '100%' }} className={this.state.status ? 'button-chat-format' : ''}>
+      <div style={{ background: '#f0f0f0', height: '100%' }} className={this.state.status ? 'button-chat-format' : ''}>
         <div className={this.state.status ? '' : 'chat-messages'}>
           {this.state.chat.map((each) => {
             let showName = prevName !== each.sender_name;
@@ -123,6 +123,7 @@ class Chat extends Component {
     this.statusListener = roomRef.onSnapshot(snapshot => {
       let status = snapshot.data().status
       this.setState({ status: status })
+
     })
 
     // Subscribe to messages(collection) and order each message(document) by timestamp in ascending order
