@@ -16,13 +16,37 @@ class ApplicantChat extends React.Component {
     * minimized-chat: there has been a chat window opened, but it is currently minimized
     * closed-chat: there is no chat window open, and the user can open one by clicking "Chat with an Advisor"
     */
-   super(props);
+    super(props);
     this.state = {
       chatOpen: false,
       chatMinimized: false,
       name: '',
       isSignedIn: false
     };
+    this.anonUserListener = null;
+  }
+
+  async componentDidMount() {
+    if (firebase.auth().currentUser) {
+      let user = await firebase.auth().currentUser
+      const db = firebase.firestore()
+      let anonUserRef = db.collection('anon-users').doc(user.uid)
+      let anonUserSnapshot = await anonUserRef.get()
+      if (anonUserSnapshot.exists) {
+        this.anonUserListener = anonUserRef.onSnapshot(snapshot => {
+          if (!snapshot.data()) {
+            this.anonUserListener()
+            firebase.auth().signOut()
+            this.setState({
+              isSignedIn: false,
+              chatOpen: false
+            })
+          }
+        })
+      } else {
+        firebase.auth().signOut()
+      }
+    }
   }
 
   // Saves anonymous user information to Firestore (name, uid, chatbot status)
@@ -60,7 +84,18 @@ class ApplicantChat extends React.Component {
 
   //This function will create another room in the database and send a greeting from the chatbot
   async createRoom(room_name, creator_name, creator_uid) {    
-    const db = firebase.firestore();    
+    const db = firebase.firestore();
+    let anonUserRef = await db.collection('anon-users').doc(creator_uid)
+    this.anonUserListener = anonUserRef.onSnapshot(snapshot => {
+      if (!snapshot.data()) {
+        this.anonUserListener()
+        this.setState({
+          isSignedIn: false,
+          chatOpen: false
+        })
+      }
+    })
+
     let roomRef = await db.collection('chat-rooms').doc(room_name)
     roomRef.set({
       "creator_name": creator_name,

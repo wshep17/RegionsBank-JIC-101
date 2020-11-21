@@ -149,7 +149,7 @@ class ChatRooms extends Component {
 
     //Retrieve an instance of our Firestore Database
     const db = firebase.firestore()
-
+    
     //Delete messages(documents in subcollection) in the chatroom
     let messagesRef = await db.collection('chat-rooms').doc(room_info.creator_uid).collection('messages')
     await messagesRef.get().then(async (messages) => {
@@ -169,6 +169,9 @@ class ChatRooms extends Component {
 
     //Delete chatroom(document)
     let roomRef = await db.collection('chat-rooms').doc(room_info.creator_uid)
+    roomRef.update({
+      delete: true
+    })
     roomRef.delete();
 
     //Delete anon-user(document)

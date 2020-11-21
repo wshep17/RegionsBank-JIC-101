@@ -21,6 +21,9 @@ class Chat extends Component {
       status: true,
       context: ""
     }
+    this.deletionListener = null;
+    this.statusListener = null;
+    this.messageListener = null;
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -106,16 +109,25 @@ class Chat extends Component {
       name = anonUsersRef.data().anon_name
     }
 
-    // Subscribe to chatbot status
     let roomRef = await db.collection('chat-rooms').doc(room_id)
-    roomRef.onSnapshot(snapshot => {
+    this.deletionListener = roomRef.onSnapshot(snapshot => {
+      if (!snapshot.data() || snapshot.data().delete) {
+        this.deletionListener()
+        this.statusListener()
+        this.messageListener()
+        firebase.auth().signOut()
+      }
+    })
+
+    // Subscribe to chatbot status
+    this.statusListener = roomRef.onSnapshot(snapshot => {
       let status = snapshot.data().status
       this.setState({ status: status })
     })
 
     // Subscribe to messages(collection) and order each message(document) by timestamp in ascending order
     let messagesRef = await db.collection('chat-rooms').doc(room_id).collection('messages')
-    messagesRef.orderBy('timestamp', 'asc').onSnapshot(snapshot => {
+    this.messageListener = messagesRef.orderBy('timestamp', 'asc').onSnapshot(snapshot => {
       let messages = []
       snapshot.forEach((item) => {
         messages.push(item.data())
