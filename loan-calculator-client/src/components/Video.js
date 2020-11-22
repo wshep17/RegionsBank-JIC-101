@@ -2,19 +2,13 @@ import React, { Component } from 'react'
 import firebase from '../scripts/firebase.js';
 import { ContextAPI } from './Context.js';
 import '../css/Video.css';
-
-
 /**
 Brute Force Solution:
 1. allow admin to generate a video room id.
 2. send this id over to the caller for them to join it.
 
 Note: limit the ability to generate video room ids to admins only.
-
 */
-
-
-
 const configuration = {
   iceServers: [
     {
@@ -46,7 +40,6 @@ class Video extends Component {
         this.createRoom = this.createRoom.bind(this)
     }
 
-
     render() {
         return (
             <div style={{'marginTop': "60px"}}>
@@ -75,8 +68,6 @@ class Video extends Component {
         )
     }
     componentDidMount() {
-        //console.log("isAdmin: ", this.context.isAdmin)
-
         //set the create room button to be disabled
         //document.querySelector('#createRoomBtn').disabled = true;
 
@@ -310,8 +301,6 @@ class Video extends Component {
             document.querySelector('#joinBtn').disabled = true;
             document.querySelector('#createRoomBtn').disabled = true;
             document.querySelector('#hangupBtn').disabled = true;
-            
-            
         }
     }
 }

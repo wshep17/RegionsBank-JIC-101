@@ -45,7 +45,7 @@ class App extends React.Component {
       triggerAdminLogout: this.handleAdminLogout
     }
     const conditionalRender = () => {
-      //if it's still loading return blank screen
+      // If it is still loading, return blank screen
       if (this.state.isLoading) {
         return (<div></div>)
       } else {
@@ -76,7 +76,6 @@ class App extends React.Component {
   handleAdminCheck() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user && !user.isAnonymous) {
-        console.log({ email: user.email, name: user.displayName })
         this.setState({ isAdmin: true, isLoading: false })
       } else {
         this.setState({ isAdmin: false, isLoading: false })
@@ -87,19 +86,15 @@ class App extends React.Component {
 
   handleAdminLogin() {
     this.setState({ isAdmin: true })
-    console.log("Admin Status: ", this.state.isAdmin)
   }
 
   handleAdminJoinRoom(room) {
     this.setState({ admin_room_location: room }, function() {
-      console.log("An admin has just joined room: ", this.state.admin_room_location)
     })
   }
 
   handleAdminLogout() {
-    //console.log('handle log out')
     this.setState({ isAdmin: false , admin_room_location: ""})
-    console.log("Admin Status: ", this.state.isAdmin)
   }
 
 }

@@ -1,3 +1,4 @@
+// Regex is used to add and update symbols in the input boxes
 import React, { useState }  from 'react';
 import {
   Collapse,
@@ -10,7 +11,7 @@ import '../css/AffordabilityCalculator.css';
 import BarChart from './BarChart';
 
 function AffordabilityCalculator() {
-  // create the inputs for our calculator
+  // Create the inputs for our calculator
   const [ inputs, setInputs ] = useState({
     monthlyPayment: 250,
     interestRate: 4.9,
@@ -21,22 +22,22 @@ function AffordabilityCalculator() {
     downPayment: 500
   });
 
-  // create radioData and set it to calue 1
+  // Create radioData and set it to calue 1
   const [ radioData, setRadioData ] = useState({
     value: 1,
     chart_data_afford: { key: 2, title: "Vehicle Affordability by Loan Term", xAxisTitle: "Loan Term per Month", data: [{}] }
   });
 
-  //create an array for vehicleAffordability inputs
+  // Create an array for vehicleAffordability inputs
   const [ loanData, setLoanData ] = useState({
     vehiclePrice: 0,
     vehicleAffordability: [{}],
   });
 
-  // make the panels collapsed
+  // Make the panels collapsed
   const { Panel } = Collapse;
 
-  //call it if inputs are changed
+  // Call it if inputs are changed
   const onInputsChange = (formData) => {
     const newInputs = { ...inputs };
     formData.forEach(field => {
@@ -51,7 +52,7 @@ function AffordabilityCalculator() {
 
     const newLoanData = { ...loanData };
 
-    // using affordability calculator
+    // Using the Affordability Calculator
     newLoanData.vehicleAffordability = calculateAffordability(newInputs);
     const {vehiclePrice} = calculateAffordability(newInputs);
     newLoanData.vehiclePrice = vehiclePrice;
@@ -86,6 +87,7 @@ function AffordabilityCalculator() {
   return (
     <div>
       <div className='calculator-inputs'>
+        {/* These are inputs for the loan information */}
         <Collapse bordered={false} defaultActiveKey={['1', '2', '3']}>
           <Panel header="Loan Information" key="1">
             <Form
@@ -117,6 +119,8 @@ function AffordabilityCalculator() {
               </Form.Item>
             </Form>
           </Panel>
+
+          {/* These are inputs for the vehicle purchase price information */}
           <Panel header="Purchase Information" key="2">
             <Form
               name="affordability-inputs"
@@ -175,6 +179,8 @@ function AffordabilityCalculator() {
           </Panel>
         </Collapse>
       </div>
+
+      {/* This controls the display of the chart */}
       <div className='calc-outputs'>
         <div className='chart-container' style={{'display': 'flex'}}>
           <div className='chart'>
@@ -188,6 +194,8 @@ function AffordabilityCalculator() {
             </Radio.Group>
           </div>
         </div>
+
+        {/* This displays the chart data in text format */}
         <div className='main-outputs-container'>
           <h2 style={{ 'padding-bottom': '15px' }}>Vehicle Affordability by Loan Term</h2>
           <table>

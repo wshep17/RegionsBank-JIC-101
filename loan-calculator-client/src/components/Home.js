@@ -3,7 +3,6 @@ import { Card, Col, Row } from 'antd';
 import { ContextAPI } from './Context.js';
 import { BarChartOutlined, MessageOutlined } from '@ant-design/icons';
 
-
 class Home extends Component {
   /**
   * Refer to "AdminLogin.js" to better understand what this line means :)
@@ -53,8 +52,6 @@ class Home extends Component {
       </div>
     )
   }
-
-
 }
 
 export default Home
