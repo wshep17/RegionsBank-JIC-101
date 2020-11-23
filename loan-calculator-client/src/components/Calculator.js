@@ -1,5 +1,5 @@
 /*
-  class for organizing and displaying the loan calculators
+* Class for organizing and displaying the loan calculators
 */
 import React from 'react'
 import AffordabilityCalculator from './AffordabilityCalculator.js';
@@ -9,7 +9,6 @@ import { Tabs } from 'antd';
 import "antd/dist/antd.css";
 import "../css/App.css";
 import ApplicantChat from './ApplicantChat.js';
-
 
 export default function Calculator() {
 	const { TabPane } = Tabs;

@@ -1,6 +1,33 @@
 # RegionsBank-JIC-101
 This readme is written for a Windows OS
 
+RELEASE 1.0 NOTES
+## Features
+	(a) Monthly Payment Calculator
+	
+	(b) Vehicle Affordability Calculator
+
+	(c) Low Rate vs. Cash Back Calculator
+
+	(d) Chatbot and Live messaging
+
+	(e) Live Video Calling
+
+## Bug Fixes
+	(a) Y values on the chart overlapped with the Y axis labels
+
+	(b) The chatrooms errored out when deleting a room
+
+## Known Bugs and Defects
+	(a) The calulators will error out with negative inputs
+
+	(b) The legend for the multi-bar chart overlaps with the bars
+
+	(c) The tool tips for inputs and chart data are still in progress
+
+	(d) The Monthly Payment Calculator does not include a downloadable csv of the loan payoff schedule
+
+INSTALL GUIDE
 ## Step 1: Install latest version of Nodejs.
 	(a) Navigate to `https://nodejs.org/en/download/`.
 
@@ -18,7 +45,7 @@ This readme is written for a Windows OS
 		This command will change directory to the front-end folder of the application.
 
 ## Step 4: Install Dependencies.
-	Note: You should be in the `loan-calculator` folder :)
+	Note: You should be in the `loan-calculator` folder
 	(a)	Type `npm install` into the command line.
 		This command will install the dependencies in the local `node_modules` folder.
 

@@ -121,8 +121,6 @@ class ChatRooms extends Component {
 
 	//This function will allow the admin to join the room
 	async adminJoinRoom(room) {
-		//console.log(room)
-
     //Fetch the currently logged in user
     let user = firebase.auth().currentUser
 
@@ -179,7 +177,5 @@ class ChatRooms extends Component {
     userRef.delete();
   }
 }
-
-
 
 export default withRouter(ChatRooms);

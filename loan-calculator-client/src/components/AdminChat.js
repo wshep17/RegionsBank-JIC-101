@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import Video from './Video.js';
 import { ContextAPI } from './Context.js';
 import Chat from './Chat.js';
-
-
 /**
  * General Component:
  * Chatroom
@@ -23,7 +21,6 @@ class AdminChat extends Component {
     }
   }
 
-
   render() {
     return (
       <div className='chat-container'>
@@ -33,6 +30,5 @@ class AdminChat extends Component {
     )
   }
 }
-
 
 export default AdminChat;

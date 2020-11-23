@@ -1,3 +1,4 @@
+// Regex is used to add and update symbols in the input boxes
 import React, { useState, useEffect } from 'react';
 import {
   Button,
@@ -15,6 +16,7 @@ import ReactTooltip from 'react-tooltip';
 
 
 function MonthlyPaymentCalculator() {
+  // Create the inputs for our calculator
   const [ inputs, setInputs ] = useState({
     purchasePrice: 25000,
     cashBack: 500,
@@ -73,7 +75,7 @@ function MonthlyPaymentCalculator() {
     updateChart();
   };
 
-  // toggle for chart buttons
+  // Toggle for chart buttons
   const updateChart = (event) => {
     const newRadioData = { ...radioData };
 
@@ -102,7 +104,7 @@ function MonthlyPaymentCalculator() {
     newLoanData.loanAmount = loanAmount;
     newLoanData.monthlyPayment = monthlyPayment;
 
-    // using amortize package
+    // Using amortize package
     const [newInterestPaidData, newPrincipalPaidData, newEndingBalanceData] = calculateAmortizedLoanData(newInputs);
     newLoanData.interestPaidData.default = newInterestPaidData;
     newLoanData.principalPaidData.default = newPrincipalPaidData;
@@ -214,16 +216,11 @@ function MonthlyPaymentCalculator() {
     lineHeight: '30px',
   };
 
-  // const options = [
-  //   { label: 'Thing 1', value: 1},
-  //   { label: 'Thing 2', value: 2},
-  // ];
-
-
-  // displays/ updates the chart based on user inputs
+  // Displays/ updates the chart based on user inputs
   return (
     <div className='calculator-tab-content'>
       <div className='calculator-inputs'>
+        {/* These are inputs for the vehicle information */}
         <Collapse bordered={false} defaultActiveKey={['1', '2', '3']}>
           <Panel header="Vehicle Information" key="1">
             <Form
@@ -267,6 +264,8 @@ function MonthlyPaymentCalculator() {
               </Form.Item>
             </Form>
           </Panel>
+
+          {/* These are inputs for the trade-in value information */}
           <Panel header="Trade-In Information" key="2">
           <Form
               form={formTwo}
@@ -299,6 +298,8 @@ function MonthlyPaymentCalculator() {
               </Form.Item>
             </Form>
           </Panel>
+
+          {/* These are inputs for the loan information */}
           <Panel header="Loan Information" key="3">
             <Form
               form={formThree}
@@ -339,6 +340,9 @@ function MonthlyPaymentCalculator() {
           </Panel>
         </Collapse>
       </div>
+
+      {/* This controls the display of the chart.
+          This calculator has options to display multiple sets of data */}
       <div className='multiple-inputs' style={multipleDataStyle}>
         <Input placeholder="Loan name" style={{ width: 200, margin: 10 }} onChange={onNameChange} data-tip='Save multiple loan alternatives'></Input>
         <ReactTooltip place="bottom"/>
@@ -368,6 +372,8 @@ function MonthlyPaymentCalculator() {
             </Radio.Group>
           </div>
         </div>
+
+        {/* This displays the chart data in text format */}
         <div className='main-outputs-container'>
           <h2>Monthly Payment</h2>
           <h2 style={{ fontWeight: 'bold' }}>{"$" + (loanData && loanData.monthlyPayment ? loanData.monthlyPayment.toFixed(2) : "0")}</h2>

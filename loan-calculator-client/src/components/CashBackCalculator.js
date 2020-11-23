@@ -1,3 +1,4 @@
+// Regex is used to add and update symbols in the input boxes
 import React, { useState } from 'react';
 import {
   Collapse,
@@ -10,7 +11,7 @@ import '../css/CashBackCalculator.css';
 import BarChart from './BarChart';
 
 function CashBackCalculator() {
-  // create the inputs for our calculator
+  // Creates the inputs for our calculator
   const [ inputs, setInputs ] = useState({
     purchasePrice: 25000,
     cashBack: 500,
@@ -55,7 +56,7 @@ function CashBackCalculator() {
     newLoanData.loanAmount = loanAmount;
     newLoanData.monthlyPayment = monthlyPayment;
 
-    // using amortize package
+    // Using amortize package
     const [totalData, totalPrincipalPaidData, totalInterestPaidData] = calculateCashBack(newInputs);
     newLoanData.totalData = totalData;
     newLoanData.totalPrincipalPaidData = totalPrincipalPaidData;
@@ -65,7 +66,7 @@ function CashBackCalculator() {
     updateChart();
   };
   
-  // toggle for chart buttons
+  // Toggle for chart buttons
   const updateChart = (event) => {
     const newRadioData = { ...radioData };
 
@@ -90,10 +91,11 @@ function CashBackCalculator() {
     lineHeight: '30px',
   };
 
-  // displays/ updates the chart based on user inputs
+  // Displays/ updates the chart based on user inputs
   return (
     <div>
       <div className='calculator-inputs'>
+        {/* These are inputs for the vehicle information */}
         <Collapse bordered={false} defaultActiveKey={['1', '2', '3']}>
         <Panel header="Vehicle Information" key="1">
             <Form
@@ -138,6 +140,8 @@ function CashBackCalculator() {
               </Form.Item>
             </Form>
           </Panel>
+
+          {/* These are inputs for the trade-in value information */}
           <Panel header="Trade-In Information" key="2">
           <Form
               name="monthly-payment-inputs"
@@ -165,6 +169,8 @@ function CashBackCalculator() {
               </Form.Item>
             </Form>
           </Panel>
+
+          {/* These are inputs for the loan information */}
           <Panel header="Loan Information" key="3">
             <Form
               name="monthly-payment-inputs"
@@ -200,7 +206,9 @@ function CashBackCalculator() {
           </Panel>
         </Collapse>
       </div>
+
       <div className='calc-outputs'>
+        {/* This controls the display of the chart */}
         <div className='chart-container' style={{'display': 'flex'}}>
           <div className='chart'>
             <BarChart data={radioData.chart_data} width={400} height={300} />
@@ -219,7 +227,9 @@ function CashBackCalculator() {
             </Radio.Group>
           </div>
         </div>
+
         <div className='main-outputs-container'>
+          {/* This displays the chart information in text format */}
           <h2 style={{ 'padding-bottom': '5px' }}>Cash Back Option</h2>
           <table>
             <tr>

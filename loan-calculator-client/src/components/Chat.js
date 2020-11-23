@@ -28,7 +28,7 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-    //fetch the messages from the database	
+    // Fetch the messages from the database	
     this.fetchRoomInfo()
   }
 
@@ -208,6 +208,5 @@ class Chat extends Component {
     }
   }
 }
-
 
 export default Chat;

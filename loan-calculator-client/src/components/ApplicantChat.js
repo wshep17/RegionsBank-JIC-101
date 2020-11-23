@@ -65,7 +65,7 @@ class ApplicantChat extends React.Component {
         "anon_name": this.state.name, 
         "anon_uid": user.uid,
       }).then(async () => {
-        //create a room out of their uid
+        // Create a room out of their uid
         const roomRef = db.collection('chat-rooms').doc(user.uid);
         const doc = await roomRef.get();
 
@@ -82,7 +82,7 @@ class ApplicantChat extends React.Component {
     .catch((err) => console.log(err))
   }
 
-  //This function will create another room in the database and send a greeting from the chatbot
+  // This function will create another room in the database and send a greeting from the chatbot
   async createRoom(room_name, creator_name, creator_uid) {    
     const db = firebase.firestore();
     let anonUserRef = await db.collection('anon-users').doc(creator_uid)
