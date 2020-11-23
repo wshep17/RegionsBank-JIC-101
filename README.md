@@ -27,6 +27,8 @@ RELEASE 1.0 NOTES
 
 	(d) The Monthly Payment Calculator does not include a downloadable csv of the loan payoff schedule
 
+	(e) Monthly Payment Calculator and Low Rate vs. Cash Back Calculator will show the same chart until the page is refreshed or the inputs are changed
+
 INSTALL GUIDE
 ## Step 1: Install latest version of Nodejs.
 	(a) Navigate to `https://nodejs.org/en/download/`.
