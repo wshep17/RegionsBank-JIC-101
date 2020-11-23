@@ -1,0 +1,99 @@
+.ant-table-wrapper {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.chat-container {
+  margin: 80px 50px;
+  padding: 20px;
+  border: 1px solid #f0f0f0;
+  border-radius: 5px;
+}
+
+.button-chat-format {
+  padding-bottom: 16px;
+  overflow: scroll;
+}
+
+.open-chat-button {
+  position: fixed;
+  right: -70px;
+  top: 50%;
+  font-size: 16px;
+  transform: rotate(270deg);
+}
+
+.chat-messages {
+  height: calc(100% - 55px);
+  overflow: scroll;
+}
+
+.chat-input {
+  padding: 5px;
+}
+
+.chatbot-buttons {
+  display: flex;
+  flex-direction: column;
+  width: 96%;
+  margin: auto;
+  padding-top: 5px;
+}
+
+.user-message-block {
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-message-block-cont {
+  padding: 5px;
+  padding-top: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 10px;
+  margin: 0;
+  padding-right: 5px;
+  margin-left: auto;
+}
+
+.user-message {
+  background: #117788;
+  color: white;
+  border-radius: 12px;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 3px 10px;
+  margin-left: auto;
+}
+
+.admin-message-block {
+  padding: 5px;
+}
+
+.admin-message-block-cont {
+  padding: 5px;
+  padding-top: 0;
+}
+
+.admin-name {
+  font-size: 10px;
+  margin: 0;
+  padding-left: 5px;
+}
+
+.admin-message {
+  background: white;
+  border-radius: 12px;
+  width: fit-content;
+  padding: 3px 10px;
+}
+
+.admin-message p,
+.user-message p {
+  margin: 0;
+}

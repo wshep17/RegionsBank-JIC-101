@@ -9,7 +9,7 @@ import { withRouter } from "react-router-dom";
 
 class NavigationBar extends Component {
   /**
-  * Refer to "AdminLogin.js" to better understand what this line means :)
+  * Refer to "AdminLogin.js" to better understand what this line means
   * Note: I prefer to leverage context with class components when possible. 
   *       It looks much cleaner/readable, but this can also be done with 
   *       functional components. Take a look at the "PrivateRoute.js" file
@@ -36,9 +36,14 @@ class NavigationBar extends Component {
         )
       } else {
         return (
-          <Tooltip title='Login'>
-            <Button onClick={() => this.props.history.push('/login')} shape='circle' icon={<LoginOutlined />} />
-          </Tooltip>
+          <div>
+            <Tooltip title="Home">
+              <Button onClick={() => this.props.history.push('/home')} shape='circle' icon={<HomeOutlined />} />
+            </Tooltip>
+            <Tooltip title='Login'>
+              <Button onClick={() => this.props.history.push('/login')} shape='circle' icon={<LoginOutlined />} />
+            </Tooltip>
+          </div>
         )
       }
     }
@@ -54,7 +59,7 @@ class NavigationBar extends Component {
     )
   }
 
-  //Facilitate Logging Out
+  // Facilitate Logging Out
   handleLogout() {
     firebase.auth().signOut()
       .then(() => {

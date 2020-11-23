@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Card, Col, Row } from 'antd';
 import { ContextAPI } from './Context.js';
-import AnonUserIdentification from './AnonUserIdentification.js';
+import { BarChartOutlined, MessageOutlined } from '@ant-design/icons';
 
 class Home extends Component {
   /**
@@ -22,11 +22,11 @@ class Home extends Component {
       if (this.context.isAdmin) {
         return (
           <Col span={10} style={{ margin: 'auto', padding: '10px' }}>
-            <Card style={{ textAlign: 'center', backgroundColor: '#FFFFCC' }}
+            <Card style={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}
               hoverable={true}
               bordered={true}
               onClick={() => this.props.history.push('/chat-rooms')}
-            ><b>Go to the Chat Rooms!</b></Card>
+            ><b style={{ fontSize: '30px'}}>Browse Chat Rooms<br></br><MessageOutlined style={{ fontSize: '60px'}}/></b></Card>
           </Col>
         )
       } else {
@@ -36,16 +36,15 @@ class Home extends Component {
       }
     }
     return (
-      <div>
-        <AnonUserIdentification />
+      <div style={{ paddingTop: '60px' }}>
         <Row gutter={20}>
-          <div style={{ margin: 'auto', width: '50%', paddingTop: '60px' }}>
+          <div style={{ margin: 'auto',  width: '50%', display: 'flex' }}>
             <Col span={10} style={{ margin: 'auto', padding: '10px' }}>
-              <Card style={{ textAlign: 'center', backgroundColor: '#CCFFCC' }}
+              <Card style={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}
                 hoverable={true}
                 bordered={true}
                 onClick={() => this.props.history.push('/calculator')}
-              ><b>Go to the Calculator!</b></Card>
+              ><b style={{ fontSize: '30px'}}>Use Loan Calculators<br></br><BarChartOutlined style={{ fontSize: '60px'}}/></b></Card>
             </Col>
             {conditionalRender()}
           </div>
@@ -53,8 +52,6 @@ class Home extends Component {
       </div>
     )
   }
-
-
 }
 
 export default Home
