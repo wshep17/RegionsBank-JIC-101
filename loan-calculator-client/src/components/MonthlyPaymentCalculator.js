@@ -28,12 +28,15 @@ function MonthlyPaymentCalculator() {
   const [ loanData, setLoanData ] = useState({
     loanAmount: calculateLoanData(inputs).loanAmount,
     monthlyPayment: calculateLoanData(inputs).monthlyPayment,
-    interestPaidData: [{}],
-    principalPaidData: [{}],
-    endingBalanceData: [{}]
+
+    // previously an array of objects, now we want an object containing arrays
+    // of objects, with keys being the loan name
+    interestPaidData: { default: [{}] },
+    principalPaidData: { default: [{}] },
+    endingBalanceData: { default: [{}] }
   });
   const [ dropdownData, setDropdownData ] = useState({
-    selectedValue: "",
+    selectedValue: [],
     inputValues: {}
   });
   const [ enteredName, setEnteredName ] = useState({
@@ -41,10 +44,13 @@ function MonthlyPaymentCalculator() {
   })
   const [ radioData, setRadioData ] = useState({
     value: 1,
-    chart_data: {key: 1, title: "Loan Payoff Schedule", xAxisTitle: "Year", data: loanData.interestPaidData}
+    chart_data: {key: 1, title: "Loan Payoff Schedule", xAxisTitle: "Year", data: loanData.interestPaidData, isMultiBarChart: false}
   });
   useEffect(() => {
-    updateCalculationData(inputs);
+    if (radioData.chart_data.isMultiBarChart === false) {
+      // only run this for single loan bar chart
+      updateCalculationData(inputs);
+    }
     updateChart();
   }, [inputs]);
 
@@ -98,9 +104,9 @@ function MonthlyPaymentCalculator() {
 
     // using amortize package
     const [newInterestPaidData, newPrincipalPaidData, newEndingBalanceData] = calculateAmortizedLoanData(newInputs);
-    newLoanData.interestPaidData = newInterestPaidData;
-    newLoanData.principalPaidData = newPrincipalPaidData;
-    newLoanData.endingBalanceData = newEndingBalanceData;
+    newLoanData.interestPaidData.default = newInterestPaidData;
+    newLoanData.principalPaidData.default = newPrincipalPaidData;
+    newLoanData.endingBalanceData.default = newEndingBalanceData;
     setLoanData(newLoanData);
   }
 
@@ -110,29 +116,34 @@ function MonthlyPaymentCalculator() {
   const [formThree] = Form.useForm();
 
   const handleLoadClick = () => {
-    // Load selected value's data into input boxes
-    const newInputs = { ...dropdownData.inputValues[dropdownData.selectedValue] };
-    formOne.setFieldsValue({
-      purchasePrice: newInputs.purchasePrice,
-      cashBack: newInputs.cashBack,
-      taxRate: newInputs.taxRate
-    });
-    formTwo.setFieldsValue({
-      tradeInValue: newInputs.tradeInValue,
-      tradeInOwed: newInputs.tradeInOwed
-    });
-    formThree.setFieldsValue({
-      loanTerm: newInputs.loanTerm,
-      interestRate: newInputs.interestRate,
-      downPayment: newInputs.downPayment
-    });
+    if (radioData.chart_data.isMultiBarChart === true) {
+      // handle load for multiple graphs
+      updateChart();
+    } else {
+      // Load selected value's data into input boxes
+      const newInputs = { ...dropdownData.inputValues[dropdownData.selectedValue[0]] };
+      formOne.setFieldsValue({
+        purchasePrice: newInputs.purchasePrice,
+        cashBack: newInputs.cashBack,
+        taxRate: newInputs.taxRate
+      });
+      formTwo.setFieldsValue({
+        tradeInValue: newInputs.tradeInValue,
+        tradeInOwed: newInputs.tradeInOwed
+      });
+      formThree.setFieldsValue({
+        loanTerm: newInputs.loanTerm,
+        interestRate: newInputs.interestRate,
+        downPayment: newInputs.downPayment
+      });
 
-    // Also load data into the current state
-    setInputs(newInputs);
+      // Also load data into the current state
+      setInputs(newInputs);
 
-    // Finally, update chart
-    updateCalculationData(newInputs);
-    updateChart();
+      // Finally, update chart
+      updateCalculationData(newInputs);
+      updateChart();
+    }
   }
 
   const handleSaveClick = () => {
@@ -140,14 +151,56 @@ function MonthlyPaymentCalculator() {
     const currentInputData = { ...inputs };
     newDropdownData.inputValues[enteredName.name] = currentInputData;
     setDropdownData(newDropdownData);
-    console.log(dropdownData);
+    // console.log(dropdownData);
   }
 
   const handleSelectChange = (value) => {
-    console.log(`Selected: ${value}`);
-    const newDropdownData = { ...dropdownData };
-    newDropdownData.selectedValue = value;
-    setDropdownData(newDropdownData);
+    if (value.length >= 2) {
+      // we have multiple selections
+      const newRadioData = { ...radioData };
+      newRadioData.chart_data.isMultiBarChart = true;
+      setRadioData(newRadioData);
+
+      // clear current interestPaidData, principalPaidData, and endingBalanceData
+      // and reinsert default data from before
+      // then for loan name in `value`, insert corresponding chart data into
+      // interestPaidData, principalPaidData, and endingBalanceData
+      const oldLoanData = { ...loanData };
+      const newLoanData = {
+        loanAmount: oldLoanData.loanAmount,
+        monthlyPayment: oldLoanData.monthlyPayment,
+        interestPaidData: { default: oldLoanData.interestPaidData.default },
+        principalPaidData: { default: oldLoanData.principalPaidData.default },
+        endingBalanceData: { default: oldLoanData.endingBalanceData.default }
+      };
+
+      // const newLoanData = { ...loanData };
+      // calculate and insert new data from current multi-selection
+      for (let i = 0; i < value.length; i++) {
+        const loanName = value[i];
+        const newInputs = { ...dropdownData.inputValues[loanName] };
+        const [newInterestPaidData, newPrincipalPaidData, newEndingBalanceData] = calculateAmortizedLoanData(newInputs);
+        newLoanData.interestPaidData[loanName] = newInterestPaidData;
+        newLoanData.principalPaidData[loanName] = newPrincipalPaidData;
+        newLoanData.endingBalanceData[loanName] = newEndingBalanceData;
+      }
+      // console.log(newLoanData);
+      setLoanData(newLoanData);
+
+      const newDropdownData = { ...dropdownData };
+      newDropdownData.selectedValue = value;
+      setDropdownData(newDropdownData);
+
+      updateChart();
+    } else {
+      const newRadioData = { ...radioData };
+      newRadioData.chart_data.isMultiBarChart = false;
+      setRadioData(newRadioData);
+
+      const newDropdownData = { ...dropdownData };
+      newDropdownData.selectedValue = value;
+      setDropdownData(newDropdownData);
+    }
   }
 
   const multipleDataStyle = {
@@ -290,8 +343,8 @@ function MonthlyPaymentCalculator() {
         <Input placeholder="Loan name" style={{ width: 200, margin: 10 }} onChange={onNameChange} data-tip='Save multiple loan alternatives'></Input>
         <ReactTooltip place="bottom"/>
         <Button type="primary" style={{ margin: 10 }} onClick={handleSaveClick}>Save</Button>
-        <Select defaultValue="None" style={{ width: 120, margin:10 }} onChange={handleSelectChange} data-tip='Choose loans to compare'>
-          {Object.keys(dropdownData.inputValues).map((elem) =><Option value={elem}>{elem}</Option>)}
+        <Select placeholder="Please select" style={{ width: 200, margin:10 }} onChange={handleSelectChange} mode="multiple" data-tip='Choose loans to compare'>
+          { Object.keys(dropdownData.inputValues).map((elem) => <Option value={elem}> {elem} </Option>) }
         </Select>
         <ReactTooltip place="bottom"/>
         <Button type="primary" style={{ margin: 10 }} onClick={handleLoadClick}>Load</Button>
