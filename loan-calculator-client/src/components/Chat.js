@@ -21,21 +21,18 @@ class Chat extends Component {
       status: true,
       context: ""
     }
-    this.deletionListener = null;
-    this.statusListener = null;
-    this.messageListener = null;
     this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
-    // Fetch the messages from the database	
+    //fetch the messages from the database	
     this.fetchRoomInfo()
   }
 
   render() {
     let prevName = '';
     return (
-      <div style={{ background: '#eeeeee', height: '100%' }} className={this.state.status ? 'button-chat-format' : ''}>
+      <div style={{ background: '#f0f0f0', height: '100%' }} className={this.state.status ? 'button-chat-format' : ''}>
         <div className={this.state.status ? '' : 'chat-messages'}>
           {this.state.chat.map((each) => {
             let showName = prevName !== each.sender_name;
@@ -109,25 +106,18 @@ class Chat extends Component {
       name = anonUsersRef.data().anon_name
     }
 
-    let roomRef = await db.collection('chat-rooms').doc(room_id)
-    this.deletionListener = roomRef.onSnapshot(snapshot => {
-      if (!snapshot.data() || snapshot.data().delete) {
-        this.deletionListener()
-        this.statusListener()
-        this.messageListener()
-        firebase.auth().signOut()
-      }
-    })
-
     // Subscribe to chatbot status
-    this.statusListener = roomRef.onSnapshot(snapshot => {
-      let status = snapshot.data().status
-      this.setState({ status: status })
+    let roomRef = await db.collection('chat-rooms').doc(room_id)
+    roomRef.onSnapshot(snapshot => {
+      if (snapshot.data()) {
+        let status = snapshot.data().status
+        this.setState({ status: status })
+      }
     })
 
     // Subscribe to messages(collection) and order each message(document) by timestamp in ascending order
     let messagesRef = await db.collection('chat-rooms').doc(room_id).collection('messages')
-    this.messageListener = messagesRef.orderBy('timestamp', 'asc').onSnapshot(snapshot => {
+    messagesRef.orderBy('timestamp', 'asc').onSnapshot(snapshot => {
       let messages = []
       snapshot.forEach((item) => {
         messages.push(item.data())
@@ -146,22 +136,13 @@ class Chat extends Component {
     // Create reference to the location where messages are stored
     let messagesRef = db.collection('chat-rooms').doc(this.state.room_id).collection('messages').doc()
 
-    let timestamp = firebase.firestore.FieldValue.serverTimestamp()
-
     // Post the message to the database (Note: this will generate a random/unique key)
     messagesRef.set({
       "sender_name": this.state.name,
       "message": this.state.message,
       "uid": user.uid,
-      "timestamp": timestamp
+      "timestamp": firebase.firestore.FieldValue.serverTimestamp()
     })
-
-    if (!this.context.isAdmin) {
-      let roomRef = db.collection('chat-rooms').doc(this.state.room_id)
-      roomRef.update({
-        "last_question": timestamp
-      })
-    }
   }
 
   async handleChatbotResponse(btn) {
@@ -191,22 +172,15 @@ class Chat extends Component {
     // Create reference to the location where messages are stored
     let messagesRef = db.collection('chat-rooms').doc(this.state.room_id).collection('messages').doc()
 
-    let timestamp = firebase.firestore.FieldValue.serverTimestamp()
     // Post the message to the database (Note: this will generate a random/unique key)
     messagesRef.set({
       "sender_name": name,
       "message": response,
       "uid": uid,
-      "timestamp": timestamp
+      "timestamp": firebase.firestore.FieldValue.serverTimestamp()
     })
-
-    if (uid !== "Chatbot") {
-      let roomRef = db.collection('chat-rooms').doc(this.state.room_id)
-      roomRef.update({
-        "last_question": timestamp
-      })
-    }
   }
 }
+
 
 export default Chat;
