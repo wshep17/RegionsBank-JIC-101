@@ -28,14 +28,14 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-    // Fetch the messages from the database	
+    //fetch the messages from the database	
     this.fetchRoomInfo()
   }
 
   render() {
     let prevName = '';
     return (
-      <div style={{ background: '#eeeeee', height: '100%' }} className={this.state.status ? 'button-chat-format' : ''}>
+      <div style={{ background: '#f0f0f0', height: '100%' }} className={this.state.status ? 'button-chat-format' : ''}>
         <div className={this.state.status ? '' : 'chat-messages'}>
           {this.state.chat.map((each) => {
             let showName = prevName !== each.sender_name;
@@ -109,6 +109,7 @@ class Chat extends Component {
       name = anonUsersRef.data().anon_name
     }
 
+    // Subscribe to chatbot status
     let roomRef = await db.collection('chat-rooms').doc(room_id)
     this.deletionListener = roomRef.onSnapshot(snapshot => {
       if (!snapshot.data() || snapshot.data().delete) {
@@ -119,7 +120,6 @@ class Chat extends Component {
       }
     })
 
-    // Subscribe to chatbot status
     this.statusListener = roomRef.onSnapshot(snapshot => {
       let status = snapshot.data().status
       this.setState({ status: status })
@@ -132,7 +132,7 @@ class Chat extends Component {
       snapshot.forEach((item) => {
         messages.push(item.data())
       })
-      this.setState({ chat: messages, message: "", name: name, room_id: room_id})
+      this.setState({ chat: messages, message: "", name: name, room_id: room_id })
     })
   }
 
@@ -179,9 +179,9 @@ class Chat extends Component {
       this.sendChatbotInteraction(this.state.name, btn.text, user.uid).then(() => {
         this.sendChatbotInteraction("Chatbot", res.response, "Chatbot")
       })
-      
+
     }
-    this.setState({context: res.context})
+    this.setState({ context: res.context })
   }
 
   async sendChatbotInteraction(name, response, uid) {
@@ -208,5 +208,6 @@ class Chat extends Component {
     }
   }
 }
+
 
 export default Chat;
