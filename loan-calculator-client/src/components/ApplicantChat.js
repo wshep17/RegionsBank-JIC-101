@@ -25,7 +25,31 @@ class ApplicantChat extends React.Component {
       isSignedIn: false,
       videoPortal: false
     }
+    this.anonUserListener = null;
     this.activateVideoPortal = this.activateVideoPortal.bind(this)
+  }
+
+  async componentDidMount() {
+    if (firebase.auth().currentUser) {
+      let user = await firebase.auth().currentUser
+      const db = firebase.firestore()
+      let anonUserRef = db.collection('anon-users').doc(user.uid)
+      let anonUserSnapshot = await anonUserRef.get()
+      if (anonUserSnapshot.exists) {
+        this.anonUserListener = anonUserRef.onSnapshot(snapshot => {
+          if (!snapshot.data()) {
+            this.anonUserListener()
+            firebase.auth().signOut()
+            this.setState({
+              isSignedIn: false,
+              chatOpen: false
+            })
+          }
+        })
+      } else {
+        firebase.auth().signOut()
+      }
+    }
   }
 
   render() {
@@ -123,7 +147,19 @@ class ApplicantChat extends React.Component {
 
   //This function will create another room in the database and send a greeting from the chatbot
   async createRoom(room_name, creator_name, creator_uid) {    
-    const db = firebase.firestore();    
+    const db = firebase.firestore();
+    
+    let anonUserRef = await db.collection('anon-users').doc(creator_uid)
+    this.anonUserListener = anonUserRef.onSnapshot(snapshot => {
+      if (!snapshot.data()) {
+        this.anonUserListener()
+        this.setState({
+          isSignedIn: false,
+          chatOpen: false
+        })
+      }
+    })
+
     let roomRef = await db.collection('chat-rooms').doc(room_name)
     roomRef.set({
       "creator_name": creator_name,

@@ -21,6 +21,9 @@ class Chat extends Component {
       status: true,
       context: ""
     }
+    this.deletionListener = null;
+    this.statusListener = null;
+    this.messageListener = null;
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -108,21 +111,28 @@ class Chat extends Component {
 
     // Subscribe to chatbot status
     let roomRef = await db.collection('chat-rooms').doc(room_id)
-    roomRef.onSnapshot(snapshot => {
-      if (snapshot.data()) {
-        let status = snapshot.data().status
-        this.setState({ status: status })
+    this.deletionListener = roomRef.onSnapshot(snapshot => {
+      if (!snapshot.data() || snapshot.data().delete) {
+        this.deletionListener()
+        this.statusListener()
+        this.messageListener()
+        firebase.auth().signOut()
       }
+    })
+
+    this.statusListener = roomRef.onSnapshot(snapshot => {
+      let status = snapshot.data().status
+      this.setState({ status: status })
     })
 
     // Subscribe to messages(collection) and order each message(document) by timestamp in ascending order
     let messagesRef = await db.collection('chat-rooms').doc(room_id).collection('messages')
-    messagesRef.orderBy('timestamp', 'asc').onSnapshot(snapshot => {
+    this.messageListener = messagesRef.orderBy('timestamp', 'asc').onSnapshot(snapshot => {
       let messages = []
       snapshot.forEach((item) => {
         messages.push(item.data())
       })
-      this.setState({ chat: messages, message: "", name: name, room_id: room_id})
+      this.setState({ chat: messages, message: "", name: name, room_id: room_id })
     })
   }
 
@@ -136,13 +146,22 @@ class Chat extends Component {
     // Create reference to the location where messages are stored
     let messagesRef = db.collection('chat-rooms').doc(this.state.room_id).collection('messages').doc()
 
+    let timestamp = firebase.firestore.FieldValue.serverTimestamp()
+
     // Post the message to the database (Note: this will generate a random/unique key)
     messagesRef.set({
       "sender_name": this.state.name,
       "message": this.state.message,
       "uid": user.uid,
-      "timestamp": firebase.firestore.FieldValue.serverTimestamp()
+      "timestamp": timestamp
     })
+
+    if (!this.context.isAdmin) {
+      let roomRef = db.collection('chat-rooms').doc(this.state.room_id)
+      roomRef.update({
+        "last_question": timestamp
+      })
+    }
   }
 
   async handleChatbotResponse(btn) {
@@ -160,9 +179,9 @@ class Chat extends Component {
       this.sendChatbotInteraction(this.state.name, btn.text, user.uid).then(() => {
         this.sendChatbotInteraction("Chatbot", res.response, "Chatbot")
       })
-      
+
     }
-    this.setState({context: res.context})
+    this.setState({ context: res.context })
   }
 
   async sendChatbotInteraction(name, response, uid) {
@@ -172,13 +191,21 @@ class Chat extends Component {
     // Create reference to the location where messages are stored
     let messagesRef = db.collection('chat-rooms').doc(this.state.room_id).collection('messages').doc()
 
+    let timestamp = firebase.firestore.FieldValue.serverTimestamp()
     // Post the message to the database (Note: this will generate a random/unique key)
     messagesRef.set({
       "sender_name": name,
       "message": response,
       "uid": uid,
-      "timestamp": firebase.firestore.FieldValue.serverTimestamp()
+      "timestamp": timestamp
     })
+
+    if (uid !== "Chatbot") {
+      let roomRef = db.collection('chat-rooms').doc(this.state.room_id)
+      roomRef.update({
+        "last_question": timestamp
+      })
+    }
   }
 }
 
